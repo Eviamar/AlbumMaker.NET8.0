@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AlbumMaker.Properties" GeneratedClassName="DarkThemeSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Background" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#373861</Value>
+    </Setting>
+    <Setting Name="Foreground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="ButtonBackground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#5254B5</Value>
+    </Setting>
+    <Setting Name="ButtonForeground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="SideMenuBackground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#202152</Value>
+    </Setting>
+    <Setting Name="SideMenuForeground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="SideMenuButtonBackground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#3f4fb5</Value>
+    </Setting>
+    <Setting Name="SideMenuButtonForeGround" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="TextBoxBackground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#aeb0fc</Value>
+    </Setting>
+    <Setting Name="TextBoxForeground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
+    </Setting>
+    <Setting Name="LinkLabelForeground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#00eaff</Value>
+    </Setting>
+    <Setting Name="LinkLabelOnClick" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#ffd500</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
