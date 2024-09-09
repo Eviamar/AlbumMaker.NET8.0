@@ -14,6 +14,10 @@ namespace AlbumMaker.Classes.Items
         private bool isAdmin;
         private List<AlbumItem> albumItems;
          
+        public UserItem(string name,string password) : base(name)
+        {
+            this.password = password;
+        }
         public UserItem(int id,string name, string password, string question, string answer,bool isAdmin) : base(id,name)
         {
             this.password = password;

@@ -1,4 +1,6 @@
 ﻿using AlbumMaker.Classes;
+using AlbumMaker.Classes.Db;
+using AlbumMaker.Classes.Items;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +15,11 @@ namespace AlbumMaker.Forms
 {
     public partial class Login : UserControl
     {
+        private AppDataBase db;
         public Login()
         {
             InitializeComponent();
+            db = new AppDataBase();
         }
 
         private void lblForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -54,11 +58,17 @@ namespace AlbumMaker.Forms
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-            if (checkBoxRememberMe.Checked)
+
+
+            if (db.VerifyUser(textBoxUsername.Text, textBoxPassword.Text))
             {
-                Properties.AppSettings.Default.userName = textBoxUsername.Text;
-                Properties.AppSettings.Default.Save();
+                if (checkBoxRememberMe.Checked)
+                {
+                    Properties.AppSettings.Default.userName = textBoxUsername.Text;
+                    Properties.AppSettings.Default.Save();
+                }
             }
+            
         }
 
         private void Login_Load(object sender, EventArgs e)

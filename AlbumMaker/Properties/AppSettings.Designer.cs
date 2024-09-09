@@ -76,5 +76,17 @@ namespace AlbumMaker.Properties {
                 this["userName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AppLocation {
+            get {
+                return ((string)(this["AppLocation"]));
+            }
+            set {
+                this["AppLocation"] = value;
+            }
+        }
     }
 }

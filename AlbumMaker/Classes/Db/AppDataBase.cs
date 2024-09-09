@@ -1,4 +1,5 @@
-﻿using AlbumMaker.Forms;
+﻿using AlbumMaker.Classes.Items;
+using AlbumMaker.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,11 @@ namespace AlbumMaker.Classes.Db
     internal class AppDataBase
     {
         
+        public bool VerifyUser(string userName,string password)
+        {
+            if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
+                return false;
+            return false;
+        }
     }
 }

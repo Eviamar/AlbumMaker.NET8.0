@@ -6,11 +6,13 @@ namespace AlbumMaker
     public partial class Form1 : Form
     {
         private bool menuOpen = true;
+        
 
         public Form1()
         {
             InitializeComponent();
             this.Text = Properties.AppSettings.Default.AppName;
+            Properties.AppSettings.Default.AppLocation = AppDomain.CurrentDomain.BaseDirectory;
 
         }
 
@@ -102,11 +104,12 @@ namespace AlbumMaker
         private void btnMyAlbums_Click(object sender, EventArgs e)
         {
             MyAlbums albums = new MyAlbums();
-            albums.Dock = DockStyle.Fill;
+            albums.Dock = DockStyle.Top;
             albums.Parent = FindForm();
             panelMain.Controls.Clear();
             SettingsManager.SetTheme(albums);
             panelMain.Controls.Add(albums);
         }
+        
     }
 }

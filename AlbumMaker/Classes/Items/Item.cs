@@ -11,6 +11,10 @@ namespace AlbumMaker.Classes.Items
         private readonly int id;
         private string name;
 
+        public Item(string name)
+        {
+            this.name = name;
+        }
         public Item(int id, string name)
         {
             this.id = id;

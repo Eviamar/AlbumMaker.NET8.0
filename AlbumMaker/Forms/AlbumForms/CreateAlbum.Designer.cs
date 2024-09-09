@@ -30,12 +30,13 @@
         {
             menuStrip1 = new MenuStrip();
             scanFilesToolStripMenuItem = new ToolStripMenuItem();
+            goBackToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { scanFilesToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { goBackToolStripMenuItem, scanFilesToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(339, 24);
@@ -47,7 +48,14 @@
             scanFilesToolStripMenuItem.Name = "scanFilesToolStripMenuItem";
             scanFilesToolStripMenuItem.Size = new Size(68, 20);
             scanFilesToolStripMenuItem.Text = "Scan files";
-            
+            scanFilesToolStripMenuItem.Click += scanFilesToolStripMenuItem_Click;
+            // 
+            // goBackToolStripMenuItem
+            // 
+            goBackToolStripMenuItem.Name = "goBackToolStripMenuItem";
+            goBackToolStripMenuItem.Size = new Size(62, 20);
+            goBackToolStripMenuItem.Text = "Go back";
+            goBackToolStripMenuItem.Click += goBackToolStripMenuItem_Click;
             // 
             // CreateAlbum
             // 
@@ -66,5 +74,6 @@
 
         private MenuStrip menuStrip1;
         private ToolStripMenuItem scanFilesToolStripMenuItem;
+        private ToolStripMenuItem goBackToolStripMenuItem;
     }
 }
