@@ -13,7 +13,7 @@ namespace AlbumMaker.Classes.Items
 
         public Item(string name)
         {
-            this.name = name;
+            this.name = name; 
         }
         public Item(int id, string name)
         {

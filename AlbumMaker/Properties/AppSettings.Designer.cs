@@ -88,5 +88,17 @@ namespace AlbumMaker.Properties {
                 this["AppLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isLogged {
+            get {
+                return ((bool)(this["isLogged"]));
+            }
+            set {
+                this["isLogged"] = value;
+            }
+        }
     }
 }

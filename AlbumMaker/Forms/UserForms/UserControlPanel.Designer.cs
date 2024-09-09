@@ -81,7 +81,7 @@
             // 
             // btnUpdatePassword
             // 
-            btnUpdatePassword.Location = new Point(47, 77);
+            btnUpdatePassword.Location = new Point(49, 104);
             btnUpdatePassword.Name = "btnUpdatePassword";
             btnUpdatePassword.Size = new Size(116, 23);
             btnUpdatePassword.TabIndex = 25;

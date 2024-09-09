@@ -60,12 +60,25 @@ namespace AlbumMaker.Forms
         {
 
 
-            if (db.VerifyUser(textBoxUsername.Text, textBoxPassword.Text))
+            if (db.VerifyUser(textBoxUsername.Text.ToLower(), textBoxPassword.Text))
             {
+                
                 if (checkBoxRememberMe.Checked)
                 {
                     Properties.AppSettings.Default.userName = textBoxUsername.Text;
                     Properties.AppSettings.Default.Save();
+                }
+                Properties.AppSettings.Default.isLogged = true;
+                Properties.AppSettings.Default.Save();
+                MyAlbums myAlbums = new MyAlbums();
+                Panel p = this.Parent as Panel;
+                if (p != null)
+                {
+                    p.Controls.Add(myAlbums);
+                    myAlbums.Dock = DockStyle.Fill;
+                    SettingsManager.SetTheme(myAlbums);
+                    this.Dispose();
+                    myAlbums.Show();
                 }
             }
             

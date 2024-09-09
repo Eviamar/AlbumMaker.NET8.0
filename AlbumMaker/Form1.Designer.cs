@@ -33,11 +33,14 @@
             panelMenu = new Panel();
             btnMenuToggle = new Button();
             btnLogin = new Button();
-            btnSettings = new Button();
-            btnUserControlPanel = new Button();
             btnMyAlbums = new Button();
+            btnUserControlPanel = new Button();
+            btnSettings = new Button();
+            btnLogout = new Button();
+            btnExit = new Button();
             timerMenuToggle = new System.Windows.Forms.Timer(components);
             panelMain = new Panel();
+            timerCheckUserLoggedIn = new System.Windows.Forms.Timer(components);
             flpMenu.SuspendLayout();
             panelMenu.SuspendLayout();
             SuspendLayout();
@@ -51,6 +54,8 @@
             flpMenu.Controls.Add(btnMyAlbums);
             flpMenu.Controls.Add(btnUserControlPanel);
             flpMenu.Controls.Add(btnSettings);
+            flpMenu.Controls.Add(btnLogout);
+            flpMenu.Controls.Add(btnExit);
             flpMenu.Dock = DockStyle.Left;
             flpMenu.Location = new Point(0, 0);
             flpMenu.MaximumSize = new Size(145, 0);
@@ -90,16 +95,15 @@
             btnLogin.UseVisualStyleBackColor = true;
             btnLogin.Click += btnLogin_Click;
             // 
-            // btnSettings
+            // btnMyAlbums
             // 
-            btnSettings.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btnSettings.Location = new Point(3, 118);
-            btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(131, 23);
-            btnSettings.TabIndex = 3;
-            btnSettings.Text = "Settings";
-            btnSettings.UseVisualStyleBackColor = true;
-            btnSettings.Click += btnSettings_Click;
+            btnMyAlbums.Location = new Point(3, 60);
+            btnMyAlbums.Name = "btnMyAlbums";
+            btnMyAlbums.Size = new Size(131, 23);
+            btnMyAlbums.TabIndex = 5;
+            btnMyAlbums.Text = "My Albums";
+            btnMyAlbums.UseVisualStyleBackColor = true;
+            btnMyAlbums.Click += btnMyAlbums_Click;
             // 
             // btnUserControlPanel
             // 
@@ -111,15 +115,36 @@
             btnUserControlPanel.UseVisualStyleBackColor = true;
             btnUserControlPanel.Click += btnUserControlPanel_Click;
             // 
-            // btnMyAlbums
+            // btnSettings
             // 
-            btnMyAlbums.Location = new Point(3, 60);
-            btnMyAlbums.Name = "btnMyAlbums";
-            btnMyAlbums.Size = new Size(131, 23);
-            btnMyAlbums.TabIndex = 5;
-            btnMyAlbums.Text = "My Albums";
-            btnMyAlbums.UseVisualStyleBackColor = true;
-            btnMyAlbums.Click += btnMyAlbums_Click;
+            btnSettings.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnSettings.Location = new Point(3, 118);
+            btnSettings.Name = "btnSettings";
+            btnSettings.Size = new Size(131, 23);
+            btnSettings.TabIndex = 3;
+            btnSettings.Text = "Settings";
+            btnSettings.UseVisualStyleBackColor = true;
+            btnSettings.Click += btnSettings_Click;
+            // 
+            // btnLogout
+            // 
+            btnLogout.Location = new Point(3, 147);
+            btnLogout.Name = "btnLogout";
+            btnLogout.Size = new Size(131, 23);
+            btnLogout.TabIndex = 6;
+            btnLogout.Text = "Logout";
+            btnLogout.UseVisualStyleBackColor = true;
+            btnLogout.Click += btnLogout_Click;
+            // 
+            // btnExit
+            // 
+            btnExit.Location = new Point(3, 176);
+            btnExit.Name = "btnExit";
+            btnExit.Size = new Size(131, 23);
+            btnExit.TabIndex = 7;
+            btnExit.Text = "Exit";
+            btnExit.UseVisualStyleBackColor = true;
+            btnExit.Click += btnExit_Click;
             // 
             // timerMenuToggle
             // 
@@ -134,6 +159,10 @@
             panelMain.Name = "panelMain";
             panelMain.Size = new Size(655, 450);
             panelMain.TabIndex = 1;
+            // 
+            // timerCheckUserLoggedIn
+            // 
+            timerCheckUserLoggedIn.Tick += timerCheckUserLoggedIn_Tick;
             // 
             // Form1
             // 
@@ -163,5 +192,8 @@
         private Panel panelMain;
         private Button btnUserControlPanel;
         private Button btnMyAlbums;
+        private Button btnLogout;
+        private Button btnExit;
+        private System.Windows.Forms.Timer timerCheckUserLoggedIn;
     }
 }

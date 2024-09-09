@@ -6,13 +6,14 @@ namespace AlbumMaker
     public partial class Form1 : Form
     {
         private bool menuOpen = true;
-        
+
 
         public Form1()
         {
             InitializeComponent();
             this.Text = Properties.AppSettings.Default.AppName;
             Properties.AppSettings.Default.AppLocation = AppDomain.CurrentDomain.BaseDirectory;
+            timerCheckUserLoggedIn.Start();
 
         }
 
@@ -110,6 +111,42 @@ namespace AlbumMaker
             SettingsManager.SetTheme(albums);
             panelMain.Controls.Add(albums);
         }
-        
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Properties.AppSettings.Default.isLogged = false;
+            Properties.AppSettings.Default.Save();
+            Application.Exit();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            Properties.AppSettings.Default.isLogged = false;
+            Properties.AppSettings.Default.Save();
+            Login login = new Login();
+            login.Dock = DockStyle.Fill;
+            login.Parent = FindForm();
+            panelMain.Controls.Clear();
+            SettingsManager.SetTheme(login);
+            panelMain.Controls.Add(login);
+        }
+
+        private void timerCheckUserLoggedIn_Tick(object sender, EventArgs e)
+        {
+            if (Properties.AppSettings.Default.isLogged)
+            {
+                btnMyAlbums.Visible = true;
+                btnUserControlPanel.Visible = true;
+                btnLogout.Visible = true;
+                
+               
+            }
+            else
+            {
+                btnMyAlbums.Visible = false;
+                btnUserControlPanel.Visible = false;
+                btnLogout.Visible = false;
+            }
+        }
     }
 }
