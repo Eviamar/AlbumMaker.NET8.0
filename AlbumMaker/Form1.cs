@@ -6,12 +6,12 @@ namespace AlbumMaker
     public partial class Form1 : Form
     {
         private bool menuOpen = true;
-   
+
         public Form1()
         {
             InitializeComponent();
             this.Text = Properties.AppSettings.Default.AppName;
-            
+
         }
 
         private void btnMenuToggle_Click(object sender, EventArgs e)
@@ -76,7 +76,7 @@ namespace AlbumMaker
         private void Form1_Load(object sender, EventArgs e)
         {
             SettingsManager.SetTheme(this);
-            
+
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -87,6 +87,26 @@ namespace AlbumMaker
             panelMain.Controls.Clear();
             SettingsManager.SetTheme(login);
             panelMain.Controls.Add(login);
+        }
+
+        private void btnUserControlPanel_Click(object sender, EventArgs e)
+        {
+            UserControlPanel ucp = new UserControlPanel();
+            ucp.Dock = DockStyle.Fill;
+            ucp.Parent = FindForm();
+            panelMain.Controls.Clear();
+            SettingsManager.SetTheme(ucp);
+            panelMain.Controls.Add(ucp);
+        }
+
+        private void btnMyAlbums_Click(object sender, EventArgs e)
+        {
+            MyAlbums albums = new MyAlbums();
+            albums.Dock = DockStyle.Fill;
+            albums.Parent = FindForm();
+            panelMain.Controls.Clear();
+            SettingsManager.SetTheme(albums);
+            panelMain.Controls.Add(albums);
         }
     }
 }

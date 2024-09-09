@@ -25,7 +25,7 @@ namespace AlbumMaker.Forms
             btnForgot.Visible = !btnForgot.Visible;
 
             if (btnForgot.Visible)
-                lblForgot.Text = "Nevermind I remember it!)";
+                lblForgot.Text = "Nevermind I remember it!";
             else
                 lblForgot.Text = "Forgot login credentials?";
         }

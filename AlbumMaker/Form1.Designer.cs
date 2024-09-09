@@ -34,6 +34,8 @@
             btnMenuToggle = new Button();
             btnLogin = new Button();
             btnSettings = new Button();
+            btnUserControlPanel = new Button();
+            btnMyAlbums = new Button();
             timerMenuToggle = new System.Windows.Forms.Timer(components);
             panelMain = new Panel();
             flpMenu.SuspendLayout();
@@ -46,6 +48,8 @@
             flpMenu.BorderStyle = BorderStyle.FixedSingle;
             flpMenu.Controls.Add(panelMenu);
             flpMenu.Controls.Add(btnLogin);
+            flpMenu.Controls.Add(btnMyAlbums);
+            flpMenu.Controls.Add(btnUserControlPanel);
             flpMenu.Controls.Add(btnSettings);
             flpMenu.Dock = DockStyle.Left;
             flpMenu.Location = new Point(0, 0);
@@ -89,13 +93,33 @@
             // btnSettings
             // 
             btnSettings.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btnSettings.Location = new Point(3, 60);
+            btnSettings.Location = new Point(3, 118);
             btnSettings.Name = "btnSettings";
             btnSettings.Size = new Size(131, 23);
             btnSettings.TabIndex = 3;
             btnSettings.Text = "Settings";
             btnSettings.UseVisualStyleBackColor = true;
             btnSettings.Click += btnSettings_Click;
+            // 
+            // btnUserControlPanel
+            // 
+            btnUserControlPanel.Location = new Point(3, 89);
+            btnUserControlPanel.Name = "btnUserControlPanel";
+            btnUserControlPanel.Size = new Size(131, 23);
+            btnUserControlPanel.TabIndex = 4;
+            btnUserControlPanel.Text = "User Panel";
+            btnUserControlPanel.UseVisualStyleBackColor = true;
+            btnUserControlPanel.Click += btnUserControlPanel_Click;
+            // 
+            // btnMyAlbums
+            // 
+            btnMyAlbums.Location = new Point(3, 60);
+            btnMyAlbums.Name = "btnMyAlbums";
+            btnMyAlbums.Size = new Size(131, 23);
+            btnMyAlbums.TabIndex = 5;
+            btnMyAlbums.Text = "My Albums";
+            btnMyAlbums.UseVisualStyleBackColor = true;
+            btnMyAlbums.Click += btnMyAlbums_Click;
             // 
             // timerMenuToggle
             // 
@@ -137,5 +161,7 @@
         private Button btnLogin;
         private Button btnSettings;
         private Panel panelMain;
+        private Button btnUserControlPanel;
+        private Button btnMyAlbums;
     }
 }
