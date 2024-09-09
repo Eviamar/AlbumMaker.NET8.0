@@ -69,6 +69,7 @@ namespace AlbumMaker
             Settings settings = new Settings();
             settings.Dock = DockStyle.Fill;
             panelMain.Controls.Clear();
+            SettingsManager.SetTheme(settings);
             panelMain.Controls.Add(settings);
         }
 

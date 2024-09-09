@@ -71,5 +71,12 @@ namespace AlbumMaker.Forms
                 textBoxUsername.Text = savedUserName;
             }
         }
+
+        private void linkLabelForgetMe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Properties.AppSettings.Default.userName = "";
+            Properties.AppSettings.Default.Save();
+            textBoxUsername.Text = Properties.AppSettings.Default.userName;
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace AlbumMaker.Forms
 {
     public partial class Settings : UserControl
     {
+        private bool isLoading = true;
         public Settings()
         {
             InitializeComponent();
@@ -24,6 +25,7 @@ namespace AlbumMaker.Forms
             Properties.AppSettings.Default.isDark = false;
             Properties.AppSettings.Default.Save();
             SettingsManager.SetTheme();
+
         }
 
         private void radioButtonDark_CheckedChanged(object sender, EventArgs e)
@@ -31,14 +33,30 @@ namespace AlbumMaker.Forms
             Properties.AppSettings.Default.isDark = true;
             Properties.AppSettings.Default.Save();
             SettingsManager.SetTheme();
+
         }
 
         private void Settings_Load(object sender, EventArgs e)
         {
+            isLoading = true;
             if (Properties.AppSettings.Default.isDark)
                 radioButtonDark.Checked = true;
             else
                 radioButtonLight.Checked = true;
+
+            for (int i = 0; i < comboBoxFontSize.Items.Count; i++)
+            {
+                var item = (KeyValuePair<string, float>)comboBoxFontSize.Items[i];
+
+                if (item.Value == Properties.AppSettings.Default.FontSize)
+                {
+                    comboBoxFontSize.SelectedItem = item;
+                    break;
+                }
+
+            }
+
+            isLoading = false;
         }
 
         private void AddSizesToComboBox()
@@ -57,9 +75,17 @@ namespace AlbumMaker.Forms
 
         private void comboBoxFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selectedItem = (KeyValuePair<string, float>)comboBoxFontSize.SelectedItem;
-            Properties.AppSettings.Default.FontSize = selectedItem.Value;
-            Properties.AppSettings.Default.Save();
+            if (!isLoading)
+            {
+                var selectedItem = (KeyValuePair<string, float>)comboBoxFontSize.SelectedItem;
+                Properties.AppSettings.Default.FontSize = selectedItem.Value;
+                Properties.AppSettings.Default.Save();
+                SettingsManager.SetTheme();
+                SettingsManager.SetTheme(this);
+
+            }
+
+
 
 
         }

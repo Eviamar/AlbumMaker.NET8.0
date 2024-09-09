@@ -39,6 +39,7 @@
             textBoxAnswer = new TextBox();
             btnForgot = new Button();
             checkBoxRememberMe = new CheckBox();
+            linkLabelForgetMe = new LinkLabel();
             SuspendLayout();
             // 
             // lblLogin
@@ -53,7 +54,7 @@
             // lblAlreadyRegistered
             // 
             lblAlreadyRegistered.AutoSize = true;
-            lblAlreadyRegistered.Location = new Point(3, 124);
+            lblAlreadyRegistered.Location = new Point(3, 149);
             lblAlreadyRegistered.Name = "lblAlreadyRegistered";
             lblAlreadyRegistered.Size = new Size(148, 15);
             lblAlreadyRegistered.TabIndex = 1;
@@ -64,7 +65,7 @@
             // lblForgot
             // 
             lblForgot.AutoSize = true;
-            lblForgot.Location = new Point(3, 150);
+            lblForgot.Location = new Point(3, 175);
             lblForgot.Name = "lblForgot";
             lblForgot.Size = new Size(137, 15);
             lblForgot.TabIndex = 2;
@@ -102,9 +103,9 @@
             // 
             // btnSubmit
             // 
-            btnSubmit.Location = new Point(111, 77);
+            btnSubmit.Location = new Point(3, 123);
             btnSubmit.Name = "btnSubmit";
-            btnSubmit.Size = new Size(75, 40);
+            btnSubmit.Size = new Size(183, 23);
             btnSubmit.TabIndex = 6;
             btnSubmit.Text = "Login";
             btnSubmit.UseVisualStyleBackColor = true;
@@ -112,7 +113,7 @@
             // 
             // richTextBoxQuestion
             // 
-            richTextBoxQuestion.Location = new Point(3, 168);
+            richTextBoxQuestion.Location = new Point(3, 193);
             richTextBoxQuestion.Name = "richTextBoxQuestion";
             richTextBoxQuestion.ReadOnly = true;
             richTextBoxQuestion.Size = new Size(183, 48);
@@ -122,7 +123,7 @@
             // 
             // textBoxAnswer
             // 
-            textBoxAnswer.Location = new Point(3, 222);
+            textBoxAnswer.Location = new Point(3, 247);
             textBoxAnswer.Name = "textBoxAnswer";
             textBoxAnswer.PlaceholderText = "Your answer";
             textBoxAnswer.Size = new Size(185, 23);
@@ -131,7 +132,7 @@
             // 
             // btnForgot
             // 
-            btnForgot.Location = new Point(3, 251);
+            btnForgot.Location = new Point(3, 276);
             btnForgot.Name = "btnForgot";
             btnForgot.Size = new Size(185, 23);
             btnForgot.TabIndex = 9;
@@ -149,10 +150,22 @@
             checkBoxRememberMe.Text = "Remember me";
             checkBoxRememberMe.UseVisualStyleBackColor = true;
             // 
+            // linkLabelForgetMe
+            // 
+            linkLabelForgetMe.AutoSize = true;
+            linkLabelForgetMe.Location = new Point(124, 98);
+            linkLabelForgetMe.Name = "linkLabelForgetMe";
+            linkLabelForgetMe.Size = new Size(64, 15);
+            linkLabelForgetMe.TabIndex = 11;
+            linkLabelForgetMe.TabStop = true;
+            linkLabelForgetMe.Text = "Forget Me!";
+            linkLabelForgetMe.LinkClicked += linkLabelForgetMe_LinkClicked;
+            // 
             // Login
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(linkLabelForgetMe);
             Controls.Add(checkBoxRememberMe);
             Controls.Add(btnForgot);
             Controls.Add(textBoxAnswer);
@@ -165,7 +178,7 @@
             Controls.Add(lblAlreadyRegistered);
             Controls.Add(lblLogin);
             Name = "Login";
-            Size = new Size(205, 285);
+            Size = new Size(205, 316);
             Load += Login_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -184,5 +197,6 @@
         private TextBox textBoxAnswer;
         private Button btnForgot;
         private CheckBox checkBoxRememberMe;
+        private LinkLabel linkLabelForgetMe;
     }
 }
