@@ -35,6 +35,7 @@
             btnUpdatePassword = new Button();
             btnUpdateQuestion = new Button();
             grpBoxPassword = new GroupBox();
+            checkBoxShowHide = new CheckBox();
             textBoxCurrentPassword = new TextBox();
             grpBoxQuestion = new GroupBox();
             grpBoxOther = new GroupBox();
@@ -85,12 +86,13 @@
             // 
             // btnUpdatePassword
             // 
-            btnUpdatePassword.Location = new Point(49, 104);
+            btnUpdatePassword.Location = new Point(100, 104);
             btnUpdatePassword.Name = "btnUpdatePassword";
-            btnUpdatePassword.Size = new Size(116, 23);
+            btnUpdatePassword.Size = new Size(63, 23);
             btnUpdatePassword.TabIndex = 25;
             btnUpdatePassword.Text = "Update password";
             btnUpdatePassword.UseVisualStyleBackColor = true;
+            btnUpdatePassword.Click += btnUpdatePassword_Click;
             // 
             // btnUpdateQuestion
             // 
@@ -104,6 +106,7 @@
             // 
             // grpBoxPassword
             // 
+            grpBoxPassword.Controls.Add(checkBoxShowHide);
             grpBoxPassword.Controls.Add(textBoxCurrentPassword);
             grpBoxPassword.Controls.Add(textBoxPassword);
             grpBoxPassword.Controls.Add(textBoxPassword2);
@@ -114,6 +117,17 @@
             grpBoxPassword.TabIndex = 27;
             grpBoxPassword.TabStop = false;
             grpBoxPassword.Text = "Password";
+            // 
+            // checkBoxShowHide
+            // 
+            checkBoxShowHide.AutoSize = true;
+            checkBoxShowHide.Location = new Point(6, 107);
+            checkBoxShowHide.Name = "checkBoxShowHide";
+            checkBoxShowHide.Size = new Size(55, 19);
+            checkBoxShowHide.TabIndex = 27;
+            checkBoxShowHide.Text = "Show";
+            checkBoxShowHide.UseVisualStyleBackColor = true;
+            checkBoxShowHide.CheckedChanged += checkBoxShowHide_CheckedChanged;
             // 
             // textBoxCurrentPassword
             // 
@@ -191,5 +205,6 @@
         private GroupBox grpBoxOther;
         private CheckBox checkBoxRememberMe;
         private TextBox textBoxCurrentPassword;
+        private CheckBox checkBoxShowHide;
     }
 }

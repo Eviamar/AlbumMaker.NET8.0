@@ -27,11 +27,14 @@ namespace AlbumMaker.Forms
         private void GetDrives()
         {
             DriveInfo[] allDrives = DriveInfo.GetDrives();
+            int tabIndex = 0;
             foreach (DriveInfo drive in allDrives)
             {
                 Button btn = new Button
                 {
-                    Text = drive.Name
+                    Text = drive.Name,
+                    TabIndex = tabIndex++
+
                 };
                 btn.MouseClick += (sender, args) => Button_MouseClick(sender, args, drive.RootDirectory.Name);
                 flowLayoutPanelDrives.Controls.Add(btn);
@@ -174,7 +177,6 @@ namespace AlbumMaker.Forms
             {
                 p.Controls.Add(createAlbum);
                 createAlbum.Dock = DockStyle.Fill;
-                SettingsManager.SetTheme(createAlbum);
                 this.Dispose();
                 createAlbum.Show();
             }
@@ -182,6 +184,7 @@ namespace AlbumMaker.Forms
 
         private void ScanForImages_Load(object sender, EventArgs e)
         {
+            SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
         }
     }

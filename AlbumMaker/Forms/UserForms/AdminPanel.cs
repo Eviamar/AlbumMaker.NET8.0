@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using AlbumMaker.Classes;
+
 
 namespace AlbumMaker.Forms.UserForms
 {
@@ -19,6 +12,7 @@ namespace AlbumMaker.Forms.UserForms
 
         private void AdminPanel_Load(object sender, EventArgs e)
         {
+            SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
         }
     }

@@ -44,7 +44,7 @@
             btnSubmit.Location = new Point(3, 210);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(185, 23);
-            btnSubmit.TabIndex = 19;
+            btnSubmit.TabIndex = 6;
             btnSubmit.Text = "Register";
             btnSubmit.UseVisualStyleBackColor = true;
             btnSubmit.Click += btnSubmit_Click;
@@ -56,7 +56,7 @@
             textBoxAnswer.Name = "textBoxAnswer";
             textBoxAnswer.PlaceholderText = "Your answer";
             textBoxAnswer.Size = new Size(185, 23);
-            textBoxAnswer.TabIndex = 18;
+            textBoxAnswer.TabIndex = 5;
             // 
             // richTextBoxQuestion
             // 
@@ -65,7 +65,7 @@
             richTextBoxQuestion.MaxLength = 200;
             richTextBoxQuestion.Name = "richTextBoxQuestion";
             richTextBoxQuestion.Size = new Size(185, 48);
-            richTextBoxQuestion.TabIndex = 17;
+            richTextBoxQuestion.TabIndex = 4;
             richTextBoxQuestion.Text = "Type here a question of your own.\nThis question will be used to recover your account in case you forget it.";
             // 
             // checkBoxPassword
@@ -74,7 +74,7 @@
             checkBoxPassword.Location = new Point(3, 102);
             checkBoxPassword.Name = "checkBoxPassword";
             checkBoxPassword.Size = new Size(108, 19);
-            checkBoxPassword.TabIndex = 15;
+            checkBoxPassword.TabIndex = 3;
             checkBoxPassword.Text = "Show password";
             checkBoxPassword.UseVisualStyleBackColor = true;
             checkBoxPassword.CheckedChanged += checkBoxPassword_CheckedChanged;
@@ -87,7 +87,7 @@
             textBoxPassword.PasswordChar = '*';
             textBoxPassword.PlaceholderText = "Password";
             textBoxPassword.Size = new Size(183, 23);
-            textBoxPassword.TabIndex = 14;
+            textBoxPassword.TabIndex = 1;
             // 
             // textBoxUsername
             // 
@@ -96,7 +96,7 @@
             textBoxUsername.Name = "textBoxUsername";
             textBoxUsername.PlaceholderText = "Username";
             textBoxUsername.Size = new Size(183, 23);
-            textBoxUsername.TabIndex = 13;
+            textBoxUsername.TabIndex = 0;
             // 
             // lblAlreadyRegistered
             // 
@@ -104,7 +104,7 @@
             lblAlreadyRegistered.Location = new Point(3, 250);
             lblAlreadyRegistered.Name = "lblAlreadyRegistered";
             lblAlreadyRegistered.Size = new Size(185, 15);
-            lblAlreadyRegistered.TabIndex = 11;
+            lblAlreadyRegistered.TabIndex = 7;
             lblAlreadyRegistered.TabStop = true;
             lblAlreadyRegistered.Text = "Already have account? login now!";
             lblAlreadyRegistered.LinkClicked += lblAlreadyRegistered_LinkClicked;
@@ -126,7 +126,7 @@
             textBoxPassword2.PasswordChar = '*';
             textBoxPassword2.PlaceholderText = "Password";
             textBoxPassword2.Size = new Size(183, 23);
-            textBoxPassword2.TabIndex = 20;
+            textBoxPassword2.TabIndex = 2;
             // 
             // Register
             // 

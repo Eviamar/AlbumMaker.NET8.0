@@ -1,14 +1,6 @@
 ﻿using AlbumMaker.Classes;
 using AlbumMaker.Classes.Db;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace AlbumMaker.Forms
 {
@@ -109,6 +101,7 @@ namespace AlbumMaker.Forms
 
         private void Register_Load(object sender, EventArgs e)
         {
+            SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
         }
     }

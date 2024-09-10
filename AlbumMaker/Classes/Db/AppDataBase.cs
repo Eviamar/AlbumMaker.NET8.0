@@ -1,7 +1,6 @@
 ﻿using AlbumMaker.Classes.Items;
-using Microsoft.VisualBasic.ApplicationServices;
 using System.Data.SQLite;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
 namespace AlbumMaker.Classes.Db
 {
     internal static class AppDataBase
@@ -133,7 +132,7 @@ namespace AlbumMaker.Classes.Db
                     string query = "SELECT COUNT(*) FROM Users";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
-                        int userCount = Convert.ToInt32(command.ExecuteScalarAsync());
+                        int userCount = Convert.ToInt32(await command.ExecuteScalarAsync());
                         await connection.CloseAsync();
                         return userCount > 0;
                     }
@@ -278,32 +277,33 @@ namespace AlbumMaker.Classes.Db
         
         public static async Task<bool> UpdateUser(UserItem user)
         {
+            
             if (user == null)
                 return false;
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    string query = "UPDATE Users SET User_Name = @userName,user_Password =@userPassword,isAdmin = @isAdmin, userSecret = @secret, userSecretAnswer = @answer WHERE USER_ID = @userID";
-
+                    string query = "UPDATE Users SET user_Name = @userName,user_Password = @userPassword, isAdmin = @isAdmin, userSecret = @secret, userSecretAnswer = @answer WHERE USER_ID = @userID";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@userName", user.GetID());
+                        command.Parameters.AddWithValue("@userID", user.GetID());
                         command.Parameters.AddWithValue("@userName", user.GetName());
                         command.Parameters.AddWithValue("@userPassword", user.GetPassword());
-                        command.Parameters.AddWithValue("@isAdmin", user.IsAdmin());
-                        command.Parameters.AddWithValue("@userSecret", user.GetQuestion());
-                        command.Parameters.AddWithValue("@userSecretAnswer", user.GetAnswer());
+                        command.Parameters.AddWithValue("@isAdmin", user.GetIsAdmin());
+                        command.Parameters.AddWithValue("@secret", user.GetQuestion());
+                        command.Parameters.AddWithValue("@answer", user.GetAnswer());
                         await connection.OpenAsync();
                         int rowsAffected = await command.ExecuteNonQueryAsync();
-                        connection.Close();
+                        await connection.CloseAsync();
+                       
                         return rowsAffected > 0;
                     }
 
                 }
 
             }
-            catch (Exception ex) { return false; throw; }
+            catch (Exception ex) { MessageBox.Show(ex.ToString(),ex.Message); return false; throw; }
         }
 
         public static async Task<bool> DeleteUser(UserItem user)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace AlbumMaker.Classes.Items
 {
@@ -16,5 +12,9 @@ namespace AlbumMaker.Classes.Items
             this.description = description;
         }
         public string GetDescription()=> description;
+        public override string ToString()
+        {
+            return base.ToString()+$"Path: {path}\nDescription:{description}";
+        }
     }
 }

@@ -1,13 +1,5 @@
 ﻿using AlbumMaker.Classes;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace AlbumMaker.Forms
 {
@@ -26,7 +18,6 @@ namespace AlbumMaker.Forms
             {
                 p.Controls.Add(scan);
                 scan.Dock = DockStyle.Fill;
-                SettingsManager.SetTheme(scan);
                 this.Dispose();
                 scan.Show();
             }
@@ -40,7 +31,6 @@ namespace AlbumMaker.Forms
             {
                 p.Controls.Add(myAlbums);
                 myAlbums.Dock = DockStyle.Fill;
-                SettingsManager.SetTheme(myAlbums);
                 this.Dispose();
                 myAlbums.Show();
             }
@@ -48,6 +38,7 @@ namespace AlbumMaker.Forms
 
         private void CreateAlbum_Load(object sender, EventArgs e)
         {
+            SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
         }
     }

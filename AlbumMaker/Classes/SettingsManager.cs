@@ -1,12 +1,4 @@
-﻿using AlbumMaker.Forms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-
+﻿
 namespace AlbumMaker.Classes
 {
     internal static class SettingsManager
@@ -20,6 +12,26 @@ namespace AlbumMaker.Classes
             {
                 SetTheme(form);
             }
+        }
+
+        public static int GetMaxWidthMenu()
+        {
+            float fontSize = GetFont().Size;
+            int maxWidthSize = 145;
+            if (fontSize == 9)
+            {
+                maxWidthSize = 145;
+            }
+            else if (fontSize == 12)
+            {
+                maxWidthSize = 160;
+            }
+            else if (fontSize == 16)
+            {
+                maxWidthSize = 200;
+            }
+            return maxWidthSize;
+
 
         }
         public static Font GetFont()
@@ -48,6 +60,7 @@ namespace AlbumMaker.Classes
             bool isDark = Properties.AppSettings.Default.isDark;
             foreach (Control c in f.Controls)
             {
+                
                 if (c is FlowLayoutPanel)
                 {
                     FlowLayoutPanel flp = (FlowLayoutPanel)c;
@@ -117,12 +130,14 @@ namespace AlbumMaker.Classes
         }
         public static void SetThemeToMenu(FlowLayoutPanel flp, bool isDark)
         {
+            
             flp.BackColor = isDark ?
                    ConvertHexToColor(Properties.DarkThemeSettings.Default.SideMenuBackground)
                    : ConvertHexToColor(Properties.LightThemeSettings.Default.SideMenuBackground);
             flp.ForeColor = isDark ?
                 ConvertHexToColor(Properties.DarkThemeSettings.Default.SideMenuForeground)
                 : ConvertHexToColor(Properties.LightThemeSettings.Default.SideMenuForeground);
+            
         }
 
         public static void SetThemeToControls(Control control, bool theme)

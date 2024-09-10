@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace AlbumMaker.Classes.Items
 {
@@ -13,15 +9,6 @@ namespace AlbumMaker.Classes.Items
         private string answer;
         private bool isAdmin;
         private List<AlbumItem> albumItems;
-         
-        //public UserItem(int id,string name,string password,int isAdmin) : base(id,name)
-        //{
-        //    this.password = password;
-        //    if(isAdmin==1)
-        //        this.isAdmin = true;
-        //    else
-        //        this.isAdmin = false;
-        //}
         public UserItem(int id,string name, string password, string question, string answer,bool isAdmin) : base(id,name)
         {
             this.password = password;
@@ -30,10 +17,18 @@ namespace AlbumMaker.Classes.Items
             this.isAdmin = isAdmin;
             albumItems = new List<AlbumItem>();
         }
+        public override string ToString()
+        {
+            return base.ToString() + $"Password: {password},Question: {question},Answer: {answer},Is admin? {isAdmin}";
+        }
         public string GetPassword() => password;
         public string GetQuestion() => question;
         public string GetAnswer() => answer;
-        public bool IsAdmin() => isAdmin;
+        public void SetQuestion(string question)=> this.question = question;
+        public void SetAnswer(string answer)=> this.answer = answer;
+        public void SetNewPassword(string newPassword) => this.password = newPassword;
+        public bool GetIsAdmin() => isAdmin;
+        public bool SetIsAdmin(bool admin) => isAdmin = admin;
         public List<AlbumItem> GetAlbumItems() => albumItems;
         public void AddAlbumItem(AlbumItem albumItem) => albumItems.Add(albumItem);
         public void SetAlbumItems(List<AlbumItem> albumItems) => this.albumItems = albumItems;
@@ -46,6 +41,7 @@ namespace AlbumMaker.Classes.Items
                 
             }
         }
+       
     }
     
 }

@@ -10,15 +10,14 @@ namespace AlbumMaker.Classes.Items
     {
         private int id;
         private string name;
-
-        public Item(string name)
-        {
-            this.name = name; 
-        }
         public Item(int id, string name)
         {
             this.id = id;
             this.name = name;
+        }
+        public override string ToString()
+        {
+            return $"ID: {id},Name: {name}\n";
         }
         public string GetName()=> name;
         public int GetID()=> id;

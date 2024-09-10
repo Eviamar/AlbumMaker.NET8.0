@@ -1,23 +1,24 @@
 ﻿using AlbumMaker.Classes;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace AlbumMaker.Forms
 {
     public partial class Settings : UserControl
     {
         private bool isLoading = true;
+        private System.Windows.Forms.Timer timerClose;
+        private System.Windows.Forms.Timer timerOpen;
         public Settings()
         {
             InitializeComponent();
             AddSizesToComboBox();
+        }
+        public Settings(System.Windows.Forms.Timer timerClose, System.Windows.Forms.Timer timerOpen)
+        {
+            InitializeComponent();
+            AddSizesToComboBox();
+            this.timerClose = timerClose;
+            this.timerOpen = timerOpen;
         }
 
         private void radioButtonLight_CheckedChanged(object sender, EventArgs e)
@@ -38,6 +39,7 @@ namespace AlbumMaker.Forms
 
         private void Settings_Load(object sender, EventArgs e)
         {
+            SettingsManager.SetTheme(this);
             isLoading = true;
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             if (Properties.AppSettings.Default.isDark)
@@ -81,14 +83,19 @@ namespace AlbumMaker.Forms
                 var selectedItem = (KeyValuePair<string, float>)comboBoxFontSize.SelectedItem;
                 Properties.AppSettings.Default.FontSize = selectedItem.Value;
                 Properties.AppSettings.Default.Save();
+                if (timerClose != null && timerOpen != null)
+                {
+                    timerClose.Interval = 1;
+                    timerOpen.Interval = 1;
+                    timerClose.Start();
+                    
+                    //timerOpen.Start();
+
+                }
                 SettingsManager.SetTheme();
                 SettingsManager.SetTheme(this);
 
             }
-
-
-
-
         }
     }
 }

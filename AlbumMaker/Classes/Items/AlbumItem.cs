@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace AlbumMaker.Classes.Items
 {
@@ -18,7 +14,10 @@ namespace AlbumMaker.Classes.Items
             this.template = template;
             images = new List<ImageItem>();
         }
-        
+        public override string ToString()
+        {
+            return base.ToString()+$"Description: {description},Template: {template}";
+        }
         public string GetDescription()=> description;
         public string GetTemplate()=> template;
         public List<ImageItem> GetImages() => images;

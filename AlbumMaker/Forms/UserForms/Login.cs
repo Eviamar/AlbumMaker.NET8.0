@@ -1,6 +1,6 @@
 ﻿using AlbumMaker.Classes;
 using AlbumMaker.Classes.Db;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
 
 
 namespace AlbumMaker.Forms
@@ -115,6 +115,7 @@ namespace AlbumMaker.Forms
 
         private void Login_Load(object sender, EventArgs e)
         {
+            SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             if (Properties.AppSettings.Default.userName != "")
             {
