@@ -58,11 +58,13 @@
             // 
             // MyAlbums
             // 
+            AccessibleName = "My albums";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(menuStrip1);
             Name = "MyAlbums";
             Size = new Size(433, 300);
+            Load += MyAlbums_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);

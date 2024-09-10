@@ -32,10 +32,12 @@
             // 
             // AdminPanel
             // 
+            AccessibleName = "Admin panel";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Name = "AdminPanel";
             Size = new Size(410, 326);
+            Load += AdminPanel_Load;
             ResumeLayout(false);
         }
 

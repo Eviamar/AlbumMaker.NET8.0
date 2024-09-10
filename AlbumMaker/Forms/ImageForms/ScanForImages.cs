@@ -179,5 +179,10 @@ namespace AlbumMaker.Forms
                 createAlbum.Show();
             }
         }
+
+        private void ScanForImages_Load(object sender, EventArgs e)
+        {
+            this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
+        }
     }
 }

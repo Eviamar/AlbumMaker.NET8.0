@@ -39,6 +39,7 @@ namespace AlbumMaker.Forms
         private void Settings_Load(object sender, EventArgs e)
         {
             isLoading = true;
+            this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             if (Properties.AppSettings.Default.isDark)
                 radioButtonDark.Checked = true;
             else

@@ -8,7 +8,7 @@ namespace AlbumMaker.Classes.Items
 {
     internal class Item
     {
-        private readonly int id;
+        private int id;
         private string name;
 
         public Item(string name)
@@ -24,4 +24,5 @@ namespace AlbumMaker.Classes.Items
         public int GetID()=> id;
         public void SetNewName(string newName)=> name = newName;
     }
+    
 }

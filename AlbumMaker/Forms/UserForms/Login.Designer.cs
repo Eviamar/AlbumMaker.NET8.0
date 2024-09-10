@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             lblLogin = new Label();
             lblAlreadyRegistered = new LinkLabel();
             lblForgot = new LinkLabel();
@@ -39,7 +40,6 @@
             textBoxAnswer = new TextBox();
             btnForgot = new Button();
             checkBoxRememberMe = new CheckBox();
-            linkLabelForgetMe = new LinkLabel();
             SuspendLayout();
             // 
             // lblLogin
@@ -67,10 +67,10 @@
             lblForgot.AutoSize = true;
             lblForgot.Location = new Point(3, 175);
             lblForgot.Name = "lblForgot";
-            lblForgot.Size = new Size(137, 15);
+            lblForgot.Size = new Size(100, 15);
             lblForgot.TabIndex = 2;
             lblForgot.TabStop = true;
-            lblForgot.Text = "Forgot login credentials?";
+            lblForgot.Text = "Forgot password?";
             lblForgot.LinkClicked += lblForgot_LinkClicked;
             // 
             // textBoxUsername
@@ -132,6 +132,7 @@
             // 
             // btnForgot
             // 
+            btnForgot.AccessibleName = "";
             btnForgot.Location = new Point(3, 276);
             btnForgot.Name = "btnForgot";
             btnForgot.Size = new Size(185, 23);
@@ -139,6 +140,7 @@
             btnForgot.Text = "Remind me!";
             btnForgot.UseVisualStyleBackColor = true;
             btnForgot.Visible = false;
+            btnForgot.Click += btnForgot_Click;
             // 
             // checkBoxRememberMe
             // 
@@ -149,23 +151,15 @@
             checkBoxRememberMe.TabIndex = 10;
             checkBoxRememberMe.Text = "Remember me";
             checkBoxRememberMe.UseVisualStyleBackColor = true;
+            checkBoxRememberMe.CheckedChanged += checkBoxRememberMe_CheckedChanged;
             // 
-            // linkLabelForgetMe
-            // 
-            linkLabelForgetMe.AutoSize = true;
-            linkLabelForgetMe.Location = new Point(124, 98);
-            linkLabelForgetMe.Name = "linkLabelForgetMe";
-            linkLabelForgetMe.Size = new Size(64, 15);
-            linkLabelForgetMe.TabIndex = 11;
-            linkLabelForgetMe.TabStop = true;
-            linkLabelForgetMe.Text = "Forget Me!";
-            linkLabelForgetMe.LinkClicked += linkLabelForgetMe_LinkClicked;
+
             // 
             // Login
             // 
+            AccessibleName = "Login";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(linkLabelForgetMe);
             Controls.Add(checkBoxRememberMe);
             Controls.Add(btnForgot);
             Controls.Add(textBoxAnswer);
@@ -197,6 +191,5 @@
         private TextBox textBoxAnswer;
         private Button btnForgot;
         private CheckBox checkBoxRememberMe;
-        private LinkLabel linkLabelForgetMe;
     }
 }

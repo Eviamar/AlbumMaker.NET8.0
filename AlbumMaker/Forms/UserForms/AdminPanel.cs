@@ -16,5 +16,10 @@ namespace AlbumMaker.Forms.UserForms
         {
             InitializeComponent();
         }
+
+        private void AdminPanel_Load(object sender, EventArgs e)
+        {
+            this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
+        }
     }
 }

@@ -1,4 +1,5 @@
 using AlbumMaker.Classes;
+using AlbumMaker.Classes.Db;
 using AlbumMaker.Forms;
 
 namespace AlbumMaker
@@ -7,14 +8,12 @@ namespace AlbumMaker
     {
         private bool menuOpen = true;
 
-
         public Form1()
         {
             InitializeComponent();
             this.Text = Properties.AppSettings.Default.AppName;
-            Properties.AppSettings.Default.AppLocation = AppDomain.CurrentDomain.BaseDirectory;
             timerCheckUserLoggedIn.Start();
-
+            AppDataBase.CreateDataBase();
         }
 
         private void btnMenuToggle_Click(object sender, EventArgs e)
@@ -78,8 +77,11 @@ namespace AlbumMaker
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Properties.AppSettings.Default.AppLocation = AppDomain.CurrentDomain.BaseDirectory;
+            Properties.AppSettings.Default.AppDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            Properties.AppSettings.Default.Save();
             SettingsManager.SetTheme(this);
-
+            
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -114,15 +116,13 @@ namespace AlbumMaker
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Properties.AppSettings.Default.isLogged = false;
-            Properties.AppSettings.Default.Save();
+            ExitMethod();
             Application.Exit();
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            Properties.AppSettings.Default.isLogged = false;
-            Properties.AppSettings.Default.Save();
+            ExitMethod();
             Login login = new Login();
             login.Dock = DockStyle.Fill;
             login.Parent = FindForm();
@@ -135,18 +135,31 @@ namespace AlbumMaker
         {
             if (Properties.AppSettings.Default.isLogged)
             {
+                btnLogin.Visible = false;
                 btnMyAlbums.Visible = true;
                 btnUserControlPanel.Visible = true;
                 btnLogout.Visible = true;
-                
-               
+
+
             }
             else
             {
+                btnLogin.Visible = true;
                 btnMyAlbums.Visible = false;
                 btnUserControlPanel.Visible = false;
                 btnLogout.Visible = false;
             }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ExitMethod();
+        }
+        private void ExitMethod()
+        {
+            Properties.AppSettings.Default.isLogged = false;
+            Properties.AppSettings.Default.currentUser = "";
+            Properties.AppSettings.Default.Save();
         }
     }
 }

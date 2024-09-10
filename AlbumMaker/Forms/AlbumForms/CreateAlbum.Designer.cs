@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             menuStrip1 = new MenuStrip();
-            scanFilesToolStripMenuItem = new ToolStripMenuItem();
             goBackToolStripMenuItem = new ToolStripMenuItem();
+            scanFilesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -43,13 +43,6 @@
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
-            // scanFilesToolStripMenuItem
-            // 
-            scanFilesToolStripMenuItem.Name = "scanFilesToolStripMenuItem";
-            scanFilesToolStripMenuItem.Size = new Size(68, 20);
-            scanFilesToolStripMenuItem.Text = "Scan files";
-            scanFilesToolStripMenuItem.Click += scanFilesToolStripMenuItem_Click;
-            // 
             // goBackToolStripMenuItem
             // 
             goBackToolStripMenuItem.Name = "goBackToolStripMenuItem";
@@ -57,13 +50,22 @@
             goBackToolStripMenuItem.Text = "Go back";
             goBackToolStripMenuItem.Click += goBackToolStripMenuItem_Click;
             // 
+            // scanFilesToolStripMenuItem
+            // 
+            scanFilesToolStripMenuItem.Name = "scanFilesToolStripMenuItem";
+            scanFilesToolStripMenuItem.Size = new Size(68, 20);
+            scanFilesToolStripMenuItem.Text = "Scan files";
+            scanFilesToolStripMenuItem.Click += scanFilesToolStripMenuItem_Click;
+            // 
             // CreateAlbum
             // 
+            AccessibleName = "Create album";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(menuStrip1);
             Name = "CreateAlbum";
             Size = new Size(339, 234);
+            Load += CreateAlbum_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);

@@ -47,6 +47,7 @@
             btnSubmit.TabIndex = 19;
             btnSubmit.Text = "Register";
             btnSubmit.UseVisualStyleBackColor = true;
+            btnSubmit.Click += btnSubmit_Click;
             // 
             // textBoxAnswer
             // 
@@ -129,6 +130,7 @@
             // 
             // Register
             // 
+            AccessibleName = "Register";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(textBoxPassword2);
@@ -142,6 +144,7 @@
             Controls.Add(lblRegister);
             Name = "Register";
             Size = new Size(193, 275);
+            Load += Register_Load;
             ResumeLayout(false);
             PerformLayout();
         }

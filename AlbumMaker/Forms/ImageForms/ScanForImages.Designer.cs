@@ -106,6 +106,7 @@
             // 
             // ScanForImages
             // 
+            AccessibleName = "Scan images";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panelDisplay);
@@ -113,6 +114,7 @@
             Controls.Add(flowLayoutPanelDrives);
             Name = "ScanForImages";
             Size = new Size(413, 306);
+            Load += ScanForImages_Load;
             Leave += ScanForImages_Leave;
             flowLayoutPanelDrives.ResumeLayout(false);
             flowLayoutPanelDrives.PerformLayout();

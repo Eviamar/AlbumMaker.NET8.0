@@ -25,7 +25,7 @@ namespace AlbumMaker.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Album Maker")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DigiBum")]
         public string AppName {
             get {
                 return ((string)(this["AppName"]));
@@ -59,6 +59,8 @@ namespace AlbumMaker.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|Data|\\Appdata.mdf;Integrated" +
+            " Security=True")]
         public string SQLConnection {
             get {
                 return ((string)(this["SQLConnection"]));
@@ -98,6 +100,30 @@ namespace AlbumMaker.Properties {
             }
             set {
                 this["isLogged"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string currentUser {
+            get {
+                return ((string)(this["currentUser"]));
+            }
+            set {
+                this["currentUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AppDataFolder {
+            get {
+                return ((string)(this["AppDataFolder"]));
+            }
+            set {
+                this["AppDataFolder"] = value;
             }
         }
     }

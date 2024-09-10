@@ -1,37 +1,52 @@
 ﻿using AlbumMaker.Classes;
 using AlbumMaker.Classes.Db;
-using AlbumMaker.Classes.Items;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
 
 namespace AlbumMaker.Forms
 {
     public partial class Login : UserControl
     {
-        private AppDataBase db;
+        private bool isQuestion = false;
         public Login()
         {
             InitializeComponent();
-            db = new AppDataBase();
+
+
         }
 
-        private void lblForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            richTextBoxQuestion.Visible = !richTextBoxQuestion.Visible;
-            textBoxAnswer.Visible = !textBoxAnswer.Visible;
-            btnForgot.Visible = !btnForgot.Visible;
 
-            if (btnForgot.Visible)
-                lblForgot.Text = "Nevermind I remember it!";
-            else
-                lblForgot.Text = "Forgot login credentials?";
+        private async void lblForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            
+            if (lblForgot.Text == "Forgot password?")
+            {
+                if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
+                {
+                  
+                    MessageBox.Show("You need to type your username", "Need username to recover its password", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    textBoxUsername.Focus();
+                    return;
+                }
+                else
+                {
+                    isQuestion = await AppDataBase.RecoverPassword(textBoxUsername.Text);
+                    richTextBoxQuestion.Text = AppDataBase.userItem.GetQuestion();
+                }
+            }
+            if (isQuestion)
+            {
+                richTextBoxQuestion.Visible = !richTextBoxQuestion.Visible;
+                textBoxAnswer.Visible = !textBoxAnswer.Visible;
+                btnForgot.Visible = !btnForgot.Visible;
+
+                if (btnForgot.Visible)
+                    lblForgot.Text = "Nevermind I remember it!";
+                else
+                    lblForgot.Text = "Forgot password?";
+            }
+            
+
         }
 
         private void lblAlreadyRegistered_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -58,17 +73,31 @@ namespace AlbumMaker.Forms
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-
-
-            if (db.VerifyUser(textBoxUsername.Text.ToLower(), textBoxPassword.Text))
+            if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
             {
-                
+                MessageBox.Show($"Username cannot be empty", "Username is empty!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBoxUsername.Focus();
+                return;
+            }
+            if (String.IsNullOrWhiteSpace(textBoxPassword.Text))
+            {
+                MessageBox.Show($"Password cannot be empty", "Password is empty!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBoxPassword.Focus();
+                return;
+            }
+
+
+            bool isVerfied = AppDataBase.VerifyUser(textBoxUsername.Text.ToLower(), textBoxPassword.Text);
+            if (isVerfied)
+            {
+
                 if (checkBoxRememberMe.Checked)
-                {
                     Properties.AppSettings.Default.userName = textBoxUsername.Text;
-                    Properties.AppSettings.Default.Save();
-                }
+                else
+                    Properties.AppSettings.Default.userName = "";
+
                 Properties.AppSettings.Default.isLogged = true;
+                Properties.AppSettings.Default.currentUser = textBoxUsername.Text;
                 Properties.AppSettings.Default.Save();
                 MyAlbums myAlbums = new MyAlbums();
                 Panel p = this.Parent as Panel;
@@ -81,25 +110,43 @@ namespace AlbumMaker.Forms
                     myAlbums.Show();
                 }
             }
-            
+
         }
 
         private void Login_Load(object sender, EventArgs e)
         {
-
-            //move it to the end after checking if user exist and password is matched
-            string savedUserName = Properties.AppSettings.Default.userName;
+            this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             if (Properties.AppSettings.Default.userName != "")
             {
-                textBoxUsername.Text = savedUserName;
+                textBoxUsername.Text = Properties.AppSettings.Default.userName;
+                checkBoxRememberMe.Checked = true;
+            }
+            else
+                checkBoxRememberMe.Checked = false;
+        }
+
+        private void checkBoxRememberMe_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBoxRememberMe.Checked)
+            {
+                Properties.AppSettings.Default.userName = "";
+                Properties.AppSettings.Default.Save();
             }
         }
 
-        private void linkLabelForgetMe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnForgot_Click(object sender, EventArgs e)
         {
-            Properties.AppSettings.Default.userName = "";
-            Properties.AppSettings.Default.Save();
-            textBoxUsername.Text = Properties.AppSettings.Default.userName;
+            if (textBoxAnswer.Text == AppDataBase.userItem.GetAnswer())
+            {
+                MessageBox.Show($"Your password is:\n\n{AppDataBase.userItem.GetPassword()}", "Recovered successfully", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBoxPassword.Focus();
+            }
+            else
+            {
+                MessageBox.Show($"Wrong answer!", "Answer incorrect", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
+
+
     }
 }

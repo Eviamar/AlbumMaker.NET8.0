@@ -111,7 +111,7 @@
             btnUserControlPanel.Name = "btnUserControlPanel";
             btnUserControlPanel.Size = new Size(131, 23);
             btnUserControlPanel.TabIndex = 4;
-            btnUserControlPanel.Text = "User Panel";
+            btnUserControlPanel.Text = "User Settings";
             btnUserControlPanel.UseVisualStyleBackColor = true;
             btnUserControlPanel.Click += btnUserControlPanel_Click;
             // 
@@ -175,6 +175,7 @@
             MinimumSize = new Size(400, 200);
             Name = "Form1";
             Text = "Form1";
+            FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             flpMenu.ResumeLayout(false);
             panelMenu.ResumeLayout(false);

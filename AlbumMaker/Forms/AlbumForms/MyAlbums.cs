@@ -31,5 +31,10 @@ namespace AlbumMaker.Forms
                 albumCreate.Show();
             }
         }
+
+        private void MyAlbums_Load(object sender, EventArgs e)
+        {
+            this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
+        }
     }
 }

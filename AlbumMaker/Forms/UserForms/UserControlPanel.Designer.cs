@@ -35,28 +35,32 @@
             btnUpdatePassword = new Button();
             btnUpdateQuestion = new Button();
             grpBoxPassword = new GroupBox();
+            textBoxCurrentPassword = new TextBox();
             grpBoxQuestion = new GroupBox();
+            grpBoxOther = new GroupBox();
+            checkBoxRememberMe = new CheckBox();
             grpBoxPassword.SuspendLayout();
             grpBoxQuestion.SuspendLayout();
+            grpBoxOther.SuspendLayout();
             SuspendLayout();
             // 
             // textBoxPassword2
             // 
-            textBoxPassword2.Location = new Point(6, 51);
+            textBoxPassword2.Location = new Point(6, 75);
             textBoxPassword2.MaxLength = 20;
             textBoxPassword2.Name = "textBoxPassword2";
             textBoxPassword2.PasswordChar = '*';
-            textBoxPassword2.PlaceholderText = "Password";
+            textBoxPassword2.PlaceholderText = "Confirm new password";
             textBoxPassword2.Size = new Size(157, 23);
             textBoxPassword2.TabIndex = 22;
             // 
             // textBoxPassword
             // 
-            textBoxPassword.Location = new Point(6, 22);
+            textBoxPassword.Location = new Point(6, 47);
             textBoxPassword.MaxLength = 20;
             textBoxPassword.Name = "textBoxPassword";
             textBoxPassword.PasswordChar = '*';
-            textBoxPassword.PlaceholderText = "Password";
+            textBoxPassword.PlaceholderText = "new password";
             textBoxPassword.Size = new Size(157, 23);
             textBoxPassword.TabIndex = 21;
             // 
@@ -100,6 +104,7 @@
             // 
             // grpBoxPassword
             // 
+            grpBoxPassword.Controls.Add(textBoxCurrentPassword);
             grpBoxPassword.Controls.Add(textBoxPassword);
             grpBoxPassword.Controls.Add(textBoxPassword2);
             grpBoxPassword.Controls.Add(btnUpdatePassword);
@@ -109,6 +114,16 @@
             grpBoxPassword.TabIndex = 27;
             grpBoxPassword.TabStop = false;
             grpBoxPassword.Text = "Password";
+            // 
+            // textBoxCurrentPassword
+            // 
+            textBoxCurrentPassword.Location = new Point(6, 19);
+            textBoxCurrentPassword.MaxLength = 20;
+            textBoxCurrentPassword.Name = "textBoxCurrentPassword";
+            textBoxCurrentPassword.PasswordChar = '*';
+            textBoxCurrentPassword.PlaceholderText = "Current password";
+            textBoxCurrentPassword.Size = new Size(157, 23);
+            textBoxCurrentPassword.TabIndex = 26;
             // 
             // grpBoxQuestion
             // 
@@ -122,18 +137,44 @@
             grpBoxQuestion.TabStop = false;
             grpBoxQuestion.Text = "Question";
             // 
+            // grpBoxOther
+            // 
+            grpBoxOther.Controls.Add(checkBoxRememberMe);
+            grpBoxOther.Location = new Point(4, 142);
+            grpBoxOther.Name = "grpBoxOther";
+            grpBoxOther.Size = new Size(195, 100);
+            grpBoxOther.TabIndex = 29;
+            grpBoxOther.TabStop = false;
+            grpBoxOther.Text = "Misc";
+            // 
+            // checkBoxRememberMe
+            // 
+            checkBoxRememberMe.AutoSize = true;
+            checkBoxRememberMe.Location = new Point(6, 22);
+            checkBoxRememberMe.Name = "checkBoxRememberMe";
+            checkBoxRememberMe.Size = new Size(160, 19);
+            checkBoxRememberMe.TabIndex = 0;
+            checkBoxRememberMe.Text = "Remember me next login";
+            checkBoxRememberMe.UseVisualStyleBackColor = true;
+            checkBoxRememberMe.CheckedChanged += checkBoxRememberMe_CheckedChanged;
+            // 
             // UserControlPanel
             // 
+            AccessibleName = "User settings";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(grpBoxOther);
             Controls.Add(grpBoxQuestion);
             Controls.Add(grpBoxPassword);
             Name = "UserControlPanel";
-            Size = new Size(403, 167);
+            Size = new Size(403, 260);
+            Load += UserControlPanel_Load;
             grpBoxPassword.ResumeLayout(false);
             grpBoxPassword.PerformLayout();
             grpBoxQuestion.ResumeLayout(false);
             grpBoxQuestion.PerformLayout();
+            grpBoxOther.ResumeLayout(false);
+            grpBoxOther.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -147,5 +188,8 @@
         private Button btnUpdateQuestion;
         private GroupBox grpBoxPassword;
         private GroupBox grpBoxQuestion;
+        private GroupBox grpBoxOther;
+        private CheckBox checkBoxRememberMe;
+        private TextBox textBoxCurrentPassword;
     }
 }
