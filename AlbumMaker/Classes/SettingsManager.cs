@@ -180,6 +180,19 @@ namespace AlbumMaker.Classes
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.TextBoxForeground)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.TextBoxForeground);
             }
+            if(control is MenuStrip menu)
+            {
+                menu.BackColor = theme ?
+              ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
+              : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
+                menu.ForeColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
+                foreach(ToolStripItem item in menu.Items)
+                {
+                    item.Font = GetFont();
+                }
+            }
             else
             {
                 control.BackColor = theme ?

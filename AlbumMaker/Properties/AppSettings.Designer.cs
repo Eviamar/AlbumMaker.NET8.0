@@ -126,5 +126,17 @@ namespace AlbumMaker.Properties {
                 this["AppDataFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int AlbumSize {
+            get {
+                return ((int)(this["AlbumSize"]));
+            }
+            set {
+                this["AlbumSize"] = value;
+            }
+        }
     }
 }

@@ -32,24 +32,24 @@
             labelDrives = new Label();
             progressBarScanning = new ProgressBar();
             panelDisplay = new Panel();
-            dataGridView1 = new DataGridView();
             menuStrip1 = new MenuStrip();
             goBackToolStripMenuItem = new ToolStripMenuItem();
+            dataGridView1 = new DataGridView();
             flowLayoutPanelDrives.SuspendLayout();
             panelDisplay.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // flowLayoutPanelDrives
             // 
             flowLayoutPanelDrives.Controls.Add(labelDrives);
-            flowLayoutPanelDrives.Dock = DockStyle.Left;
+            flowLayoutPanelDrives.Dock = DockStyle.Right;
             flowLayoutPanelDrives.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanelDrives.Location = new Point(0, 0);
+            flowLayoutPanelDrives.Location = new Point(321, 0);
             flowLayoutPanelDrives.Name = "flowLayoutPanelDrives";
             flowLayoutPanelDrives.Size = new Size(92, 306);
-            flowLayoutPanelDrives.TabIndex = 0;
+            flowLayoutPanelDrives.TabIndex = 1;
             // 
             // labelDrives
             // 
@@ -63,7 +63,7 @@
             // progressBarScanning
             // 
             progressBarScanning.Dock = DockStyle.Bottom;
-            progressBarScanning.Location = new Point(92, 283);
+            progressBarScanning.Location = new Point(0, 283);
             progressBarScanning.Name = "progressBarScanning";
             progressBarScanning.Size = new Size(321, 23);
             progressBarScanning.TabIndex = 1;
@@ -74,10 +74,26 @@
             panelDisplay.Controls.Add(dataGridView1);
             panelDisplay.Controls.Add(menuStrip1);
             panelDisplay.Dock = DockStyle.Fill;
-            panelDisplay.Location = new Point(92, 0);
+            panelDisplay.Location = new Point(0, 0);
             panelDisplay.Name = "panelDisplay";
             panelDisplay.Size = new Size(321, 283);
             panelDisplay.TabIndex = 2;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { goBackToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(321, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // goBackToolStripMenuItem
+            // 
+            goBackToolStripMenuItem.Name = "goBackToolStripMenuItem";
+            goBackToolStripMenuItem.Size = new Size(62, 20);
+            goBackToolStripMenuItem.Text = "Go back";
+            goBackToolStripMenuItem.Click += goBackToolStripMenuItem_Click;
             // 
             // dataGridView1
             // 
@@ -87,22 +103,6 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(321, 259);
             dataGridView1.TabIndex = 0;
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { goBackToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(321, 24);
-            menuStrip1.TabIndex = 1;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // goBackToolStripMenuItem
-            // 
-            goBackToolStripMenuItem.Name = "goBackToolStripMenuItem";
-            goBackToolStripMenuItem.Size = new Size(62, 20);
-            goBackToolStripMenuItem.Text = "Go back";
-            goBackToolStripMenuItem.Click += goBackToolStripMenuItem_Click;
             // 
             // ScanForImages
             // 
@@ -120,9 +120,9 @@
             flowLayoutPanelDrives.PerformLayout();
             panelDisplay.ResumeLayout(false);
             panelDisplay.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
 
@@ -131,8 +131,8 @@
         private Label labelDrives;
         private ProgressBar progressBarScanning;
         private Panel panelDisplay;
-        private DataGridView dataGridView1;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem goBackToolStripMenuItem;
+        private DataGridView dataGridView1;
     }
 }
