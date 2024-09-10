@@ -8,11 +8,13 @@ namespace AlbumMaker.Classes.Items
 {
     internal class ImageItem : Item
     {
-        private string name;
+        private string path;
+        private string description;
 
-        public ImageItem(int id,string name) : base(id,name)
+        public ImageItem(int id,string path,string description) : base(id,path)
         {
-            this.name = name;
+            this.description = description;
         }
+        public string GetDescription()=> description;
     }
 }

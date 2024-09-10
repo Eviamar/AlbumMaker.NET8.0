@@ -50,7 +50,7 @@ namespace AlbumMaker.Forms
                 login.Show();
             }
         }
-        private void btnSubmit_Click(object sender, EventArgs e)
+        private async void btnSubmit_Click(object sender, EventArgs e)
         {
 
             if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
@@ -100,7 +100,7 @@ namespace AlbumMaker.Forms
 
 
 
-            bool isCreated = AppDataBase.CreateUser(textBoxUsername.Text, textBoxPassword.Text, richTextBoxQuestion.Text, textBoxAnswer.Text);
+            bool isCreated = await AppDataBase.CreateUser(textBoxUsername.Text, textBoxPassword.Text, richTextBoxQuestion.Text, textBoxAnswer.Text);
             if (isCreated)
                 NavigateToLogin();
 

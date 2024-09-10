@@ -71,7 +71,7 @@ namespace AlbumMaker.Forms
                 textBoxPassword.PasswordChar = '*';
         }
 
-        private void btnSubmit_Click(object sender, EventArgs e)
+        private async void btnSubmit_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
             {
@@ -87,7 +87,7 @@ namespace AlbumMaker.Forms
             }
 
 
-            bool isVerfied = AppDataBase.VerifyUser(textBoxUsername.Text.ToLower(), textBoxPassword.Text);
+            bool isVerfied = await AppDataBase.VerifyUser(textBoxUsername.Text.ToLower(), textBoxPassword.Text);
             if (isVerfied)
             {
 

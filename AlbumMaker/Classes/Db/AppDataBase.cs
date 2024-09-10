@@ -9,15 +9,16 @@ namespace AlbumMaker.Classes.Db
         static string connectionString = @$"Data Source={Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\Database\Database.db;Version=3";
         public static UserItem userItem { get; set; } //try to use that as global variable to do whatever in the app
 
+
         #region generic database queries
-        public static void CreateDataBase()
+        public static async void CreateDataBase()
         {
             try
             {
                 Directory.CreateDirectory($@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\Database");
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string[] createTableSql = {
                         @"
@@ -48,10 +49,10 @@ namespace AlbumMaker.Classes.Db
                     {
                         using (SQLiteCommand command = new SQLiteCommand(sql, connection))
                         {
-                            command.ExecuteNonQuery();
+                            await command.ExecuteNonQueryAsync();
                         }
                     }
-                    connection.Close();
+                    await connection.CloseAsync();
                 }
             }
             catch (SQLiteException sqlex) { throw; }
@@ -63,18 +64,18 @@ namespace AlbumMaker.Classes.Db
         #endregion generic
 
         #region user queries
-        public static bool VerifyUser(string userName, string password)
+        public static async Task<bool> VerifyUser(string userName, string password)
         {
             try
             {
                 int userID = -1;
-                string storedPassword = null;
+                string storedPassword = "";
                 int isAdmin = -1;
                 string question = "";
                 string answer = "";
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string query = "SELECT * FROM Users WHERE user_Name = @UserName";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
@@ -83,7 +84,7 @@ namespace AlbumMaker.Classes.Db
 
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
-                            if (reader.Read()) // User exists
+                            if (await reader.ReadAsync()) // User exists
                             {
                                 userID = reader.GetInt32(reader.GetOrdinal("USER_ID"));
                                 storedPassword = reader.GetString(reader.GetOrdinal("user_Password"));
@@ -96,13 +97,13 @@ namespace AlbumMaker.Classes.Db
 
                                     UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
                                     userItem = user;
-                                    connection.Close();
+                                    await connection.CloseAsync();
                                     return true;
                                 }
                                 else
                                 {
                                     MessageBox.Show("Incorrect password", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    connection.Close();
+                                    await connection.CloseAsync();
                                     return false;
                                 }
                             }
@@ -110,7 +111,7 @@ namespace AlbumMaker.Classes.Db
                             {
                                 // User doesn't exist
                                 MessageBox.Show("User doesn't exist", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                connection.Close();
+                                await connection.CloseAsync();
                                 return false;
                             }
                         }
@@ -121,19 +122,19 @@ namespace AlbumMaker.Classes.Db
             catch (Exception ex) { throw; }
         }
 
-        private static bool AreThereAnyUsers() 
+        private static async Task<bool> AreThereAnyUsers() 
         {
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string query = "SELECT COUNT(*) FROM Users";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
-                        int userCount = Convert.ToInt32(command.ExecuteScalar());
-                        connection.Close();
+                        int userCount = Convert.ToInt32(command.ExecuteScalarAsync());
+                        await connection.CloseAsync();
                         return userCount > 0;
                     }
                 }
@@ -182,7 +183,7 @@ namespace AlbumMaker.Classes.Db
 
                                 UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
                                 userItem = user;
-                                connection.Close();
+                                await connection.CloseAsync();
                                 return true;
 
                             }
@@ -190,7 +191,7 @@ namespace AlbumMaker.Classes.Db
                             {
                                 
                                 MessageBox.Show("User doesn't exist", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                connection.Close();
+                                await connection.CloseAsync();
                                 return false;
                             }
                         }
@@ -201,113 +202,402 @@ namespace AlbumMaker.Classes.Db
             catch (Exception ex) { throw; }
         }
 
-        public static bool CreateUser(string UserName, string Password,string userQuestion,string userAnswer)
+        public static async Task<bool> CreateUser(string UserName, string Password,string userQuestion,string userAnswer)
         {
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     string insertQuery = "";
-                    bool res = AreThereAnyUsers();
+                    bool res = await AreThereAnyUsers();
                     if (res)
                         insertQuery = "INSERT INTO Users (user_Name, user_Password, isAdmin,userSecret,userSecretAnswer) VALUES (@UserName, @Password, 0, @userQuestion, @userAnswer)";
                     else
                         insertQuery = "INSERT INTO Users (user_Name, user_Password, isAdmin,userSecret,userSecretAnswer) VALUES (@UserName, @Password, 1, @userQuestion, @userAnswer)";
                     if (String.IsNullOrEmpty(insertQuery))
                         return false;
-                    connection.Open();
+                    await connection.OpenAsync();
                     using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
                     {
                         insertCommand.Parameters.AddWithValue("@UserName", UserName);
                         insertCommand.Parameters.AddWithValue("@Password", Password);
                         insertCommand.Parameters.AddWithValue("@userQuestion", userQuestion);
                         insertCommand.Parameters.AddWithValue("@userAnswer", userAnswer);
-                        insertCommand.ExecuteNonQuery();
+                        await insertCommand.ExecuteScalarAsync();
                     }
                     MessageBox.Show($"{UserName} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    connection.Close();
+                    await connection.CloseAsync();
                     return true;
                 }
             }
             catch (SQLiteException ex) { return false;  throw; }
             catch (Exception ex){ return false; throw;}
         }
-        public static UserItem ReadUser(string userName)
+        public static async Task<List<UserItem>> GetAllUsers()
         {
-            if (string.IsNullOrWhiteSpace(userName))
-                return null;
-            UserItem user;
-            return null;
+            List<UserItem> users = new List<UserItem>();
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string query = "SELECT * FROM Users"; // Query to get all users
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        // Asynchronously execute the command and get a data reader
+                        using (SQLiteDataReader reader =  command.ExecuteReader())
+                        {
+                            // Iterate through all rows
+                            while (await reader.ReadAsync())
+                            {
+                                int userID = reader.GetInt32(reader.GetOrdinal("USER_ID"));
+                                string userName = reader.GetString(reader.GetOrdinal("user_Name"));
+                                string storedPassword = reader.GetString(reader.GetOrdinal("user_Password"));
+                                int isAdmin = reader.GetInt32(reader.GetOrdinal("isAdmin"));
+                                string question = reader.GetString(reader.GetOrdinal("userSecret"));
+                                string answer = reader.GetString(reader.GetOrdinal("userSecretAnswer"));
+
+                                // Create a new UserItem for each row and add it to the list
+                                UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
+                                users.Add(user);
+                            }
+                        }
+                    }
+                    await connection.CloseAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw; // Optionally log or handle exceptions
+            }
+
+            return users;
         }
-        public static bool UpdateUser(UserItem user)
+        
+        public static async Task<bool> UpdateUser(UserItem user)
         {
             if (user == null)
                 return false;
-            return true;
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string query = "UPDATE Users SET User_Name = @userName,user_Password =@userPassword,isAdmin = @isAdmin, userSecret = @secret, userSecretAnswer = @answer WHERE USER_ID = @userID";
+
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@userName", user.GetID());
+                        command.Parameters.AddWithValue("@userName", user.GetName());
+                        command.Parameters.AddWithValue("@userPassword", user.GetPassword());
+                        command.Parameters.AddWithValue("@isAdmin", user.IsAdmin());
+                        command.Parameters.AddWithValue("@userSecret", user.GetQuestion());
+                        command.Parameters.AddWithValue("@userSecretAnswer", user.GetAnswer());
+                        await connection.OpenAsync();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+                        connection.Close();
+                        return rowsAffected > 0;
+                    }
+
+                }
+
+            }
+            catch (Exception ex) { return false; throw; }
         }
 
-        public static bool DeleteUser(UserItem user)
+        public static async Task<bool> DeleteUser(UserItem user)
         {
             if (user == null) return
                    false;
-            return true;
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string deleteQuery = "DELETE FROM Users WHERE USER_ID = @userID";
+
+                    using (SQLiteCommand deleteCommand = new SQLiteCommand(deleteQuery, connection))
+                    {
+                        deleteCommand.Parameters.AddWithValue("@userID", user.GetID());
+
+                        await connection.OpenAsync();
+                        int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                        {
+                            await connection.CloseAsync();
+                            return true;
+                        }
+                        await connection.CloseAsync();
+                        return false;
+                    }
+
+                }
+            }
+            catch(Exception ex) { return false; throw;  }
+
+
+
         }
         #endregion user
 
 
         #region album queries
-        public static bool CreateAlbum(AlbumItem album)
+        public static async Task<bool> GetAllAlbumsOfUser(UserItem user)
+        {
+            List<AlbumItem> albums = new List<AlbumItem>();
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string query = $"SELECT * FROM Albums WHERE User_ID={user.GetID()}"; // Query to get all users
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        // Asynchronously execute the command and get a data reader
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            // Iterate through all rows
+                            while (await reader.ReadAsync())
+                            {
+                                int albumID = reader.GetInt32(reader.GetOrdinal("ALBUM_ID"));
+                                string albumName = reader.GetString(reader.GetOrdinal("Album_Name"));
+                                string albumDescription = reader.GetString(reader.GetOrdinal("Album_Description"));
+                                string albumTemplate = reader.GetString(reader.GetOrdinal("Album_Template"));
+
+                                // Create a new UserItem for each row and add it to the list
+                                AlbumItem album = new AlbumItem(albumID, albumName, albumDescription, albumTemplate);
+                                albums.Add(album);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { return false; throw; }
+
+            user.SetAlbumItems(albums);
+            if (user.GetAlbumItems().Count > 0)
+                return true;
+            return false;
+        }
+
+        public static async Task<bool> CreateAlbum(int userID, string albumName, string albumDescription,string albumTemplate)
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string insertQuery = insertQuery = "INSERT INTO Albums (USER_ID, Album_Name, Album_Description,Album_Template) VALUES (@userID, @albumName, @albumDescription, @albumTemplate)";
+
+                    if (String.IsNullOrEmpty(insertQuery))
+                        return false;
+                    await connection.OpenAsync();
+                    using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
+                    {
+                        insertCommand.Parameters.AddWithValue("@userID", userID);
+                        insertCommand.Parameters.AddWithValue("@albumName", albumName);
+                        insertCommand.Parameters.AddWithValue("@albumDescription", albumDescription);
+                        insertCommand.Parameters.AddWithValue("@albumTemplate", albumTemplate);
+                        await insertCommand.ExecuteScalarAsync();
+                    }
+                    MessageBox.Show($"{albumName} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await connection.CloseAsync();
+                    return true;
+                }
+            }
+            catch (SQLiteException ex) { return false; throw; }
+            catch (Exception ex) { return false; throw; }
+        }
+ 
+        public static async Task<bool> UpdateAlbum(AlbumItem album)
         {
             if (album == null)
                 return false;
-            return true;
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string query = "UPDATE Albums SET Album_Name = @newName,Album_Description =@newDesc,Album_Template = @newTemplate WHERE ALBUM_ID = @albumID";
+
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@albumID", album.GetID());
+                        command.Parameters.AddWithValue("@newName", album.GetName());
+                        command.Parameters.AddWithValue("@newDesc", album.GetDescription());
+                        command.Parameters.AddWithValue("@newTemplate", album.GetTemplate());
+
+                        await connection.OpenAsync(); 
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+                        connection.Close(); 
+                        return rowsAffected > 0;
+                    }
+
+                }
+
+            }
+            catch (Exception ex) { return false; throw; }
         }
-        public static AlbumItem ReadAlbum(string albumName)
-        {
-            if (string.IsNullOrWhiteSpace(albumName))
-                return null;
-            AlbumItem album;
-            return null;
-        }
-        public static bool UpdateAlbum(AlbumItem album)
+        public static async Task<bool> DeleteAlbum(AlbumItem album)
         {
             if (album == null)
                 return false;
-            return true;
-        }
-        public static bool DeleteAlbum(AlbumItem album)
-        {
-            if (album == null)
-                return false;
-            return true;
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string deleteQuery = "DELETE FROM Albums WHERE ALBUM_ID = @albumID";
+
+                    using (SQLiteCommand deleteCommand = new SQLiteCommand(deleteQuery, connection))
+                    {
+                        deleteCommand.Parameters.AddWithValue("@albumID", album.GetID());
+
+                        await connection.OpenAsync();
+
+                        int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                        {
+                            await connection.CloseAsync();
+                            return true;
+                        }
+                        await connection.CloseAsync();
+                        return false;
+                    }
+
+                }
+            }
+            catch(Exception ex) { throw; }
+
+
+
         }
         #endregion albums
 
         #region image queries
-        public static bool CreateImage(ImageItem image)
+        public static async Task<bool> GetAllImagesOfAlbum(AlbumItem album)
+        {
+            List<ImageItem> images = new List<ImageItem>();
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string query = $"SELECT * FROM Albums WHERE User_ID={album.GetID()}"; // Query to get all users
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        // Asynchronously execute the command and get a data reader
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            // Iterate through all rows
+                            while (await reader.ReadAsync())
+                            {
+                                int imageID = reader.GetInt32(reader.GetOrdinal("IMAGE_ID"));
+                                string imagePath = reader.GetString(reader.GetOrdinal("Image_path"));
+                                string imageDescription = reader.GetString(reader.GetOrdinal("Image_Description"));
+
+                                // Create a new UserItem for each row and add it to the list
+                                ImageItem image = new ImageItem(imageID, imagePath, imageDescription);
+                                images.Add(image);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { return false; throw; }
+
+            album.SetImages(images);
+            if (album.GetImages().Count > 0)
+                return true;
+            return false;
+        }
+        public static async Task<bool> CreateImage(int albumID, string imagePath, string imageDescription)
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string insertQuery = insertQuery = "INSERT INTO Images (ALBUM_ID, Image_path, Image_Description) VALUES (@albumID, @imagePath, @imageDescription)";
+
+                    if (String.IsNullOrEmpty(insertQuery))
+                        return false;
+                    await connection.OpenAsync();
+                    using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
+                    {
+                        insertCommand.Parameters.AddWithValue("@albumID", albumID);
+                        insertCommand.Parameters.AddWithValue("@imagePath", imagePath);
+                        insertCommand.Parameters.AddWithValue("@imageDescription", imageDescription);
+                        await insertCommand.ExecuteScalarAsync();
+                    }
+                    MessageBox.Show($"{imagePath} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    connection.Close();
+                    return true;
+                }
+            }
+            catch (SQLiteException ex) { return false; throw; }
+            catch (Exception ex) { return false; throw; }
+        }
+        public static async Task<bool> UpdateImage(ImageItem image)
         {
             if (image == null)
                 return false;
-            return true;
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string query = "UPDATE Images SET Image_Description = @newDescription WHERE Image_path = @imagePath";
+
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        // Replace this with the actual parameter value you want to set
+                        command.Parameters.AddWithValue("@imagePath", image.GetName());
+                        command.Parameters.AddWithValue("@newDescription", image.GetDescription());
+
+                        await connection.OpenAsync(); // Open the connection before executing the command
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+                        connection.Close(); // Close the connection after executing the command
+                        return rowsAffected > 0;
+                    }
+
+                }
+
+            }
+            catch(Exception ex) { return false; throw; }
+
+
         }
-        public static ImageItem ReadImage(string imageName)
-        {
-            if (string.IsNullOrWhiteSpace(imageName))
-                return null;
-            ImageItem image;
-            return null;
-        }
-        public static bool UpdateImage(ImageItem image)
+        public static async Task<bool> DeleteImage(ImageItem image)
         {
             if (image == null)
                 return false;
-            return true;
-        }
-        public static bool DeleteImage(ImageItem image)
-        {
-            if (image == null)
-                return false;
-            return true;
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string deleteQuery = "DELETE FROM Images WHERE IMAGE_ID = @imageID";
+
+                    using (SQLiteCommand deleteCommand = new SQLiteCommand(deleteQuery, connection))
+                    {
+                        deleteCommand.Parameters.AddWithValue("@imageID", image.GetID());
+
+                        await connection.OpenAsync();
+                        int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
+
+                        if (rowsAffected > 0)
+                        {
+                            await connection.CloseAsync();
+                            return true;
+                        }
+                        await connection.CloseAsync();
+                        return false;
+                    }
+
+                }
+            }
+            catch (Exception ex) { return false; throw; }
         }
         #endregion
     }

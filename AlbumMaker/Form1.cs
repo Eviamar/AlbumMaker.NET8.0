@@ -13,7 +13,7 @@ namespace AlbumMaker
             InitializeComponent();
             this.Text = Properties.AppSettings.Default.AppName;
             timerCheckUserLoggedIn.Start();
-            AppDataBase.CreateDataBase();
+            
         }
 
         private void btnMenuToggle_Click(object sender, EventArgs e)
@@ -80,6 +80,7 @@ namespace AlbumMaker
             Properties.AppSettings.Default.AppLocation = AppDomain.CurrentDomain.BaseDirectory;
             Properties.AppSettings.Default.AppDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
             Properties.AppSettings.Default.Save();
+            AppDataBase.CreateDataBase();
             SettingsManager.SetTheme(this);
             
         }
