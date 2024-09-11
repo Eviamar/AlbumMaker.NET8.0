@@ -16,8 +16,7 @@ namespace AlbumMaker
             InitializeComponent();
             this.Text = Properties.AppSettings.Default.AppName;
             timerCheckUserLoggedIn.Start();
-            timerMenuClose.Interval = 1;
-            timerMenuOpen.Interval = 1;
+           
 
         }
 
@@ -79,11 +78,7 @@ namespace AlbumMaker
         private void btnSettings_Click(object sender, EventArgs e)
         {
             Navigate(new Settings(timerMenuClose, timerMenuOpen));
-            //Settings settings = new Settings();
-            //settings.Dock = DockStyle.Fill;
-            //panelMain.Controls.Clear();
-            //SettingsManager.SetTheme(settings);
-            //panelMain.Controls.Add(settings);
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -101,23 +96,14 @@ namespace AlbumMaker
         private void btnLogin_Click(object sender, EventArgs e)
         {
             Navigate(new Login());
-            //Login login = new Login();
-            //login.Dock = DockStyle.Fill;
-            //login.Parent = FindForm();
-            //panelMain.Controls.Clear();
-            //SettingsManager.SetTheme(login);
-            //panelMain.Controls.Add(login);
+
         }
 
         private void btnUserControlPanel_Click(object sender, EventArgs e)
         {
 
             Navigate(new UserControlPanel());
-            //ucp.Dock = DockStyle.Fill;
-            //ucp.Parent = FindForm();
-            //panelMain.Controls.Clear();
-            //SettingsManager.SetTheme(ucp);
-            //panelMain.Controls.Add(ucp);
+
         }
 
         private void btnMyAlbums_Click(object sender, EventArgs e)
@@ -125,11 +111,6 @@ namespace AlbumMaker
 
             Navigate(new MyAlbums());
 
-            //albums.Dock = DockStyle.Top;
-            //albums.Parent = FindForm();
-            //panelMain.Controls.Clear();
-            //SettingsManager.SetTheme(albums);
-            //panelMain.Controls.Add(albums);
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -143,13 +124,6 @@ namespace AlbumMaker
             ExitMethod();
             AppDataBase.userItem = null;
             Navigate(new Login());
-
-            //Login login = new Login();
-            //login.Dock = DockStyle.Fill;
-            //login.Parent = FindForm();
-            //panelMain.Controls.Clear();
-            //SettingsManager.SetTheme(login);
-            //panelMain.Controls.Add(login);
         }
 
         private void timerCheckUserLoggedIn_Tick(object sender, EventArgs e)
@@ -161,29 +135,14 @@ namespace AlbumMaker
             btnLogout.Visible = Properties.AppSettings.Default.isLogged;
             btnLogin.Visible = !Properties.AppSettings.Default.isLogged;
             if (Properties.AppSettings.Default.isLogged)
-                btnAdminPanel.Visible = AppDataBase.userItem.GetIsAdmin();
+            {
+                if(AppDataBase.userItem != null) 
+                    btnAdminPanel.Visible = AppDataBase.userItem.GetIsAdmin();
+            }
             else
                 btnAdminPanel.Visible = false;
 
 
-
-
-
-            //if (Properties.AppSettings.Default.isLogged)
-            //{
-            //    btnLogin.Visible = false;
-            //    btnMyAlbums.Visible = true;
-            //    btnUserControlPanel.Visible = true;
-            //    btnLogout.Visible = true;
-            //    btnAdminPanel.Visible = AppDataBase.userItem.IsAdmin();
-            //}
-            //else
-            //{
-            //    btnLogin.Visible = true;
-            //    btnMyAlbums.Visible = false;
-            //    btnUserControlPanel.Visible = false;
-            //    btnLogout.Visible = false;
-            //}
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

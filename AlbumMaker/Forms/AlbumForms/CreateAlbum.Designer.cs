@@ -37,7 +37,10 @@
             textBoxAlbumDescription = new TextBox();
             textBoxAlbumName = new TextBox();
             FLPAlbumData = new FlowLayoutPanel();
+            panelFillInfo = new Panel();
+            progressBar1 = new ProgressBar();
             menuStrip1.SuspendLayout();
+            panelFillInfo.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -72,7 +75,7 @@
             // 
             // buttonSubmitAlbum
             // 
-            buttonSubmitAlbum.Location = new Point(414, 27);
+            buttonSubmitAlbum.Location = new Point(413, 4);
             buttonSubmitAlbum.Name = "buttonSubmitAlbum";
             buttonSubmitAlbum.Size = new Size(65, 23);
             buttonSubmitAlbum.TabIndex = 3;
@@ -84,14 +87,14 @@
             // 
             comboBoxTemplates.FormattingEnabled = true;
             comboBoxTemplates.Items.AddRange(new object[] { "Vacation", "Birthday", "Wedding" });
-            comboBoxTemplates.Location = new Point(277, 27);
+            comboBoxTemplates.Location = new Point(276, 4);
             comboBoxTemplates.Name = "comboBoxTemplates";
             comboBoxTemplates.Size = new Size(131, 23);
             comboBoxTemplates.TabIndex = 2;
             // 
             // textBoxAlbumDescription
             // 
-            textBoxAlbumDescription.Location = new Point(3, 27);
+            textBoxAlbumDescription.Location = new Point(139, 4);
             textBoxAlbumDescription.Name = "textBoxAlbumDescription";
             textBoxAlbumDescription.PlaceholderText = "Album description";
             textBoxAlbumDescription.Size = new Size(131, 23);
@@ -99,7 +102,7 @@
             // 
             // textBoxAlbumName
             // 
-            textBoxAlbumName.Location = new Point(140, 27);
+            textBoxAlbumName.Location = new Point(3, 4);
             textBoxAlbumName.MaxLength = 20;
             textBoxAlbumName.Name = "textBoxAlbumName";
             textBoxAlbumName.PlaceholderText = "Album name";
@@ -108,28 +111,51 @@
             // 
             // FLPAlbumData
             // 
-            FLPAlbumData.Dock = DockStyle.Bottom;
-            FLPAlbumData.Location = new Point(0, 56);
+            FLPAlbumData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            FLPAlbumData.AutoScroll = true;
+            FLPAlbumData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            FLPAlbumData.Location = new Point(3, 62);
             FLPAlbumData.Name = "FLPAlbumData";
-            FLPAlbumData.Size = new Size(487, 178);
+            FLPAlbumData.Size = new Size(481, 143);
             FLPAlbumData.TabIndex = 2;
+            // 
+            // panelFillInfo
+            // 
+            panelFillInfo.Controls.Add(textBoxAlbumName);
+            panelFillInfo.Controls.Add(buttonSubmitAlbum);
+            panelFillInfo.Controls.Add(textBoxAlbumDescription);
+            panelFillInfo.Controls.Add(comboBoxTemplates);
+            panelFillInfo.Dock = DockStyle.Top;
+            panelFillInfo.Location = new Point(0, 24);
+            panelFillInfo.Name = "panelFillInfo";
+            panelFillInfo.Size = new Size(487, 32);
+            panelFillInfo.TabIndex = 4;
+            // 
+            // progressBar1
+            // 
+            progressBar1.Dock = DockStyle.Bottom;
+            progressBar1.Location = new Point(0, 211);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(487, 23);
+            progressBar1.TabIndex = 5;
+            progressBar1.Visible = false;
             // 
             // CreateAlbum
             // 
             AccessibleName = "Create album";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(textBoxAlbumDescription);
-            Controls.Add(textBoxAlbumName);
+            Controls.Add(progressBar1);
+            Controls.Add(panelFillInfo);
             Controls.Add(FLPAlbumData);
-            Controls.Add(comboBoxTemplates);
             Controls.Add(menuStrip1);
-            Controls.Add(buttonSubmitAlbum);
             Name = "CreateAlbum";
             Size = new Size(487, 234);
             Load += CreateAlbum_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            panelFillInfo.ResumeLayout(false);
+            panelFillInfo.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -145,5 +171,7 @@
         private ToolStripMenuItem chooseImagesToolStripMenuItem;
         private Button buttonSubmitAlbum;
         private FlowLayoutPanel FLPAlbumData;
+        private Panel panelFillInfo;
+        private ProgressBar progressBar1;
     }
 }

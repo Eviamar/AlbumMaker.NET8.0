@@ -383,32 +383,45 @@ namespace AlbumMaker.Classes.Db
             return false;
         }
 
-        public static async Task<bool> CreateAlbum(int userID, string albumName, string albumDescription,string albumTemplate)
+        public static async Task<int> CreateAlbum(int userID, string albumName, string albumDescription,string albumTemplate)
         {
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    string insertQuery = insertQuery = "INSERT INTO Albums (USER_ID, Album_Name, Album_Description,Album_Template) VALUES (@userID, @albumName, @albumDescription, @albumTemplate)";
+                    string insertQuery = "INSERT INTO Albums (USER_ID, Album_Name, Album_Description, Album_Template) VALUES (@userID, @albumName, @albumDescription, @albumTemplate)";
 
-                    if (String.IsNullOrEmpty(insertQuery))
-                        return false;
+                    // Open the connection
                     await connection.OpenAsync();
+
                     using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
                     {
+                        // Add parameters to the query
                         insertCommand.Parameters.AddWithValue("@userID", userID);
                         insertCommand.Parameters.AddWithValue("@albumName", albumName);
                         insertCommand.Parameters.AddWithValue("@albumDescription", albumDescription);
                         insertCommand.Parameters.AddWithValue("@albumTemplate", albumTemplate);
-                        await insertCommand.ExecuteScalarAsync();
+
+                        // Execute the insert command
+                        await insertCommand.ExecuteNonQueryAsync();
                     }
-                    MessageBox.Show($"{albumName} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    await connection.CloseAsync();
-                    return true;
+
+                    // Retrieve the last inserted row ID (ALBUM_ID)
+                    using (SQLiteCommand getIdCommand = new SQLiteCommand("SELECT last_insert_rowid()", connection))
+                    {
+                        var albumId = await getIdCommand.ExecuteScalarAsync();
+
+                        // Display a success message and close the connection
+                        MessageBox.Show($"{albumName} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        await connection.CloseAsync();
+
+                        // Return the ALBUM_ID as an integer
+                        return Convert.ToInt32(albumId);
+                    }
                 }
             }
-            catch (SQLiteException ex) { return false; throw; }
-            catch (Exception ex) { return false; throw; }
+            catch (SQLiteException ex) { return -1; throw; }
+            catch (Exception ex) { return -1; throw; }
         }
  
         public static async Task<bool> UpdateAlbum(AlbumItem album)
