@@ -21,7 +21,7 @@
     <Setting Name="userName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AppLocation" Type="System.String" Scope="User">
+    <Setting Name="AppEXELocation" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="isLogged" Type="System.Boolean" Scope="User">
@@ -35,6 +35,15 @@
     </Setting>
     <Setting Name="AlbumSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="AppAlbumsFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Albums</Value>
+    </Setting>
+    <Setting Name="AppDatabaseFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Database</Value>
+    </Setting>
+    <Setting Name="AppDatabaseFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Database.db</Value>
     </Setting>
   </Settings>
 </SettingsFile>

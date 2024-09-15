@@ -7,6 +7,11 @@ using System.Windows.Forms;
 
 namespace AlbumMaker
 {
+    /*
+     
+    // optional: 
+        -allow to change app save images location (this option will need to update the entire database image paths...
+     */
     public partial class Form1 : Form
     {
         private bool menuOpen = true;
@@ -16,7 +21,8 @@ namespace AlbumMaker
             InitializeComponent();
             this.Text = Properties.AppSettings.Default.AppName;
             timerCheckUserLoggedIn.Start();
-           
+            timerMenuClose.Interval = 1;
+            timerMenuOpen.Interval = 1;
 
         }
 
@@ -84,7 +90,7 @@ namespace AlbumMaker
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            Properties.AppSettings.Default.AppLocation = AppDomain.CurrentDomain.BaseDirectory;
+            Properties.AppSettings.Default.AppEXELocation = AppDomain.CurrentDomain.BaseDirectory;
             Properties.AppSettings.Default.AppDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
             Properties.AppSettings.Default.Save();
             AppDataBase.CreateDataBase();
@@ -122,7 +128,7 @@ namespace AlbumMaker
         private void btnLogout_Click(object sender, EventArgs e)
         {
             ExitMethod();
-            AppDataBase.userItem = null;
+            SettingsManager.userItem = null;
             Navigate(new Login());
         }
 
@@ -136,8 +142,8 @@ namespace AlbumMaker
             btnLogin.Visible = !Properties.AppSettings.Default.isLogged;
             if (Properties.AppSettings.Default.isLogged)
             {
-                if(AppDataBase.userItem != null) 
-                    btnAdminPanel.Visible = AppDataBase.userItem.GetIsAdmin();
+                if(SettingsManager.userItem != null) 
+                    btnAdminPanel.Visible = SettingsManager.userItem.GetIsAdmin();
             }
             else
                 btnAdminPanel.Visible = false;

@@ -31,6 +31,7 @@
             menuStrip1 = new MenuStrip();
             createNewAlbumToolStripMenuItem = new ToolStripMenuItem();
             editAlbumsToolStripMenuItem = new ToolStripMenuItem();
+            flpDisplayAlbums = new FlowLayoutPanel();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -56,11 +57,20 @@
             editAlbumsToolStripMenuItem.Size = new Size(81, 20);
             editAlbumsToolStripMenuItem.Text = "Edit albums";
             // 
+            // flpDisplayAlbums
+            // 
+            flpDisplayAlbums.Dock = DockStyle.Fill;
+            flpDisplayAlbums.Location = new Point(0, 24);
+            flpDisplayAlbums.Name = "flpDisplayAlbums";
+            flpDisplayAlbums.Size = new Size(433, 276);
+            flpDisplayAlbums.TabIndex = 1;
+            // 
             // MyAlbums
             // 
             AccessibleName = "My albums";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(flpDisplayAlbums);
             Controls.Add(menuStrip1);
             Name = "MyAlbums";
             Size = new Size(433, 300);
@@ -76,5 +86,6 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem createNewAlbumToolStripMenuItem;
         private ToolStripMenuItem editAlbumsToolStripMenuItem;
+        private FlowLayoutPanel flpDisplayAlbums;
     }
 }

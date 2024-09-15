@@ -1,4 +1,5 @@
 ﻿using AlbumMaker.Classes;
+using System.Windows.Forms;
 
 
 namespace AlbumMaker.Forms
@@ -41,6 +42,11 @@ namespace AlbumMaker.Forms
         {
             SettingsManager.SetTheme(this);
             isLoading = true;
+
+            lblDataLocation.Text = Properties.AppSettings.Default.AppDataFolder+$@"\{Properties.AppSettings.Default.AppName}";
+            Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
+            lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
+
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             if (Properties.AppSettings.Default.isDark)
                 radioButtonDark.Checked = true;
@@ -88,7 +94,7 @@ namespace AlbumMaker.Forms
                     timerClose.Interval = 1;
                     timerOpen.Interval = 1;
                     timerClose.Start();
-                    
+
                     //timerOpen.Start();
 
                 }
@@ -96,6 +102,29 @@ namespace AlbumMaker.Forms
                 SettingsManager.SetTheme(this);
 
             }
+        }
+
+        private void btnChangeDataLocation_Click(object sender, EventArgs e)
+        {
+            string location = Properties.AppSettings.Default.AppDataFolder;
+            string oldPath = Properties.AppSettings.Default.AppDataFolder; //might not be needed this cause can use folderBroswerDialog.SelectedPath
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.ShowNewFolderButton = true;
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            { 
+                location = folderBrowserDialog.SelectedPath;
+                //=> TO COPY ALL CONTENT FROM OLD PATH TO NEW PATH AND THEN CHANGE IN THE AppSettings
+                //Properties.AppSettings.Default.AppDataFolder = location;
+                //Properties.AppSettings.Default.Save();
+            }
+            lblDataLocation.Text = location;
+            Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
+            lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
+
+
+
+
+
         }
     }
 }

@@ -35,7 +35,7 @@ namespace AlbumMaker.Forms
                 return;
             }
 
-            UserItem tempUser = AppDataBase.userItem;
+            UserItem tempUser = SettingsManager.userItem;
             tempUser.SetQuestion(richTextBoxQuestion.Text);
             tempUser.SetAnswer(textBoxAnswer.Text);
 
@@ -43,9 +43,9 @@ namespace AlbumMaker.Forms
             bool isUpdated = await AppDataBase.UpdateUser(tempUser);
             if (isUpdated)
             {
-                AppDataBase.userItem.SetQuestion(richTextBoxQuestion.Text);
-                AppDataBase.userItem.SetAnswer(textBoxAnswer.Text);
-                MessageBox.Show($"Updated question and answer.\nNew question: {AppDataBase.userItem.GetQuestion()}\nNew answer: {AppDataBase.userItem.GetAnswer()}", "Success");
+                SettingsManager.userItem.SetQuestion(richTextBoxQuestion.Text);
+                SettingsManager.userItem.SetAnswer(textBoxAnswer.Text);
+                MessageBox.Show($"Updated question and answer.\nNew question: {SettingsManager.userItem.GetQuestion()}\nNew answer: {SettingsManager.userItem.GetAnswer()}", "Success");
             }
         }
 
@@ -72,13 +72,13 @@ namespace AlbumMaker.Forms
             {
                 checkBoxRememberMe.Checked = false;
             }
-            richTextBoxQuestion.Text = AppDataBase.userItem.GetQuestion();
-            textBoxAnswer.PlaceholderText = AppDataBase.userItem.GetAnswer();
+            richTextBoxQuestion.Text = SettingsManager.userItem.GetQuestion();
+            textBoxAnswer.PlaceholderText = SettingsManager.userItem.GetAnswer();
         }
 
         private async void btnUpdatePassword_Click(object sender, EventArgs e)
         {
-            if (textBoxCurrentPassword.Text != AppDataBase.userItem.GetPassword())
+            if (textBoxCurrentPassword.Text != SettingsManager.userItem.GetPassword())
             {
                 MessageBox.Show($"Wrong current password, you have to type the password you used to login", "Password is incorrect");
                 return;
@@ -88,10 +88,10 @@ namespace AlbumMaker.Forms
                 MessageBox.Show($"Passwords are not match", "Passwords are not identical");
                 return;
             }
-            AppDataBase.userItem.SetNewPassword(textBoxPassword2.Text);
-            bool isSuccess = await AppDataBase.UpdateUser(AppDataBase.userItem);
+            SettingsManager.userItem.SetNewPassword(textBoxPassword2.Text);
+            bool isSuccess = await AppDataBase.UpdateUser(SettingsManager.userItem);
             if (isSuccess)
-                MessageBox.Show($"Succes update password\nnew password: {AppDataBase.userItem.GetPassword()}", "Success");
+                MessageBox.Show($"Succes update password\nnew password: {SettingsManager.userItem.GetPassword()}", "Success");
 
         }
 

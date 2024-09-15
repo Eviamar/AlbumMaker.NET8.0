@@ -33,8 +33,14 @@
             radioButtonLight = new RadioButton();
             comboBoxFontSize = new ComboBox();
             groupBoxFontSize = new GroupBox();
+            grpBoxSaveLocation = new GroupBox();
+            flpDisplayLabelDataLocation = new FlowLayoutPanel();
+            lblDataLocation = new Label();
+            btnChangeDataLocation = new Button();
             grpBoxTheme.SuspendLayout();
             groupBoxFontSize.SuspendLayout();
+            grpBoxSaveLocation.SuspendLayout();
+            flpDisplayLabelDataLocation.SuspendLayout();
             SuspendLayout();
             // 
             // grpBoxTheme
@@ -92,19 +98,68 @@
             groupBoxFontSize.TabStop = false;
             groupBoxFontSize.Text = "Text size";
             // 
+            // grpBoxSaveLocation
+            // 
+            grpBoxSaveLocation.Controls.Add(flpDisplayLabelDataLocation);
+            grpBoxSaveLocation.Controls.Add(btnChangeDataLocation);
+            grpBoxSaveLocation.Location = new Point(9, 98);
+            grpBoxSaveLocation.Name = "grpBoxSaveLocation";
+            grpBoxSaveLocation.Size = new Size(217, 79);
+            grpBoxSaveLocation.TabIndex = 3;
+            grpBoxSaveLocation.TabStop = false;
+            grpBoxSaveLocation.Text = "Files location";
+            // 
+            // flpDisplayLabelDataLocation
+            // 
+            flpDisplayLabelDataLocation.AutoScroll = true;
+            flpDisplayLabelDataLocation.AutoSize = true;
+            flpDisplayLabelDataLocation.Controls.Add(lblDataLocation);
+            flpDisplayLabelDataLocation.Dock = DockStyle.Fill;
+            flpDisplayLabelDataLocation.Location = new Point(3, 42);
+            flpDisplayLabelDataLocation.Name = "flpDisplayLabelDataLocation";
+            flpDisplayLabelDataLocation.Size = new Size(211, 34);
+            flpDisplayLabelDataLocation.TabIndex = 4;
+            // 
+            // lblDataLocation
+            // 
+            lblDataLocation.AutoSize = true;
+            lblDataLocation.Location = new Point(3, 0);
+            lblDataLocation.MaximumSize = new Size(0, 15);
+            lblDataLocation.MinimumSize = new Size(0, 15);
+            lblDataLocation.Name = "lblDataLocation";
+            lblDataLocation.Size = new Size(66, 15);
+            lblDataLocation.TabIndex = 0;
+            lblDataLocation.Text = "lblLocation";
+            // 
+            // btnChangeDataLocation
+            // 
+            btnChangeDataLocation.Dock = DockStyle.Top;
+            btnChangeDataLocation.Location = new Point(3, 19);
+            btnChangeDataLocation.Name = "btnChangeDataLocation";
+            btnChangeDataLocation.Size = new Size(211, 23);
+            btnChangeDataLocation.TabIndex = 1;
+            btnChangeDataLocation.Text = "Change location of files";
+            btnChangeDataLocation.UseVisualStyleBackColor = true;
+            btnChangeDataLocation.Click += btnChangeDataLocation_Click;
+            // 
             // Settings
             // 
             AccessibleName = "Application settings";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(grpBoxSaveLocation);
             Controls.Add(groupBoxFontSize);
             Controls.Add(grpBoxTheme);
             Name = "Settings";
-            Size = new Size(262, 144);
+            Size = new Size(563, 501);
             Load += Settings_Load;
             grpBoxTheme.ResumeLayout(false);
             grpBoxTheme.PerformLayout();
             groupBoxFontSize.ResumeLayout(false);
+            grpBoxSaveLocation.ResumeLayout(false);
+            grpBoxSaveLocation.PerformLayout();
+            flpDisplayLabelDataLocation.ResumeLayout(false);
+            flpDisplayLabelDataLocation.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -115,5 +170,9 @@
         private RadioButton radioButtonLight;
         private ComboBox comboBoxFontSize;
         private GroupBox groupBoxFontSize;
+        private GroupBox grpBoxSaveLocation;
+        private Button btnChangeDataLocation;
+        private Label lblDataLocation;
+        private FlowLayoutPanel flpDisplayLabelDataLocation;
     }
 }

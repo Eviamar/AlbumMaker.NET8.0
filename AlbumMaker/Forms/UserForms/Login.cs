@@ -31,7 +31,7 @@ namespace AlbumMaker.Forms
                 else
                 {
                     isQuestion = await AppDataBase.RecoverPassword(textBoxUsername.Text);
-                    richTextBoxQuestion.Text = AppDataBase.userItem.GetQuestion();
+                    richTextBoxQuestion.Text = SettingsManager.userItem.GetQuestion();
                 }
             }
             if (isQuestion)
@@ -137,9 +137,9 @@ namespace AlbumMaker.Forms
 
         private void btnForgot_Click(object sender, EventArgs e)
         {
-            if (textBoxAnswer.Text == AppDataBase.userItem.GetAnswer())
+            if (textBoxAnswer.Text == SettingsManager.userItem.GetAnswer())
             {
-                MessageBox.Show($"Your password is:\n\n{AppDataBase.userItem.GetPassword()}", "Recovered successfully", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Your password is:\n\n{SettingsManager.userItem.GetPassword()}", "Recovered successfully", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 textBoxPassword.Focus();
             }
             else

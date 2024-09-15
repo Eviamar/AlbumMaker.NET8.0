@@ -16,5 +16,10 @@ namespace AlbumMaker.Classes.Items
         {
             return base.ToString()+$"Path: {path}\nDescription:{description}";
         }
+        public string GetImagePath()
+        {
+            return $@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\\{this.path}";
+
+        }
     }
 }

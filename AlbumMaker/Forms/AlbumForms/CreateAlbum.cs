@@ -2,13 +2,15 @@
 using AlbumMaker.Classes.Custom;
 using AlbumMaker.Classes.Db;
 using AlbumMaker.Classes.Items;
+using System.Collections.Generic;
+using System.IO;
 
 
 namespace AlbumMaker.Forms
 {
     public partial class CreateAlbum : UserControl
     {
-        private string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\Albums\";
+        private string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\Albums\";
         private int imageCount = 0;
         List<KeyValuePair<int,string>> images = new List<KeyValuePair<int,string>>();
         public CreateAlbum()
@@ -88,13 +90,6 @@ namespace AlbumMaker.Forms
                                         progressBar1.Value++;
                                     }));
                                 }
-                                else
-                                {
-                                    Invoke((Action)(() =>
-                                    {
-                                        MessageBox.Show($"You already added this image to the list:\n{Path.GetFileName(image)}", $"Image is already selected");
-                                    }));
-                                }
                             }
                         });
 
@@ -125,18 +120,43 @@ namespace AlbumMaker.Forms
             {
                 imageList.Add(new ImageItem(image.Key, image.Value, ""));
             }
-            //int count = 0;
-            //foreach (Control c in FLPAlbumData.Controls)
-            //{
-            //    if (c is DigiBumPictureBox image)
-            //    {
-            //        images.Add(new ImageItem(count++, image.ImageLocation,""));
-            //    }
-            //}
             await Task.CompletedTask;
             return imageList;
         }
+        private async Task<List<KeyValuePair<int, string>>> CopyFilesToAppFolder(List<KeyValuePair<int,string>> selectedFiles,int albumID)
+        {
+            try
+            {
+                string path = $@"{pictureFolderPath}\{albumID}\";
+                Directory.CreateDirectory(path);
+                Cursor = Cursors.WaitCursor;
+                for (int i = 0; i < selectedFiles.Count; i++)
+                {
+                    
+                    await using (FileStream sourceStream = new FileStream(selectedFiles[i].Value, FileMode.Open))
+                    {
+                        await using (FileStream destinationStream = new FileStream(path + Path.GetFileName(selectedFiles[i].Value), FileMode.Create))
+                        {
+                            sourceStream.CopyTo(destinationStream);
+                           
+                        }
+                    }
 
+                }
+                string[] files = Directory.GetFiles(path);
+                List < KeyValuePair<int, string>> newFiles = new List < KeyValuePair<int, string>>();
+                int count = 0;
+                foreach (string file in files)
+                {
+                    string relativePath = $@"{albumID}\{Path.GetFileName(file)}";
+                    newFiles.Add(new KeyValuePair<int, string>(count++, relativePath));
+                }
+                Cursor = Cursors.Default;
+                return newFiles;
+            }
+            catch { Cursor = Cursors.Default; return null; throw; }
+            
+        }
         private async void buttonSubmitAlbum_Click(object sender, EventArgs e)
         {
             try
@@ -156,39 +176,35 @@ namespace AlbumMaker.Forms
                     MessageBox.Show("Cannot create album with no pictures.\nYou need to add pictures to your album.", "Choose images!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                bool success = false;
+                bool dataBaseSuccess = false;
+                bool copySuccess = false;
                 
-                int albumID = await AppDataBase.CreateAlbum(AppDataBase.userItem.GetID(), albumTitle, albumDesc, albumTemplate);
+                int albumID = await AppDataBase.CreateAlbum(SettingsManager.userItem, albumTitle, albumDesc, albumTemplate);
                 string path = pictureFolderPath + $@"{albumID}\";
 
                 if (albumID > 0)
                 {
-                    Cursor = Cursors.WaitCursor;
-                    List<ImageItem> imageItems = await ConvertSelectedPicturesToImageItem();
-                    for (int i = 0; i < images.Count; i++)
+                    // TO DO: Checked! VVV need to copy the files, then get the new location and update the image list value with the new location AND THEN run the database create
+                    // perhaps need to add more logic if a database fail need to retry or if copy fail to retry x times and return success accordingly 
+                    images = await CopyFilesToAppFolder(images,albumID);
+                    if (images != null)
                     {
-                        success = false;
-                        Directory.CreateDirectory(path);
-                        using (FileStream sourceStream = new FileStream(imageItems[i].GetName(), FileMode.Open))
-                        using (FileStream destinationStream = new FileStream(path + Path.GetFileName(imageItems[i].GetName()), FileMode.Create))
+                        copySuccess = true;
+                        List<ImageItem> imageItems = await ConvertSelectedPicturesToImageItem();
+                        foreach(ImageItem imageItem in imageItems)
                         {
-                            sourceStream.CopyTo(destinationStream);
-                            sourceStream.Close();
-                            sourceStream.Dispose();
-
+                             await AppDataBase.CreateImage(SettingsManager.userItem.GetAlbumItems().LastOrDefault(), imageItem.GetName(), "");
                         }
-                        success = await AppDataBase.CreateImage(albumID, imageItems[i].GetName(),"");
-                        Cursor = Cursors.Default;
+                        dataBaseSuccess = true;
                     }
+                    
                 }
                 else
                     return;
-                if (success)
+
+                if (dataBaseSuccess && copySuccess)
                 {
                     MessageBox.Show("Album created successfully!\nYou are being redirected to your user panel where you can view and edit your albums.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
-
-
                 }
 
             }

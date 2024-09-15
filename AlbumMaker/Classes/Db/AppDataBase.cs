@@ -5,16 +5,16 @@ namespace AlbumMaker.Classes.Db
 {
     internal static class AppDataBase
     {
-        static string connectionString = @$"Data Source={Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\Database\Database.db;Version=3";
-        public static UserItem userItem { get; set; } //try to use that as global variable to do whatever in the app
-
+        private static string dataSource = $@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\\{Properties.AppSettings.Default.AppDatabaseFolderName}";
+        private static string dataBaseFileName = $"{Properties.AppSettings.Default.AppDatabaseFileName}";
+        private static string connectionString = @$"Data Source={dataSource}\{dataBaseFileName};Version=3";
 
         #region generic database queries
         public static async void CreateDataBase()
         {
             try
             {
-                Directory.CreateDirectory($@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\Database");
+                Directory.CreateDirectory($@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppDatabaseFolderName}");
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     await connection.OpenAsync();
@@ -54,10 +54,7 @@ namespace AlbumMaker.Classes.Db
                     await connection.CloseAsync();
                 }
             }
-            catch (SQLiteException sqlex) { throw; }
-            catch (Exception ex) { throw; }
-
-
+            catch { throw; }
         }
 
         #endregion generic
@@ -95,8 +92,9 @@ namespace AlbumMaker.Classes.Db
                                 {
 
                                     UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
-                                    userItem = user;
+                                    SettingsManager.userItem = user;
                                     await connection.CloseAsync();
+                                    await GetAllAlbumsOfUser(user);
                                     return true;
                                 }
                                 else
@@ -118,7 +116,7 @@ namespace AlbumMaker.Classes.Db
                     }
                 }
             }
-            catch (Exception ex) { throw; }
+            catch  { throw; }
         }
 
         private static async Task<bool> AreThereAnyUsers() 
@@ -138,18 +136,8 @@ namespace AlbumMaker.Classes.Db
                     }
                 }
             }
-            catch (SQLiteException ex)
-            {
-                //MessageBox.Show($"{ex.Message}\nError code: {ex.ErrorCode}", "SQL error #04", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-                throw;
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message, "Error #04", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-                throw;
-            }
+            catch
+            { return false; throw; }
         }
 
         public static async Task<bool> RecoverPassword(string userName)
@@ -181,7 +169,7 @@ namespace AlbumMaker.Classes.Db
                                 answer = reader.GetString(reader.GetOrdinal("userSecretAnswer"));
 
                                 UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
-                                userItem = user;
+                                SettingsManager.userItem = user;
                                 await connection.CloseAsync();
                                 return true;
 
@@ -198,7 +186,7 @@ namespace AlbumMaker.Classes.Db
                     }
                 }
             }
-            catch (Exception ex) { throw; }
+            catch { throw; }
         }
 
         public static async Task<bool> CreateUser(string UserName, string Password,string userQuestion,string userAnswer)
@@ -229,8 +217,7 @@ namespace AlbumMaker.Classes.Db
                     return true;
                 }
             }
-            catch (SQLiteException ex) { return false;  throw; }
-            catch (Exception ex){ return false; throw;}
+            catch { return false; throw;}
         }
         public static async Task<List<UserItem>> GetAllUsers()
         {
@@ -260,19 +247,16 @@ namespace AlbumMaker.Classes.Db
 
                                 // Create a new UserItem for each row and add it to the list
                                 UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
+                                await GetAllAlbumsOfUser(user);
                                 users.Add(user);
                             }
                         }
                     }
                     await connection.CloseAsync();
+                    return users;
                 }
             }
-            catch (Exception ex)
-            {
-                throw; // Optionally log or handle exceptions
-            }
-
-            return users;
+            catch { throw; }
         }
         
         public static async Task<bool> UpdateUser(UserItem user)
@@ -303,13 +287,29 @@ namespace AlbumMaker.Classes.Db
                 }
 
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString(),ex.Message); return false; throw; }
+            catch {  return false; throw; }
         }
 
         public static async Task<bool> DeleteUser(UserItem user)
         {
-            if (user == null) return
-                   false;
+            if (user == null) 
+                return false;
+            if (user == SettingsManager.userItem)
+            {
+                MessageBox.Show("You cannot delete yourself!","Action forbidden",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                return false;
+            }
+            DialogResult dr;
+            if (user.GetIsAdmin())
+            {
+                dr = MessageBox.Show("The user you want to delete is admin, are you sure you want to delete an admin user?","Alert",MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+                if (dr == DialogResult.Yes)
+                {
+                    
+                }   
+                else
+                    return false;   
+            }
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
@@ -322,20 +322,26 @@ namespace AlbumMaker.Classes.Db
 
                         await connection.OpenAsync();
                         int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
+                        await connection.CloseAsync();
 
                         if (rowsAffected > 0)
                         {
-                            await connection.CloseAsync();
+                            await GetAllAlbumsOfUser(user);
+                            foreach(AlbumItem album in user.GetAlbumItems())
+                            {
+                                bool res = await DeleteAlbum(album);
+                                if(res)
+                                    user.DeleteSpecificAlbum(album);
+                            }
                             return true;
                         }
-                        await connection.CloseAsync();
+
                         return false;
                     }
 
                 }
             }
-            catch(Exception ex) { return false; throw;  }
-
+            catch { return false; throw; }
 
 
         }
@@ -369,13 +375,15 @@ namespace AlbumMaker.Classes.Db
 
                                 // Create a new UserItem for each row and add it to the list
                                 AlbumItem album = new AlbumItem(albumID, albumName, albumDescription, albumTemplate);
+                                await GetAllImagesOfAlbum(album);
                                 albums.Add(album);
                             }
+                            user.SetAlbumItems(albums);
                         }
                     }
                 }
             }
-            catch (Exception ex) { return false; throw; }
+            catch { return false; throw; }
 
             user.SetAlbumItems(albums);
             if (user.GetAlbumItems().Count > 0)
@@ -383,7 +391,7 @@ namespace AlbumMaker.Classes.Db
             return false;
         }
 
-        public static async Task<int> CreateAlbum(int userID, string albumName, string albumDescription,string albumTemplate)
+        public static async Task<int> CreateAlbum(UserItem user, string albumName, string albumDescription,string albumTemplate)
         {
             try
             {
@@ -397,7 +405,7 @@ namespace AlbumMaker.Classes.Db
                     using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
                     {
                         // Add parameters to the query
-                        insertCommand.Parameters.AddWithValue("@userID", userID);
+                        insertCommand.Parameters.AddWithValue("@userID", user.GetID());
                         insertCommand.Parameters.AddWithValue("@albumName", albumName);
                         insertCommand.Parameters.AddWithValue("@albumDescription", albumDescription);
                         insertCommand.Parameters.AddWithValue("@albumTemplate", albumTemplate);
@@ -405,7 +413,7 @@ namespace AlbumMaker.Classes.Db
                         // Execute the insert command
                         await insertCommand.ExecuteNonQueryAsync();
                     }
-
+                    
                     // Retrieve the last inserted row ID (ALBUM_ID)
                     using (SQLiteCommand getIdCommand = new SQLiteCommand("SELECT last_insert_rowid()", connection))
                     {
@@ -414,14 +422,14 @@ namespace AlbumMaker.Classes.Db
                         // Display a success message and close the connection
                         MessageBox.Show($"{albumName} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await connection.CloseAsync();
-
+                        AlbumItem albumItem = new AlbumItem(Convert.ToInt32(albumId), albumName, albumDescription, albumTemplate);
+                        user.AddAlbumItem(albumItem);
                         // Return the ALBUM_ID as an integer
                         return Convert.ToInt32(albumId);
                     }
                 }
             }
-            catch (SQLiteException ex) { return -1; throw; }
-            catch (Exception ex) { return -1; throw; }
+            catch { return -1; throw; }
         }
  
         public static async Task<bool> UpdateAlbum(AlbumItem album)
@@ -450,7 +458,7 @@ namespace AlbumMaker.Classes.Db
                 }
 
             }
-            catch (Exception ex) { return false; throw; }
+            catch { return false; throw; }
         }
         public static async Task<bool> DeleteAlbum(AlbumItem album)
         {
@@ -469,19 +477,25 @@ namespace AlbumMaker.Classes.Db
                         await connection.OpenAsync();
 
                         int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
-
+                        await connection.CloseAsync();
                         if (rowsAffected > 0)
                         {
-                            await connection.CloseAsync();
+                            await GetAllImagesOfAlbum(album);
+                            foreach(ImageItem image in album.GetImages())
+                            {
+                                bool res = await DeleteImage(image);
+                                if (res)
+                                    album.DeleteImageItem(image);
+                            }
                             return true;
                         }
-                        await connection.CloseAsync();
+                        
                         return false;
                     }
 
                 }
             }
-            catch(Exception ex) { throw; }
+            catch { throw; }
 
 
 
@@ -517,20 +531,24 @@ namespace AlbumMaker.Classes.Db
                                 images.Add(image);
                             }
                         }
+                        album.SetImages(images);
                     }
                 }
             }
-            catch (Exception ex) { return false; throw; }
+            catch { return false; throw; }
 
             album.SetImages(images);
             if (album.GetImages().Count > 0)
                 return true;
             return false;
         }
-        public static async Task<bool> CreateImage(int albumID, string imagePath, string imageDescription)
+        public static async Task<bool> CreateImage(AlbumItem album, string imagePath, string imageDescription)
         {
             try
             {
+                if(album==null)
+                    return false;
+
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     string insertQuery = insertQuery = "INSERT INTO Images (ALBUM_ID, Image_path, Image_Description) VALUES (@albumID, @imagePath, @imageDescription)";
@@ -540,7 +558,7 @@ namespace AlbumMaker.Classes.Db
                     await connection.OpenAsync();
                     using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
                     {
-                        insertCommand.Parameters.AddWithValue("@albumID", albumID);
+                        insertCommand.Parameters.AddWithValue("@albumID", album.GetID());
                         insertCommand.Parameters.AddWithValue("@imagePath", imagePath);
                         insertCommand.Parameters.AddWithValue("@imageDescription", imageDescription);
                         await insertCommand.ExecuteScalarAsync();
@@ -550,8 +568,7 @@ namespace AlbumMaker.Classes.Db
                     return true;
                 }
             }
-            catch (SQLiteException ex) { return false; throw; }
-            catch (Exception ex) { return false; throw; }
+            catch  { return false; throw; }
         }
         public static async Task<bool> UpdateImage(ImageItem image)
         {
@@ -578,7 +595,7 @@ namespace AlbumMaker.Classes.Db
                 }
 
             }
-            catch(Exception ex) { return false; throw; }
+            catch { return false; throw; }
 
 
         }
@@ -598,19 +615,18 @@ namespace AlbumMaker.Classes.Db
 
                         await connection.OpenAsync();
                         int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
-
+                        await connection.CloseAsync();
                         if (rowsAffected > 0)
                         {
-                            await connection.CloseAsync();
+                            
                             return true;
                         }
-                        await connection.CloseAsync();
                         return false;
                     }
 
                 }
             }
-            catch (Exception ex) { return false; throw; }
+            catch { return false; throw; }
         }
         #endregion
     }

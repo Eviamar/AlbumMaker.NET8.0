@@ -159,30 +159,44 @@ namespace AlbumMaker.Classes.Custom
         }
         #endregion constructor for image view
         #region constructor for album view
-        public DigiBumPictureBox(AlbumItem album)
+        public DigiBumPictureBox(AlbumItem album,bool isEdit)
         {
-            // Initialize buttons and labels
-            DeleteButton = new Button
-            {
-                Text = "X",
-                Font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                Width = 30,
-                BackColor = Color.Transparent,
-                ForeColor = Color.Red,
-            };
-            DeleteButton.FlatAppearance.BorderSize = 0;
+            Size = new Size(200, 200);
 
-            EditButton = new Button
+            // Initialize buttons and labels
+            if (isEdit)
             {
-                Text = "🖉",
-                Font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                Width = 30,
-                BackColor = Color.Transparent,
-                ForeColor = Color.Green,
-            };
-            EditButton.FlatAppearance.BorderSize = 0;
+                DeleteButton = new Button
+                {
+                    Text = "X",
+                    Font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold),
+                    FlatStyle = FlatStyle.Flat,
+                    Width = 30,
+                    BackColor = Color.Transparent,
+                    ForeColor = Color.Red,
+                };
+                DeleteButton.FlatAppearance.BorderSize = 0;
+
+                EditButton = new Button
+                {
+                    Text = "🖉",
+                    Font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold),
+                    FlatStyle = FlatStyle.Flat,
+                    Width = 30,
+                    BackColor = Color.Transparent,
+                    ForeColor = Color.Green,
+                };
+                EditButton.FlatAppearance.BorderSize = 0;
+                DeleteButton.Click += (sender, e) => { DeleteAlbum(sender, e, album); };
+                EditButton.Click += (sender, e) => { EditAlbum(sender, e, album); };
+                DeleteButton.Location = new Point(Width - DeleteButton.Width, 0);
+                EditButton.Location = new Point(Width - EditButton.Width, Height - EditButton.Height);
+                DeleteButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Delete");
+                EditButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Edit");
+                Controls.Add(DeleteButton);
+                Controls.Add(EditButton);
+            }
+            
 
             Title = new Label
             {
@@ -201,7 +215,6 @@ namespace AlbumMaker.Classes.Custom
             };
 
             // Setup image
-            Size = new Size(200, 200);
             if (album.GetImages().Count == 0)
             {
                 Image = null;  // Placeholder for "image not found"
@@ -216,23 +229,19 @@ namespace AlbumMaker.Classes.Custom
             SizeMode = PictureBoxSizeMode.StretchImage;
 
             // Add controls to the PictureBox
-            Controls.Add(DeleteButton);
-            Controls.Add(EditButton);
+            
             Controls.Add(Title);
             Controls.Add(Description);
 
             // Position controls
-            DeleteButton.Location = new Point(Width - DeleteButton.Width, 0);
-            EditButton.Location = new Point(Width - EditButton.Width, Height - EditButton.Height);
+            
             Title.Location = new Point(0, 0);
             Description.Location = new Point(0, Height - Description.Height);
 
             // Assign event handlers (you can add more as needed)
-            DeleteButton.Click += (sender, e) => { DeleteAlbum(sender, e, album); };
-            EditButton.Click += (sender, e) => { EditAlbum(sender, e, album); };
+           
             Click += (sender, e) => { OpenAlbum(sender,e,album); };
-            DeleteButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Delete");
-            EditButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Edit");
+
             this.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, album.GetDescription());
             this.MouseLeave += (sender, e) => Cursor = Cursors.Default;
         }

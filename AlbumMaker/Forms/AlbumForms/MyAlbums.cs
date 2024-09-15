@@ -1,4 +1,7 @@
 ﻿using AlbumMaker.Classes;
+using AlbumMaker.Classes.Custom;
+using AlbumMaker.Classes.Items;
+using AlbumMaker.Properties;
 
 
 namespace AlbumMaker.Forms
@@ -22,11 +25,25 @@ namespace AlbumMaker.Forms
                 albumCreate.Show();
             }
         }
+        private void LoadAlbums()
+        {
+            try
+            {
+                
+                foreach(AlbumItem album in SettingsManager.userItem.GetAlbumItems())
+                {
+                    DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(album,false);
+                    flpDisplayAlbums.Controls.Add(digiBumPictureBox);
+                }
+            }
+            catch { throw; }
+        }
 
         private void MyAlbums_Load(object sender, EventArgs e)
         {
             SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
+            this.LoadAlbums();
         }
     }
 }

@@ -82,12 +82,12 @@ namespace AlbumMaker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string AppLocation {
+        public string AppEXELocation {
             get {
-                return ((string)(this["AppLocation"]));
+                return ((string)(this["AppEXELocation"]));
             }
             set {
-                this["AppLocation"] = value;
+                this["AppEXELocation"] = value;
             }
         }
         
@@ -136,6 +136,42 @@ namespace AlbumMaker.Properties {
             }
             set {
                 this["AlbumSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Albums")]
+        public string AppAlbumsFolderName {
+            get {
+                return ((string)(this["AppAlbumsFolderName"]));
+            }
+            set {
+                this["AppAlbumsFolderName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Database")]
+        public string AppDatabaseFolderName {
+            get {
+                return ((string)(this["AppDatabaseFolderName"]));
+            }
+            set {
+                this["AppDatabaseFolderName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Database.db")]
+        public string AppDatabaseFileName {
+            get {
+                return ((string)(this["AppDatabaseFileName"]));
+            }
+            set {
+                this["AppDatabaseFileName"] = value;
             }
         }
     }
