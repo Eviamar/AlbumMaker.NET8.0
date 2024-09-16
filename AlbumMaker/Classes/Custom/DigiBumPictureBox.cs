@@ -1,14 +1,7 @@
 ﻿using AlbumMaker.Classes.Db;
 using AlbumMaker.Classes.Items;
-using AlbumMaker.Forms.AlbumForms;
-using AlbumMaker.Properties;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace AlbumMaker.Classes.Custom
 {
