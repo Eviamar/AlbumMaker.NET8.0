@@ -3,20 +3,47 @@
   <Profiles />
   <Settings>
     <Setting Name="AppName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Album Maker</Value>
+      <Value Profile="(Default)">DigiBum</Value>
     </Setting>
     <Setting Name="FontSize" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">9</Value>
     </Setting>
     <Setting Name="isDark" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="SQLConnection" Type="(Connection string)" Scope="Application">
-      <DesignTimeValue Profile="(Default)" />
-      <Value Profile="(Default)" />
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ConnectionString&gt;Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|Data|\Appdata.mdf;Integrated Security=True&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|Data|\Appdata.mdf;Integrated Security=True</Value>
     </Setting>
     <Setting Name="userName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AppEXELocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="isLogged" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="currentUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AppDataFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AlbumSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="AppAlbumsFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Albums</Value>
+    </Setting>
+    <Setting Name="AppDatabaseFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Database</Value>
+    </Setting>
+    <Setting Name="AppDatabaseFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Database.db</Value>
     </Setting>
   </Settings>
 </SettingsFile>

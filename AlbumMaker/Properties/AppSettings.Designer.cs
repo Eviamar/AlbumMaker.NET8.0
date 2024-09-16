@@ -25,7 +25,7 @@ namespace AlbumMaker.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Album Maker")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DigiBum")]
         public string AppName {
             get {
                 return ((string)(this["AppName"]));
@@ -34,7 +34,7 @@ namespace AlbumMaker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
         public float FontSize {
             get {
                 return ((float)(this["FontSize"]));
@@ -59,6 +59,8 @@ namespace AlbumMaker.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|Data|\\Appdata.mdf;Integrated" +
+            " Security=True")]
         public string SQLConnection {
             get {
                 return ((string)(this["SQLConnection"]));
@@ -74,6 +76,102 @@ namespace AlbumMaker.Properties {
             }
             set {
                 this["userName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AppEXELocation {
+            get {
+                return ((string)(this["AppEXELocation"]));
+            }
+            set {
+                this["AppEXELocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isLogged {
+            get {
+                return ((bool)(this["isLogged"]));
+            }
+            set {
+                this["isLogged"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string currentUser {
+            get {
+                return ((string)(this["currentUser"]));
+            }
+            set {
+                this["currentUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AppDataFolder {
+            get {
+                return ((string)(this["AppDataFolder"]));
+            }
+            set {
+                this["AppDataFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int AlbumSize {
+            get {
+                return ((int)(this["AlbumSize"]));
+            }
+            set {
+                this["AlbumSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Albums")]
+        public string AppAlbumsFolderName {
+            get {
+                return ((string)(this["AppAlbumsFolderName"]));
+            }
+            set {
+                this["AppAlbumsFolderName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Database")]
+        public string AppDatabaseFolderName {
+            get {
+                return ((string)(this["AppDatabaseFolderName"]));
+            }
+            set {
+                this["AppDatabaseFolderName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Database.db")]
+        public string AppDatabaseFileName {
+            get {
+                return ((string)(this["AppDatabaseFileName"]));
+            }
+            set {
+                this["AppDatabaseFileName"] = value;
             }
         }
     }

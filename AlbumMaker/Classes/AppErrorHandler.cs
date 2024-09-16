@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+
 
 namespace AlbumMaker.Classes
 {
@@ -22,7 +18,7 @@ namespace AlbumMaker.Classes
                 string errorMessage = $"[{DateTime.Now}] {ex.Message}{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}";
 
                 // Append the error message to the log file
-                File.AppendAllText(LogFilePath, errorMessage);
+                File.AppendAllText(LogFilePath, $"=>{errorMessage}");
                 DialogResult dr = MessageBox.Show($"An error occurred and been recorded to the error log file.\nDo you want to open the log?","Alert",MessageBoxButtons.YesNo,MessageBoxIcon.Information);
                 if(dr == DialogResult.Yes)
                 {
@@ -35,8 +31,8 @@ namespace AlbumMaker.Classes
             }
             catch (Exception logEx)
             {
-                // Handle any exceptions that occur while logging
-                //Console.WriteLine($"Failed to write to log file: {logEx.Message}");
+                
+                MessageBox.Show($"Failed to write to log file: {logEx.Message}\n\n{logEx}",logEx.Message);
             }
         }
     }

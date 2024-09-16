@@ -1,6 +1,6 @@
-﻿namespace AlbumMaker.Forms
+﻿namespace AlbumMaker.Forms.UserForms
 {
-    partial class UserPanel
+    partial class AdminPanel
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,10 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            flpUsers = new FlowLayoutPanel();
+            SuspendLayout();
+            // 
+            // flpUsers
+            // 
+            flpUsers.Dock = DockStyle.Fill;
+            flpUsers.Location = new Point(0, 0);
+            flpUsers.Name = "flpUsers";
+            flpUsers.Size = new Size(410, 326);
+            flpUsers.TabIndex = 0;
+            // 
+            // AdminPanel
+            // 
+            AccessibleName = "Admin panel";
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(flpUsers);
+            Name = "AdminPanel";
+            Size = new Size(410, 326);
+            Load += AdminPanel_Load;
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private FlowLayoutPanel flpUsers;
     }
 }

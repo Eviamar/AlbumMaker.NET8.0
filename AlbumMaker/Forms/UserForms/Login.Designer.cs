@@ -53,10 +53,10 @@
             // lblAlreadyRegistered
             // 
             lblAlreadyRegistered.AutoSize = true;
-            lblAlreadyRegistered.Location = new Point(3, 124);
+            lblAlreadyRegistered.Location = new Point(3, 149);
             lblAlreadyRegistered.Name = "lblAlreadyRegistered";
             lblAlreadyRegistered.Size = new Size(148, 15);
-            lblAlreadyRegistered.TabIndex = 1;
+            lblAlreadyRegistered.TabIndex = 5;
             lblAlreadyRegistered.TabStop = true;
             lblAlreadyRegistered.Text = "No account? Register now!";
             lblAlreadyRegistered.LinkClicked += lblAlreadyRegistered_LinkClicked;
@@ -64,12 +64,12 @@
             // lblForgot
             // 
             lblForgot.AutoSize = true;
-            lblForgot.Location = new Point(3, 150);
+            lblForgot.Location = new Point(3, 175);
             lblForgot.Name = "lblForgot";
-            lblForgot.Size = new Size(137, 15);
-            lblForgot.TabIndex = 2;
+            lblForgot.Size = new Size(100, 15);
+            lblForgot.TabIndex = 6;
             lblForgot.TabStop = true;
-            lblForgot.Text = "Forgot login credentials?";
+            lblForgot.Text = "Forgot password?";
             lblForgot.LinkClicked += lblForgot_LinkClicked;
             // 
             // textBoxUsername
@@ -78,7 +78,7 @@
             textBoxUsername.Name = "textBoxUsername";
             textBoxUsername.PlaceholderText = "Username";
             textBoxUsername.Size = new Size(183, 23);
-            textBoxUsername.TabIndex = 3;
+            textBoxUsername.TabIndex = 0;
             // 
             // textBoxPassword
             // 
@@ -87,7 +87,7 @@
             textBoxPassword.PasswordChar = '*';
             textBoxPassword.PlaceholderText = "Password";
             textBoxPassword.Size = new Size(183, 23);
-            textBoxPassword.TabIndex = 4;
+            textBoxPassword.TabIndex = 1;
             // 
             // checkBoxPassword
             // 
@@ -95,24 +95,24 @@
             checkBoxPassword.Location = new Point(3, 77);
             checkBoxPassword.Name = "checkBoxPassword";
             checkBoxPassword.Size = new Size(108, 19);
-            checkBoxPassword.TabIndex = 5;
+            checkBoxPassword.TabIndex = 2;
             checkBoxPassword.Text = "Show password";
             checkBoxPassword.UseVisualStyleBackColor = true;
             checkBoxPassword.CheckedChanged += checkBoxPassword_CheckedChanged;
             // 
             // btnSubmit
             // 
-            btnSubmit.Location = new Point(111, 77);
+            btnSubmit.Location = new Point(3, 123);
             btnSubmit.Name = "btnSubmit";
-            btnSubmit.Size = new Size(75, 40);
-            btnSubmit.TabIndex = 6;
+            btnSubmit.Size = new Size(183, 23);
+            btnSubmit.TabIndex = 4;
             btnSubmit.Text = "Login";
             btnSubmit.UseVisualStyleBackColor = true;
             btnSubmit.Click += btnSubmit_Click;
             // 
             // richTextBoxQuestion
             // 
-            richTextBoxQuestion.Location = new Point(3, 168);
+            richTextBoxQuestion.Location = new Point(3, 193);
             richTextBoxQuestion.Name = "richTextBoxQuestion";
             richTextBoxQuestion.ReadOnly = true;
             richTextBoxQuestion.Size = new Size(183, 48);
@@ -122,7 +122,7 @@
             // 
             // textBoxAnswer
             // 
-            textBoxAnswer.Location = new Point(3, 222);
+            textBoxAnswer.Location = new Point(3, 247);
             textBoxAnswer.Name = "textBoxAnswer";
             textBoxAnswer.PlaceholderText = "Your answer";
             textBoxAnswer.Size = new Size(185, 23);
@@ -131,13 +131,15 @@
             // 
             // btnForgot
             // 
-            btnForgot.Location = new Point(3, 251);
+            btnForgot.AccessibleName = "";
+            btnForgot.Location = new Point(3, 276);
             btnForgot.Name = "btnForgot";
             btnForgot.Size = new Size(185, 23);
             btnForgot.TabIndex = 9;
             btnForgot.Text = "Remind me!";
             btnForgot.UseVisualStyleBackColor = true;
             btnForgot.Visible = false;
+            btnForgot.Click += btnForgot_Click;
             // 
             // checkBoxRememberMe
             // 
@@ -145,12 +147,14 @@
             checkBoxRememberMe.Location = new Point(3, 98);
             checkBoxRememberMe.Name = "checkBoxRememberMe";
             checkBoxRememberMe.Size = new Size(104, 19);
-            checkBoxRememberMe.TabIndex = 10;
+            checkBoxRememberMe.TabIndex = 3;
             checkBoxRememberMe.Text = "Remember me";
             checkBoxRememberMe.UseVisualStyleBackColor = true;
+            checkBoxRememberMe.CheckedChanged += checkBoxRememberMe_CheckedChanged;
             // 
             // Login
             // 
+            AccessibleName = "Login";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(checkBoxRememberMe);
@@ -165,7 +169,7 @@
             Controls.Add(lblAlreadyRegistered);
             Controls.Add(lblLogin);
             Name = "Login";
-            Size = new Size(205, 285);
+            Size = new Size(205, 316);
             Load += Login_Load;
             ResumeLayout(false);
             PerformLayout();
