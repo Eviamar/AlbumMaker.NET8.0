@@ -1,5 +1,7 @@
 ﻿using AlbumMaker.Classes;
+using AlbumMaker.Classes.Custom;
 using AlbumMaker.Classes.Items;
+using System.Diagnostics;
 
 
 namespace AlbumMaker.Forms.AlbumForms
@@ -27,102 +29,7 @@ namespace AlbumMaker.Forms.AlbumForms
             this.albumItem = SettingsManager.userItem.GetAlbumItems()[albumID];
 
         }
-        
-        //public void LoadImages(int index)
-        //{
-        //    labelTitle.Text = albumItem.GetName();
-        //    labelDesc.Text = albumItem.GetDescription();
 
-        //    if (index < 0 || index >= albumItem.GetImages().Count)
-        //        return;
-        //    //string[] pictures = Directory.GetFiles($"{picsPath}\\{albumTemplate}");
-        //    for (int j = index, i = 0; j < albumItem.GetImages().Count && i < 5; j++, i++)
-        //    {
-
-        //        //DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(albumItem.GetImages()[i], false);
-        //        PictureBox p = new PictureBox()
-        //        {
-        //            Dock = DockStyle.Fill,
-        //            SizeMode = PictureBoxSizeMode.StretchImage,
-        //            ImageLocation = albumItem.GetImages()[j].GetImagePath(),
-
-        //        };
-        //        Label l = new Label()
-        //        {
-        //            AutoSize = true,
-        //            Text = albumItem.GetImages()[j].GetDescription(),
-        //            Location = new Point(0, 0)
-        //        };
-        //        p.Controls.Add(l);
-        //        int row = -1, col = -1;
-        //        switch (albumItem.GetTemplate())
-        //        {
-        //            case "Birthday":
-        //                if (i == 0) { row = 1; col = 1; } // Middle
-        //                else if (i == 1) { row = 0; col = 0; } // Top left
-        //                else if (i == 2) { row = 0; col = 2; } // Top right
-        //                else if (i == 3) { row = 2; col = 0; } // Bottom left
-        //                else { row = 2; col = 2; } // Bottom right
-        //                break;
-        //            case "Vacation":
-        //                if (i == 0) { row = 0; col = 0; } // Top Left
-        //                else if (i == 1) { row = 0; col = 1; } // Top Middle
-        //                else if (i == 2) { row = 1; col = 2; } // Middle right
-        //                else if (i == 3) { row = 2; col = 0; } // Bottom left
-        //                else { row = 2; col = 1; } // Bottom Middle
-
-        //                break;
-        //            case "Wedding":
-        //                if (i == 0) { row = 0; col = 1; } // Top Middle
-        //                else if (i == 1) { row = 1; col = 0; } // Middle Left
-        //                else if (i == 2) { row = 1; col = 1; } // Middle Middle 
-        //                else if (i == 3) { row = 1; col = 2; } // Middle Right
-        //                else { row = 2; col = 1; } // Bottom Middle
-        //                break;
-        //            default:
-
-        //                break;
-        //        }
-
-        //        if (row == -1 || col == -1)
-        //        {
-        //            this.Dispose();
-        //            return;
-        //        }
-
-        //        // Add PictureBox to the TableLayoutPanel
-        //        tableLayoutPanelImages.Controls.Add(p, col, row);
-
-        //        //add pictures related to the template to empty cells in table layout panel
-        //        int picturesCount = 0;
-        //        for (int k = 0; k < tableLayoutPanelImages.RowCount; k++)
-        //        {
-
-        //            for (int m = 0; m < tableLayoutPanelImages.ColumnCount; m++)
-        //            {
-        //                if (tableLayoutPanelImages.GetControlFromPosition(k, m) == null)
-        //                {
-        //                    if (picturesCount >= 4)
-        //                        picturesCount = 0;
-        //                    PictureBox pictureBox = new PictureBox()
-        //                    {
-        //                        //Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom,
-        //                        Dock = DockStyle.Fill,
-        //                        SizeMode = PictureBoxSizeMode.StretchImage,
-
-        //                    };
-        //                    //pictureBox.Image = Image.FromFile(pictures[picturesCount]);
-        //                    picturesCount++;
-        //                    tableLayoutPanelImages.Controls.Add(pictureBox, k, m);
-
-        //                }
-        //            }
-
-        //        }
-
-        //    }
-        //}
-       
 
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -148,7 +55,15 @@ namespace AlbumMaker.Forms.AlbumForms
             LoadImages(index);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {albumItem}";
         }
-
+        private void OpenImage(object sender, EventArgs e)
+        {
+            PictureBox p = (PictureBox)sender;
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = p.ImageLocation,
+                UseShellExecute = true
+            });
+        }
 
         public void LoadImages(int index)
         {
@@ -175,9 +90,12 @@ namespace AlbumMaker.Forms.AlbumForms
                 {
                     Dock = DockStyle.Fill,
                     SizeMode = PictureBoxSizeMode.StretchImage,
-                    ImageLocation = albumItem.GetImages()[j].GetImagePath()
+                    ImageLocation = albumItem.GetImages()[j].GetImagePath(),
+                    
                 };
-
+                p.Click += OpenImage;
+                p.MouseEnter += (sender, e) => p.Cursor = Cursors.Hand;
+                p.MouseLeave += (sender, e) => p.Cursor = Cursors.Default;
                 // Create a label for the image description
                 Label l = new Label()
                 {
@@ -300,39 +218,7 @@ namespace AlbumMaker.Forms.AlbumForms
             btnLeft.Enabled = index > 0;
         }
 
-        //private void btnLeft_Click(object sender, EventArgs e)
-        //{
-        //    if (index >= 5)
-        //    {
-        //        tableLayoutPanelImages.Controls.Clear();
-        //        LoadImages(index - 5);
-        //        index -= 5;
-        //        labelPage.Text = (--page).ToString();
-        //    }
-        //    if (index == 0)
-        //        btnLeft.Enabled = false;
-        //    else
-        //        btnRight.Enabled = true;
-        //}
 
-        //private void btnRight_Click(object sender, EventArgs e)
-        //{
-        //    if (index < albumSize)
-        //    {
-        //        tableLayoutPanelImages.Controls.Clear();
-        //        LoadImages(index + 5);
-        //        index += 5;
-        //        labelPage.Text = (++page).ToString();
-        //    }
-        //    if (index == albumSize) // TO DO: need to fix this
-        //        btnRight.Enabled = false;
-        //    else
-        //        btnLeft.Enabled = true;
-        //}
-
-        private void labelPage_Click(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }

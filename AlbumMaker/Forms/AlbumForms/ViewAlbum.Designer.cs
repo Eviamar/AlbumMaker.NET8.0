@@ -66,7 +66,6 @@
             labelPage.Size = new Size(13, 15);
             labelPage.TabIndex = 2;
             labelPage.Text = "1";
-            labelPage.Click += labelPage_Click;
             // 
             // labelDesc
             // 

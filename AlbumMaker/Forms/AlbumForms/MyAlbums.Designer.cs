@@ -30,14 +30,13 @@
         {
             menuStrip1 = new MenuStrip();
             createNewAlbumToolStripMenuItem = new ToolStripMenuItem();
-            editAlbumsToolStripMenuItem = new ToolStripMenuItem();
             flpDisplayAlbums = new FlowLayoutPanel();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { createNewAlbumToolStripMenuItem, editAlbumsToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { createNewAlbumToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(433, 24);
@@ -50,12 +49,6 @@
             createNewAlbumToolStripMenuItem.Size = new Size(115, 20);
             createNewAlbumToolStripMenuItem.Text = "Create new album";
             createNewAlbumToolStripMenuItem.Click += createNewAlbumToolStripMenuItem_Click;
-            // 
-            // editAlbumsToolStripMenuItem
-            // 
-            editAlbumsToolStripMenuItem.Name = "editAlbumsToolStripMenuItem";
-            editAlbumsToolStripMenuItem.Size = new Size(81, 20);
-            editAlbumsToolStripMenuItem.Text = "Edit albums";
             // 
             // flpDisplayAlbums
             // 
@@ -85,7 +78,6 @@
 
         private MenuStrip menuStrip1;
         private ToolStripMenuItem createNewAlbumToolStripMenuItem;
-        private ToolStripMenuItem editAlbumsToolStripMenuItem;
         private FlowLayoutPanel flpDisplayAlbums;
     }
 }

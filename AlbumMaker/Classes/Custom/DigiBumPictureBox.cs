@@ -1,5 +1,7 @@
-﻿using AlbumMaker.Classes.Items;
+﻿using AlbumMaker.Classes.Db;
+using AlbumMaker.Classes.Items;
 using AlbumMaker.Forms.AlbumForms;
+using AlbumMaker.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,6 +21,7 @@ namespace AlbumMaker.Classes.Custom
         private ToolTip imageToolTip = new ToolTip();
         public event EventHandler<int> ImageDeleted;
         public event EventHandler<int> albumView;
+        private static readonly string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\";
 
         #region constructor for image view
         public DigiBumPictureBox(ImageItem image,bool isEdit)
@@ -144,7 +147,7 @@ namespace AlbumMaker.Classes.Custom
 
             // Initialize buttons and labels
             if (isEdit)
-            {
+            { 
                 DeleteButton = new Button
                 {
                     Name = "btnDelete",
@@ -230,16 +233,36 @@ namespace AlbumMaker.Classes.Custom
         }
         private void EditAlbum(object sender, EventArgs e, AlbumItem album)
         {
-
+            MessageBox.Show($"Edit?\n{album}", "Edit");
         }
         private void OpenAlbum(object sender, EventArgs e,AlbumItem album)
         {
            int tabIndex = this.TabIndex;
-            albumView?.Invoke(this, tabIndex);
+           albumView?.Invoke(this, tabIndex);
 
         }
-        private void DeleteAlbum(object sender, EventArgs e,AlbumItem album)
+        private async void DeleteAlbum(object sender, EventArgs e,AlbumItem album)
         {
+            DialogResult dr = MessageBox.Show($"Delete?\n{album}","Deletion",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+            if(dr == DialogResult.Yes)
+            {
+                try
+                {
+                    bool res =  await AppDataBase.DeleteAlbum(album);
+                    if (res)
+                    {
+                        string albumFolderPath = pictureFolderPath + $@"{album.GetID()}\";
+                        if (Directory.Exists(albumFolderPath))
+                        {
+                            Directory.Delete(albumFolderPath,true);
+                        }
+                        SettingsManager.userItem.DeleteSpecificAlbum(album);
+                        this.Dispose();
+                    }
+                    
+                }
+                catch { throw; }
+            }
 
         }
         #endregion  constructor for album view

@@ -510,12 +510,12 @@ namespace AlbumMaker.Classes.Db
                         if (rowsAffected > 0)
                         {
                             await GetAllImagesOfAlbum(album);
+                            
                             foreach(ImageItem image in album.GetImages())
                             {
                                 bool res = await DeleteImage(image);
-                                if (res)
-                                    album.DeleteImageItem(image);
                             }
+                            album.SetImages(new List<ImageItem>());
                             return true;
                         }
                         

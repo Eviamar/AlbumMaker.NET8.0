@@ -10,7 +10,7 @@ namespace AlbumMaker.Forms
 {
     public partial class CreateAlbum : UserControl
     {
-        private string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\Albums\";
+        private string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\";
         private int imageCount = 0;
         List<KeyValuePair<int,string>> images = new List<KeyValuePair<int,string>>();
         public CreateAlbum()
