@@ -222,8 +222,8 @@ namespace AlbumMaker.Classes.Custom
             }
             else
             {
-                Image = GenerateSmallerImage(album.GetImages()[0].GetName(), 200, 200);
-                ImageLocation = album.GetImages()[0].GetName();
+                Image = GenerateSmallerImage(album.GetImages()[0].GetImagePath(), 200, 200);
+                ImageLocation = album.GetImages()[0].GetImagePath();
             }
 
             SizeMode = PictureBoxSizeMode.StretchImage;

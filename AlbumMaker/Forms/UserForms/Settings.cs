@@ -1,4 +1,5 @@
 ﻿using AlbumMaker.Classes;
+using AlbumMaker.Classes.Db;
 using System.Windows.Forms;
 
 
@@ -43,7 +44,7 @@ namespace AlbumMaker.Forms
             SettingsManager.SetTheme(this);
             isLoading = true;
 
-            lblDataLocation.Text = Properties.AppSettings.Default.AppDataFolder+$@"\{Properties.AppSettings.Default.AppName}";
+            lblDataLocation.Text = Properties.AppSettings.Default.AppDataFolder + $@"\{Properties.AppSettings.Default.AppName}";
             Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
             lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
 
@@ -106,12 +107,17 @@ namespace AlbumMaker.Forms
 
         private void btnChangeDataLocation_Click(object sender, EventArgs e)
         {
+            if (!Properties.AppSettings.Default.isLogged)
+            {
+                MessageBox.Show("You need to login to the program to change path.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             string location = Properties.AppSettings.Default.AppDataFolder;
             string oldPath = Properties.AppSettings.Default.AppDataFolder; //might not be needed this cause can use folderBroswerDialog.SelectedPath
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             folderBrowserDialog.ShowNewFolderButton = true;
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            { 
+            {
                 location = folderBrowserDialog.SelectedPath;
                 //=> TO COPY ALL CONTENT FROM OLD PATH TO NEW PATH AND THEN CHANGE IN THE AppSettings
                 //Properties.AppSettings.Default.AppDataFolder = location;
@@ -125,6 +131,16 @@ namespace AlbumMaker.Forms
 
 
 
+        }
+
+        private void btnDropTables_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("YOU ARE ABOUT TO DELETE EVERYTHING FROM THE DATABASE\nARE YOU SURE ABOUT THAT?", "!!!ALERT!!!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if(dr == DialogResult.Yes)
+            {
+                AppDataBase.DropTables();
+                SettingsManager.userItem = null;
+            }
         }
     }
 }

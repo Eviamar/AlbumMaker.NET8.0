@@ -37,6 +37,7 @@
             flpDisplayLabelDataLocation = new FlowLayoutPanel();
             lblDataLocation = new Label();
             btnChangeDataLocation = new Button();
+            btnDropTables = new Button();
             grpBoxTheme.SuspendLayout();
             groupBoxFontSize.SuspendLayout();
             grpBoxSaveLocation.SuspendLayout();
@@ -142,16 +143,27 @@
             btnChangeDataLocation.UseVisualStyleBackColor = true;
             btnChangeDataLocation.Click += btnChangeDataLocation_Click;
             // 
+            // btnDropTables
+            // 
+            btnDropTables.Location = new Point(6, 195);
+            btnDropTables.Name = "btnDropTables";
+            btnDropTables.Size = new Size(75, 23);
+            btnDropTables.TabIndex = 4;
+            btnDropTables.Text = "DropTables";
+            btnDropTables.UseVisualStyleBackColor = true;
+            btnDropTables.Click += btnDropTables_Click;
+            // 
             // Settings
             // 
             AccessibleName = "Application settings";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(btnDropTables);
             Controls.Add(grpBoxSaveLocation);
             Controls.Add(groupBoxFontSize);
             Controls.Add(grpBoxTheme);
             Name = "Settings";
-            Size = new Size(563, 501);
+            Size = new Size(292, 221);
             Load += Settings_Load;
             grpBoxTheme.ResumeLayout(false);
             grpBoxTheme.PerformLayout();
@@ -174,5 +186,6 @@
         private Button btnChangeDataLocation;
         private Label lblDataLocation;
         private FlowLayoutPanel flpDisplayLabelDataLocation;
+        private Button btnDropTables;
     }
 }

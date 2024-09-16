@@ -4,6 +4,7 @@ namespace AlbumMaker.Classes.Items
 {
     internal class ImageItem : Item
     {
+        //maybe consider add id of related album so you can put it in the path {albumID}\\{this.imageName} //instead of this.path => change path field name to "imageName"
         private string path;
         private string description;
 
@@ -18,7 +19,7 @@ namespace AlbumMaker.Classes.Items
         }
         public string GetImagePath()
         {
-            return $@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\\{this.path}";
+            return $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\{this.GetName()}";
 
         }
     }

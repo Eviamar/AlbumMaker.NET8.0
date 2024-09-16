@@ -56,6 +56,33 @@ namespace AlbumMaker.Classes.Db
             }
             catch { throw; }
         }
+        public static async void DropTables()
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string[] dropTableSql = {
+                        "DROP TABLE IF EXISTS Users;",
+                        "DROP TABLE IF EXISTS Albums;",
+                        "DROP TABLE IF EXISTS Images;"
+                };
+
+                    foreach (string sql in dropTableSql)
+                    {
+                        using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                        {
+                            await command.ExecuteNonQueryAsync();
+                        }
+                    }
+
+                    await connection.CloseAsync();
+                }
+            }
+            catch  {  throw; }
+        }
 
         #endregion generic
 
@@ -92,10 +119,18 @@ namespace AlbumMaker.Classes.Db
                                 {
 
                                     UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
-                                    SettingsManager.userItem = user;
                                     await connection.CloseAsync();
-                                    await GetAllAlbumsOfUser(user);
-                                    return true;
+                                    bool loadUser = await GetAllAlbumsOfUser(user);
+                                    if (loadUser)
+                                    {
+                                        SettingsManager.userItem = user;
+                                        return true;
+                                    }
+                                    else 
+                                    {
+                                        MessageBox.Show("Failed to load user data","Failed");
+                                        return false;
+                                    }
                                 }
                                 else
                                 {
@@ -375,17 +410,23 @@ namespace AlbumMaker.Classes.Db
 
                                 // Create a new UserItem for each row and add it to the list
                                 AlbumItem album = new AlbumItem(albumID, albumName, albumDescription, albumTemplate);
-                                await GetAllImagesOfAlbum(album);
-                                albums.Add(album);
+                                bool loadData = await GetAllImagesOfAlbum(album);
+                                if(loadData)
+                                    albums.Add(album);
+                                else
+                                {
+                                    MessageBox.Show($"Failed to load data from {album.GetName()} album","Failed");
+                                    return false;
+                                }
                             }
-                            user.SetAlbumItems(albums);
                         }
                     }
                 }
+                user.SetAlbumItems(albums);
             }
             catch { return false; throw; }
 
-            user.SetAlbumItems(albums);
+            
             if (user.GetAlbumItems().Count > 0)
                 return true;
             return false;
@@ -512,8 +553,7 @@ namespace AlbumMaker.Classes.Db
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     await connection.OpenAsync();
-
-                    string query = $"SELECT * FROM Albums WHERE User_ID={album.GetID()}"; // Query to get all users
+                    string query = $"SELECT * FROM Images WHERE ALBUM_ID={album.GetID()}"; // Query to get all users
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
                         // Asynchronously execute the command and get a data reader
@@ -525,11 +565,11 @@ namespace AlbumMaker.Classes.Db
                                 int imageID = reader.GetInt32(reader.GetOrdinal("IMAGE_ID"));
                                 string imagePath = reader.GetString(reader.GetOrdinal("Image_path"));
                                 string imageDescription = reader.GetString(reader.GetOrdinal("Image_Description"));
-
                                 // Create a new UserItem for each row and add it to the list
                                 ImageItem image = new ImageItem(imageID, imagePath, imageDescription);
                                 images.Add(image);
                             }
+                           
                         }
                         album.SetImages(images);
                     }
@@ -563,7 +603,7 @@ namespace AlbumMaker.Classes.Db
                         insertCommand.Parameters.AddWithValue("@imageDescription", imageDescription);
                         await insertCommand.ExecuteScalarAsync();
                     }
-                    MessageBox.Show($"{imagePath} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show($"{imagePath} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     connection.Close();
                     return true;
                 }
