@@ -1,5 +1,8 @@
 ﻿
+using AlbumMaker.Classes.Custom;
 using AlbumMaker.Classes.Items;
+using AlbumMaker.Properties;
+using System.Windows.Forms;
 
 namespace AlbumMaker.Classes
 {
@@ -43,18 +46,31 @@ namespace AlbumMaker.Classes
         public static void SetTheme(UserControl uc)
         {
             bool isDark = Properties.AppSettings.Default.isDark;
-            uc.Font = GetFont();
-            foreach (Control c in uc.Controls)
+            if (uc.Name == "MyAlbums")
             {
-                SetThemeToControls(c, isDark);
-                if (c.HasChildren)
+                uc.ForeColor = Color.White;
+                foreach(Control c in uc.Controls)
                 {
-                    foreach (Control cControl in c.Controls)
+                    if (c is MenuStrip)
+                        SetThemeToControls(c,isDark);
+                }
+            }
+            else
+            {
+                uc.Font = GetFont();
+                foreach (Control c in uc.Controls)
+                {
+                    SetThemeToControls(c, isDark);
+                    if (c.HasChildren)
                     {
-                        SetThemeToControls(cControl, isDark);
+                        foreach (Control cControl in c.Controls)
+                        {
+                            SetThemeToControls(cControl, isDark);
+                        }
                     }
                 }
             }
+            
 
         }
         public static void SetTheme(Form f)
@@ -144,15 +160,24 @@ namespace AlbumMaker.Classes
 
         public static void SetThemeToControls(Control control, bool theme)
         {
+            
             if (control is Button btn)
             {
-                btn.BackColor = theme ?
-              ConvertHexToColor(Properties.DarkThemeSettings.Default.ButtonBackground)
-              : ConvertHexToColor(Properties.LightThemeSettings.Default.ButtonBackground);
-                btn.ForeColor = theme ?
-                    ConvertHexToColor(Properties.DarkThemeSettings.Default.ButtonForeground)
-                    : ConvertHexToColor(Properties.LightThemeSettings.Default.ButtonForeground);
+                if (btn.Name != "btnDelete" || btn.Name != "btnEdit")
+                {
+                    btn.BackColor = theme ?
+                        ConvertHexToColor(Properties.DarkThemeSettings.Default.ButtonBackground)
+                        : ConvertHexToColor(Properties.LightThemeSettings.Default.ButtonBackground);
+                    btn.ForeColor = theme ?
+                        ConvertHexToColor(Properties.DarkThemeSettings.Default.ButtonForeground)
+                        : ConvertHexToColor(Properties.LightThemeSettings.Default.ButtonForeground);
+                }   
 
+            }
+            
+            else if(control is DigiBumPictureBox digiBum)
+            {
+                
             }
             else if (control is TextBox txtBox)
             {
@@ -198,8 +223,8 @@ namespace AlbumMaker.Classes
             else
             {
                 control.BackColor = theme ?
-              ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
-              : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
                 control.ForeColor = theme ?
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);

@@ -1,13 +1,14 @@
 ﻿using AlbumMaker.Classes.Items;
+using Microsoft.VisualBasic.ApplicationServices;
 using System.Data.SQLite;
 
 namespace AlbumMaker.Classes.Db
 {
     internal static class AppDataBase
     {
-        private static string dataSource = $@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\\{Properties.AppSettings.Default.AppDatabaseFolderName}";
-        private static string dataBaseFileName = $"{Properties.AppSettings.Default.AppDatabaseFileName}";
-        private static string connectionString = @$"Data Source={dataSource}\{dataBaseFileName};Version=3";
+        private static readonly string dataSource = $@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\\{Properties.AppSettings.Default.AppDatabaseFolderName}";
+        private static readonly string dataBaseFileName = $"{Properties.AppSettings.Default.AppDatabaseFileName}";
+        private static readonly string connectionString = @$"Data Source={dataSource}\{dataBaseFileName};Version=3";
 
         #region generic database queries
         public static async void CreateDataBase()
@@ -83,7 +84,6 @@ namespace AlbumMaker.Classes.Db
             }
             catch  {  throw; }
         }
-
         #endregion generic
 
         #region user queries
@@ -153,7 +153,6 @@ namespace AlbumMaker.Classes.Db
             }
             catch  { throw; }
         }
-
         private static async Task<bool> AreThereAnyUsers() 
         {
             try
@@ -174,7 +173,6 @@ namespace AlbumMaker.Classes.Db
             catch
             { return false; throw; }
         }
-
         public static async Task<bool> RecoverPassword(string userName)
         {
             try
@@ -223,7 +221,6 @@ namespace AlbumMaker.Classes.Db
             }
             catch { throw; }
         }
-
         public static async Task<bool> CreateUser(string UserName, string Password,string userQuestion,string userAnswer)
         {
             try
@@ -293,7 +290,6 @@ namespace AlbumMaker.Classes.Db
             }
             catch { throw; }
         }
-        
         public static async Task<bool> UpdateUser(UserItem user)
         {
             
@@ -324,7 +320,6 @@ namespace AlbumMaker.Classes.Db
             }
             catch {  return false; throw; }
         }
-
         public static async Task<bool> DeleteUser(UserItem user)
         {
             if (user == null) 
@@ -382,7 +377,6 @@ namespace AlbumMaker.Classes.Db
         }
         #endregion user
 
-
         #region album queries
         public static async Task<bool> GetAllAlbumsOfUser(UserItem user)
         {
@@ -431,7 +425,6 @@ namespace AlbumMaker.Classes.Db
                 return true;
             return false;
         }
-
         public static async Task<int> CreateAlbum(UserItem user, string albumName, string albumDescription,string albumTemplate)
         {
             try
@@ -459,20 +452,15 @@ namespace AlbumMaker.Classes.Db
                     using (SQLiteCommand getIdCommand = new SQLiteCommand("SELECT last_insert_rowid()", connection))
                     {
                         var albumId = await getIdCommand.ExecuteScalarAsync();
-
-                        // Display a success message and close the connection
-                        MessageBox.Show($"{albumName} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await connection.CloseAsync();
                         AlbumItem albumItem = new AlbumItem(Convert.ToInt32(albumId), albumName, albumDescription, albumTemplate);
                         user.AddAlbumItem(albumItem);
-                        // Return the ALBUM_ID as an integer
                         return Convert.ToInt32(albumId);
                     }
                 }
             }
             catch { return -1; throw; }
         }
- 
         public static async Task<bool> UpdateAlbum(AlbumItem album)
         {
             if (album == null)
@@ -603,8 +591,14 @@ namespace AlbumMaker.Classes.Db
                         insertCommand.Parameters.AddWithValue("@imageDescription", imageDescription);
                         await insertCommand.ExecuteScalarAsync();
                     }
-                    //MessageBox.Show($"{imagePath} created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    connection.Close();
+
+                    using (SQLiteCommand getIdCommand = new SQLiteCommand("SELECT last_insert_rowid()", connection))
+                    {
+                        var imageID = await getIdCommand.ExecuteScalarAsync();
+                        ImageItem imageItem = new ImageItem(Convert.ToInt32(imageID), imagePath, imageDescription);
+                        album.AddImage(imageItem);
+                    }
+                    await connection.CloseAsync();
                     return true;
                 }
             }

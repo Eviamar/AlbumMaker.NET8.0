@@ -74,6 +74,7 @@ namespace AlbumMaker.Forms
                         {
                             foreach (string image in ofd.FileNames)
                             {
+                                ImageItem imageItem = new ImageItem(TabIndex,image,"");
                                 // Check if the image is already added
                                 if (!images.Any(item => item.Value == image))
                                 {
@@ -81,10 +82,7 @@ namespace AlbumMaker.Forms
                                     images.Add(new KeyValuePair<int, string>(tabIndex, image));
                                     Invoke((Action)(() =>
                                     {
-                                        DigiBumPictureBox picture = new DigiBumPictureBox(image)
-                                        {
-                                            TabIndex = tabIndex
-                                        };
+                                        DigiBumPictureBox picture = new DigiBumPictureBox(imageItem,false);
                                         picture.ImageDeleted += Picture_ImageDeleted;
                                         FLPAlbumData.Controls.Add(picture);
                                         progressBar1.Value++;
@@ -98,16 +96,14 @@ namespace AlbumMaker.Forms
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch { throw; }
         }
         private void Picture_ImageDeleted(object sender, int tabIndex)
         {
             // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
             var controlToRemove = FLPAlbumData.Controls.Cast<Control>().FirstOrDefault(c => c.TabIndex == tabIndex);
-            images.RemoveAt(controlToRemove.TabIndex);
+           
+             images.RemoveAt(controlToRemove.TabIndex);
             if (controlToRemove != null)
             {
                 FLPAlbumData.Controls.Remove(controlToRemove);
@@ -208,7 +204,7 @@ namespace AlbumMaker.Forms
                 }
 
             }
-            catch(Exception ex) { throw; }
+            catch { throw; }
         }
     }
 }

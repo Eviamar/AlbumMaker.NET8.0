@@ -31,5 +31,6 @@ namespace AlbumMaker
                 AppErrorHandler.LogError(ex);
             }
         }
+        
     }
 }

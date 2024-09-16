@@ -171,7 +171,7 @@
             panelMain.Dock = DockStyle.Fill;
             panelMain.Location = new Point(145, 0);
             panelMain.Name = "panelMain";
-            panelMain.Size = new Size(816, 561);
+            panelMain.Size = new Size(645, 561);
             panelMain.TabIndex = 1;
             // 
             // timerCheckUserLoggedIn
@@ -186,7 +186,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(961, 561);
+            ClientSize = new Size(790, 561);
             Controls.Add(panelMain);
             Controls.Add(flpMenu);
             MaximumSize = new Size(2560, 1440);

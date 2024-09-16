@@ -17,7 +17,7 @@ namespace AlbumMaker.Classes.Items
         }
         public override string ToString()
         {
-            return $"ID: {id},Name: {name}\n";
+            return $"ID: {id}, Name: {name}, ";
         }
         public string GetName()=> name;
         public int GetID()=> id;

@@ -166,15 +166,14 @@ namespace AlbumMaker
         {
             Navigate(new AdminPanel());
         }
-        private void Navigate(UserControl userControl)
+        public void Navigate(UserControl userControl)
         {
+            //TO DO: apply visual sizing according to control opens
             userControl.Dock = DockStyle.Fill;
             panelMain.AutoScroll = true;
             panelMain.VerticalScroll.Enabled = true;
-            panelMain.HorizontalScroll.Enabled = true;
-            //userControl.Parent = FindForm();
+            panelMain.AutoScroll = true;
             panelMain.Controls.Clear();
-            //SettingsManager.SetTheme(userControl);
             panelMain.Controls.Add(userControl);
            
         }

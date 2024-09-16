@@ -16,7 +16,7 @@ namespace AlbumMaker.Classes.Items
         }
         public override string ToString()
         {
-            return base.ToString()+$"Description: {description},Template: {template}";
+            return base.ToString()+$"Description: {description},Template: {template} ";
         }
         public string GetDescription()=> description;
         public string GetTemplate()=> template;
