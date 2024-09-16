@@ -120,16 +120,21 @@ namespace AlbumMaker.Classes.Db
 
                                     UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
                                     await connection.CloseAsync();
-                                    bool loadUser = await GetAllAlbumsOfUser(user);
-                                    if (loadUser)
+                                    int loadUser = await GetAllAlbumsOfUser(user);
+                                    if (loadUser>=0)
                                     {
                                         SettingsManager.userItem = user;
                                         return true;
                                     }
-                                    else 
+                                    else if(loadUser==-2)
                                     {
-                                        MessageBox.Show("Failed to load user data","Failed");
+                                        MessageBox.Show("-2");
                                         return false;
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Failed to load user data", "Failed");
+                                        return false ;
                                     }
                                 }
                                 else
@@ -378,7 +383,7 @@ namespace AlbumMaker.Classes.Db
         #endregion user
 
         #region album queries
-        public static async Task<bool> GetAllAlbumsOfUser(UserItem user)
+        public static async Task<int> GetAllAlbumsOfUser(UserItem user)
         {
             List<AlbumItem> albums = new List<AlbumItem>();
 
@@ -404,13 +409,13 @@ namespace AlbumMaker.Classes.Db
 
                                 // Create a new UserItem for each row and add it to the list
                                 AlbumItem album = new AlbumItem(albumID, albumName, albumDescription, albumTemplate);
-                                bool loadData = await GetAllImagesOfAlbum(album);
-                                if(loadData)
+                                int loadData = await GetAllImagesOfAlbum(album);
+                                if(loadData>=0)
                                     albums.Add(album);
                                 else
                                 {
                                     MessageBox.Show($"Failed to load data from {album.GetName()} album","Failed");
-                                    return false;
+                                    return -2;
                                 }
                             }
                         }
@@ -418,12 +423,11 @@ namespace AlbumMaker.Classes.Db
                 }
                 user.SetAlbumItems(albums);
             }
-            catch { return false; throw; }
+            catch { return -1; throw; }
 
-            
-            if (user.GetAlbumItems().Count > 0)
-                return true;
-            return false;
+            return user.GetAlbumItems().Count;
+
+
         }
         public static async Task<int> CreateAlbum(UserItem user, string albumName, string albumDescription,string albumTemplate)
         {
@@ -532,7 +536,7 @@ namespace AlbumMaker.Classes.Db
         #endregion albums
 
         #region image queries
-        public static async Task<bool> GetAllImagesOfAlbum(AlbumItem album)
+        public static async Task<int> GetAllImagesOfAlbum(AlbumItem album)
         {
             List<ImageItem> images = new List<ImageItem>();
 
@@ -563,12 +567,11 @@ namespace AlbumMaker.Classes.Db
                     }
                 }
             }
-            catch { return false; throw; }
+            catch { return -1; throw; }
 
             album.SetImages(images);
-            if (album.GetImages().Count > 0)
-                return true;
-            return false;
+            return album.GetImages().Count;
+             
         }
         public static async Task<bool> CreateImage(AlbumItem album, string imagePath, string imageDescription)
         {

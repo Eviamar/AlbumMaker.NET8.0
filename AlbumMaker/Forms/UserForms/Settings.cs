@@ -1,5 +1,6 @@
 ﻿using AlbumMaker.Classes;
 using AlbumMaker.Classes.Db;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 
@@ -136,11 +137,21 @@ namespace AlbumMaker.Forms
         private void btnDropTables_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show("YOU ARE ABOUT TO DELETE EVERYTHING FROM THE DATABASE\nARE YOU SURE ABOUT THAT?", "!!!ALERT!!!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if(dr == DialogResult.Yes)
+            if (dr == DialogResult.Yes)
             {
                 AppDataBase.DropTables();
                 SettingsManager.userItem = null;
+                Application.Restart();
             }
+        }
+
+        private void lblDataLocation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("explorer.exe", lblDataLocation.Text);
+            }
+            catch { throw; }
         }
     }
 }

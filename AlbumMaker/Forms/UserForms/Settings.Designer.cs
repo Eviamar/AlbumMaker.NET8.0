@@ -131,6 +131,7 @@
             lblDataLocation.Size = new Size(66, 15);
             lblDataLocation.TabIndex = 0;
             lblDataLocation.Text = "lblLocation";
+            lblDataLocation.Click += lblDataLocation_Click;
             // 
             // btnChangeDataLocation
             // 
