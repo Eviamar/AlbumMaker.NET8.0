@@ -1,4 +1,5 @@
 ﻿using AlbumMaker.Classes.Items;
+using AlbumMaker.Forms;
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Data.SQLite;
 
@@ -380,6 +381,51 @@ namespace AlbumMaker.Classes.Db
 
 
         }
+        public static async Task<int> GetAllUserItems()
+        {
+            List<UserItem> users = new List<UserItem>();
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string query = $"SELECT * FROM Users"; // Query to get all users
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        // Asynchronously execute the command and get a data reader
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            // Iterate through all rows
+                            while (await reader.ReadAsync())
+                            {
+                                int userID = reader.GetInt32(reader.GetOrdinal("USER_ID"));
+                                string userName = reader.GetString(reader.GetOrdinal("user_Name"));
+                                string userPassword = reader.GetString(reader.GetOrdinal("user_Password"));
+                                int isAdmin = reader.GetInt32(reader.GetOrdinal("isAdmin"));
+                                string userSecret = reader.GetString(reader.GetOrdinal("userSecret"));
+                                string userSecretAnswer = reader.GetString(reader.GetOrdinal("userSecretAnswer"));
+                                // Create a new UserItem for each row and add it to the list
+                                UserItem user = new UserItem(userID, userName, userPassword, userSecret, userSecretAnswer,isAdmin==1);
+                                int loadData = await GetAllAlbumsOfUser(user);
+                                if (loadData >= 0)
+                                    users.Add(user);
+                                else
+                                {
+                                    MessageBox.Show($"Failed to load data from {user.GetName()}", "Failed");
+                                    return -2;
+                                }
+                            }
+                        }
+                    }
+                }
+            SettingsManager.userItems = users;
+            return users.Count;
+            }
+            catch { return -1; throw; }
+
+
+        }
         #endregion user
 
         #region album queries
@@ -558,7 +604,7 @@ namespace AlbumMaker.Classes.Db
                                 string imagePath = reader.GetString(reader.GetOrdinal("Image_path"));
                                 string imageDescription = reader.GetString(reader.GetOrdinal("Image_Description"));
                                 // Create a new UserItem for each row and add it to the list
-                                ImageItem image = new ImageItem(imageID, imagePath, imageDescription);
+                                ImageItem image = new ImageItem(imageID, imagePath, imageDescription,album.GetID());
                                 images.Add(image);
                             }
                            
@@ -598,7 +644,7 @@ namespace AlbumMaker.Classes.Db
                     using (SQLiteCommand getIdCommand = new SQLiteCommand("SELECT last_insert_rowid()", connection))
                     {
                         var imageID = await getIdCommand.ExecuteScalarAsync();
-                        ImageItem imageItem = new ImageItem(Convert.ToInt32(imageID), imagePath, imageDescription);
+                        ImageItem imageItem = new ImageItem(Convert.ToInt32(imageID), imagePath, imageDescription,album.GetID());
                         album.AddImage(imageItem);
                     }
                     await connection.CloseAsync();

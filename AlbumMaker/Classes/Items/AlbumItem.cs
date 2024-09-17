@@ -1,14 +1,13 @@
 ﻿
-
 namespace AlbumMaker.Classes.Items
 {
-    internal class AlbumItem : Item
+    public class AlbumItem : Item
     {
         
         private string description;
         private string template;
         private List<ImageItem> images;
-        public AlbumItem(int id, string name, string description,string template) : base(id,name)
+        internal AlbumItem(int id, string name, string description,string template) : base(id,name)
         {
             this.description = description;
             this.template = template;

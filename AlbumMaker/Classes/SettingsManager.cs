@@ -9,6 +9,7 @@ namespace AlbumMaker.Classes
     internal static class SettingsManager
     {
         public static UserItem userItem { get; set; }
+        internal static List<UserItem> userItems { get; set; }
         public static void SetTheme()
         {
             Form form = Form.ActiveForm;

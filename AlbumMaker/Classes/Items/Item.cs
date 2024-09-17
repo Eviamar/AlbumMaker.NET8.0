@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace AlbumMaker.Classes.Items
 {
-    internal class Item
+    public class Item
     {
         private int id;
         private string name;
-        public Item(int id, string name)
+        internal Item(int id, string name)
         {
             this.id = id;
             this.name = name;

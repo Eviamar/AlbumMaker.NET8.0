@@ -8,32 +8,34 @@ namespace AlbumMaker.Forms.UserForms
 {
     public partial class AdminPanel : UserControl
     {
-        private List<UserItem> users;
         public AdminPanel()
         {
             InitializeComponent();
-            users = new List<UserItem>();
         }
 
-        private void AdminPanel_Load(object sender, EventArgs e)
+        private async void AdminPanel_Load(object sender, EventArgs e)
         {
             SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
-            GetData();
-            LoadDataToPanel();
+            int res = await AppDataBase.GetAllUserItems();
+            if (res > 0)
+            {
+                LoadDataToPanel();
 
+            }
 
         }
         private void LoadDataToPanel()
         {
             try
             {
-                foreach (UserItem u in users)
+                foreach (UserItem u in SettingsManager.userItems)
                 {
                     GroupBox grpBox = new GroupBox();
                     grpBox.Name = u.GetID().ToString();
                     grpBox.Text = $"User: {u.GetName()} - Albums: {u.GetAlbumItems().Count}";
                     grpBox.Size = new Size(255, 300);
+
 
                     if (u.GetAlbumItems().Count == 0)
                     {
@@ -64,10 +66,6 @@ namespace AlbumMaker.Forms.UserForms
             }
             catch { throw; }
             
-        }
-        private async void GetData()
-        {
-            users = await AppDataBase.GetAllUsers();
         }
     }
 }

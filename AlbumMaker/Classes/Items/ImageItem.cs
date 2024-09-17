@@ -2,17 +2,20 @@
 
 namespace AlbumMaker.Classes.Items
 {
-    internal class ImageItem : Item
+    public class ImageItem : Item
     {
         //maybe consider add id of related album so you can put it in the path {albumID}\\{this.imageName} //instead of this.path => change path field name to "imageName"
         private string path;
         private string description;
+        private int relatedAlbumID;
 
-        public ImageItem(int id,string path,string description) : base(id,path)
+        internal ImageItem(int id,string path,string description,int relatedAlbumID) : base(id,path)
         {
             this.description = description;
+            this.relatedAlbumID = relatedAlbumID;
         }
         public string GetDescription()=> description;
+        public int GetRelatedAlbumID() => relatedAlbumID;
         public override string ToString()
         {
             return base.ToString()+$"Path: {path}\nDescription:{description}";

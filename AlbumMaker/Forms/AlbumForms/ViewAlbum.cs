@@ -15,19 +15,13 @@ namespace AlbumMaker.Forms.AlbumForms
         private int page;
         private Dictionary<int, Image> imageCache = new Dictionary<int, Image>();
 
-        public ViewAlbum(int albumID)
+        public ViewAlbum(AlbumItem albumItem)
         {
             InitializeComponent();
-            this.albumID = albumID;
+            this.albumItem = albumItem;
             index = 0;
             page = 1;
             
-        }
-        private void SetAlbumItem()
-        {
-            
-            this.albumItem = SettingsManager.userItem.GetAlbumItems()[albumID];
-
         }
 
 
@@ -47,7 +41,6 @@ namespace AlbumMaker.Forms.AlbumForms
         private void ViewAlbum_Load(object sender, EventArgs e)
         {
             SettingsManager.SetTheme(this);
-            SetAlbumItem();
             if (albumItem == null)
                 return;
 

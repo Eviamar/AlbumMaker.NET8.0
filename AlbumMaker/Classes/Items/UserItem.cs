@@ -1,15 +1,14 @@
 ﻿
-
 namespace AlbumMaker.Classes.Items
 {
-    internal class UserItem : Item
+    public class UserItem : Item
     {
         private string password;
         private string question;
         private string answer;
         private bool isAdmin;
         private List<AlbumItem> albumItems;
-        public UserItem(int id,string name, string password, string question, string answer,bool isAdmin) : base(id,name)
+        internal UserItem(int id,string name, string password, string question, string answer,bool isAdmin) : base(id,name)
         {
             this.password = password;
             this.question = question;

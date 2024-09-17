@@ -208,7 +208,6 @@
         private Panel panelMenu;
         private Button btnLogin;
         private Button btnSettings;
-        private Panel panelMain;
         private Button btnUserControlPanel;
         private Button btnMyAlbums;
         private Button btnLogout;
@@ -216,5 +215,6 @@
         private System.Windows.Forms.Timer timerCheckUserLoggedIn;
         private Button btnAdminPanel;
         private System.Windows.Forms.Timer timerMenuOpen;
+        protected internal Panel panelMain;
     }
 }

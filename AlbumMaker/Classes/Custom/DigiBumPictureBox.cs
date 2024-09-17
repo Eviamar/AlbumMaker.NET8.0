@@ -1,5 +1,6 @@
 ﻿using AlbumMaker.Classes.Db;
 using AlbumMaker.Classes.Items;
+using AlbumMaker.Forms;
 using System.Diagnostics;
 
 
@@ -36,7 +37,7 @@ namespace AlbumMaker.Classes.Custom
             DeleteButton.FlatAppearance.BorderSize = 0;
             DeleteButton.Location = new Point(Width - DeleteButton.Width, 0);
             DeleteButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Delete");
-            DeleteButton.Click += (sender, e) => { DeleteImage(sender, e, isEdit); };
+            DeleteButton.Click += (sender, e) => { DeleteImage(sender, e, image); };
             Controls.Add(DeleteButton);
 
             this.MouseLeave += (sender, e) => Cursor = Cursors.Default;
@@ -80,7 +81,7 @@ namespace AlbumMaker.Classes.Custom
                 Title.Location = new Point(0, 0);
                 Description.Location = new Point(0, Height - Description.Height);
                 EditButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Edit");
-                EditButton.Click += (sender, e) => { EditImage(sender, e); };
+                EditButton.Click += (sender, e) => { EditImage(sender, e, image); };
                 this.Click += (sender, e) => { OpenImage(sender, e, isEdit); };
                 Controls.Add(EditButton);
                 Controls.Add(Title);
@@ -111,26 +112,54 @@ namespace AlbumMaker.Classes.Custom
                 UseShellExecute = true
             });
         }
-        private void DeleteImage(object sender, EventArgs e, bool isEdit)
+        private async void DeleteImage(object sender, EventArgs e, ImageItem image)
         {
-            if(isEdit)
+            try
             {
+                DialogResult dr = MessageBox.Show($"", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr == DialogResult.Yes)
+                {
+                    /* TO DO:
+                    // 1. delete from database
+                    // 2.attempt delete the file
+                    // 3.delete the image from the list using SettingManager.userItem.GetAlbumItems().Find(x=>x.GetID()==image.GetRelatedAlbumID()).GetImages().Find(x=> x.GetID()==image.GetID()))
+                    // 4.remove from controls
+                    */
+                    bool res = await AppDataBase.DeleteImage(image);
+                    if (res)
+                    {
+                        //delete fild
+                       
 
+
+
+                    }
+
+                    int tabIndex = this.TabIndex;
+                    // this.Dispose();  // Dispose the PictureBox
+
+                    // Raise the event with the tabIndex as the event argument
+                    ImageDeleted?.Invoke(this, tabIndex);
+                }
             }
-            else
-            {
-
-            }
-            int tabIndex = this.TabIndex;
-           // this.Dispose();  // Dispose the PictureBox
-
-            // Raise the event with the tabIndex as the event argument
-            ImageDeleted?.Invoke(this, tabIndex);
+            catch { throw; }
+            
+           
         }
 
-        private void EditImage(object sender,EventArgs e)
+        private void EditImage(object sender,EventArgs e,ImageItem image)
         {
-           
+            AlbumMaker.Forms.AlbumForms.EditImage editImage = new Forms.AlbumForms.EditImage(image);
+            Panel p = this.Parent.Parent.Parent as Panel;
+            if (p != null)
+            {
+                p.Controls.Clear();
+                SettingsManager.SetTheme(editImage);
+                p.Controls.Add(editImage);
+                editImage.Dock = DockStyle.Fill;
+                // this.Dispose();
+                editImage.Show();
+            }
         }
         #endregion constructor for image view
         #region constructor for album view
@@ -226,7 +255,18 @@ namespace AlbumMaker.Classes.Custom
         }
         private void EditAlbum(object sender, EventArgs e, AlbumItem album)
         {
-            MessageBox.Show($"Edit?\n{album}", "Edit");
+            AlbumMaker.Forms.AlbumForms.EditAlbum editAlbum = new Forms.AlbumForms.EditAlbum(album);
+            Panel p = this.Parent.Parent.Parent as Panel;
+            if (p != null)
+            {
+                p.Controls.Clear();
+                SettingsManager.SetTheme(editAlbum);
+                p.Controls.Add(editAlbum);
+                editAlbum.Dock = DockStyle.Fill;
+                // this.Dispose();
+                editAlbum.Show();
+            }
+
         }
         private void OpenAlbum(object sender, EventArgs e,AlbumItem album)
         {

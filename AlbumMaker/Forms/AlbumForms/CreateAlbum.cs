@@ -74,7 +74,7 @@ namespace AlbumMaker.Forms
                         {
                             foreach (string image in ofd.FileNames)
                             {
-                                ImageItem imageItem = new ImageItem(TabIndex,image,"");
+                                ImageItem imageItem = new ImageItem(TabIndex,image,"",-1);
                                 // Check if the image is already added
                                 if (!images.Any(item => item.Value == image))
                                 {
@@ -109,12 +109,12 @@ namespace AlbumMaker.Forms
                 FLPAlbumData.Controls.Remove(controlToRemove);
             }
         }
-        private async Task<List<ImageItem>> ConvertSelectedPicturesToImageItem()
+        private async Task<List<ImageItem>> ConvertSelectedPicturesToImageItem(int albumID)
         {
             List<ImageItem> imageList = new List<ImageItem>();
             foreach(var image in images)
             {
-                imageList.Add(new ImageItem(image.Key, image.Value, ""));
+                imageList.Add(new ImageItem(image.Key, image.Value, "", albumID));
             }
             await Task.CompletedTask;
             return imageList;
@@ -186,7 +186,7 @@ namespace AlbumMaker.Forms
                     if (images != null)
                     {
                         copySuccess = true;
-                        List<ImageItem> imageItems = await ConvertSelectedPicturesToImageItem();
+                        List<ImageItem> imageItems = await ConvertSelectedPicturesToImageItem(albumID);
                         foreach(ImageItem imageItem in imageItems)
                         {
                              await AppDataBase.CreateImage(SettingsManager.userItem.GetAlbumItems().LastOrDefault(), imageItem.GetName(), "");

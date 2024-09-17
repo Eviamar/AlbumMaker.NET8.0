@@ -13,10 +13,10 @@ namespace AlbumMaker.Forms
         {
             InitializeComponent();
         }
-        private void Picture_AlbumView(object sender, int tabIndex)
+        private void Picture_AlbumView(AlbumItem album)
         {
             // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
-            ViewAlbum va = new ViewAlbum(tabIndex);
+            ViewAlbum va = new ViewAlbum(album);
             Panel p = this.Parent as Panel;
             if (p != null)
             {
@@ -44,11 +44,10 @@ namespace AlbumMaker.Forms
         {
             try
             {
-                
                 foreach(AlbumItem album in SettingsManager.userItem.GetAlbumItems())
                 {
                     DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(album,true);
-                    digiBumPictureBox.albumView += Picture_AlbumView;
+                    digiBumPictureBox.albumView +=(sender,args)=> Picture_AlbumView(album);
                     flpDisplayAlbums.Controls.Add(digiBumPictureBox);
                 }
             }

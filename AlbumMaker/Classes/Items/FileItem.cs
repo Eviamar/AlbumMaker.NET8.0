@@ -1,14 +1,13 @@
 ﻿
-
 namespace AlbumMaker.Classes.Items
 {
-    internal class FileItem : Item
+    public class FileItem : Item
     {
         private string extension;
         private string rootDrive;
         private DateTime createdDate;
         private DateTime modifiedDate;
-        public FileItem(int id, string rootDrive,string name,string extension, string path, DateTime createdDate, DateTime modifiedDate) : base(id,name)
+        internal FileItem(int id, string rootDrive,string name,string extension, string path, DateTime createdDate, DateTime modifiedDate) : base(id,name)
         {
             this.rootDrive = rootDrive;
             this.extension = extension;
