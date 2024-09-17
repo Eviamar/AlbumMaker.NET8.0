@@ -18,6 +18,8 @@ namespace AlbumMaker.Classes.Items
             return base.ToString()+$"Description: {description},Template: {template} ";
         }
         public string GetDescription()=> description;
+        public void SetDescription(string newDesc)=> this.description = newDesc;
+        public void SetTemplate(string newTemplate) => this.template = newTemplate;
         public string GetTemplate()=> template;
         public List<ImageItem> GetImages() => images;
         public void AddImage(ImageItem image) => images.Add(image);

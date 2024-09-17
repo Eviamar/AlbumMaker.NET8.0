@@ -1,5 +1,6 @@
 ﻿using AlbumMaker.Classes;
 using AlbumMaker.Classes.Db;
+using AlbumMaker.Properties;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -105,37 +106,72 @@ namespace AlbumMaker.Forms
 
             }
         }
+        public void CopyDirectory(string sourceDir, string destinationDir, bool copySubDirs)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDir);
 
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDir);
+            }
+
+            // If the destination directory doesn't exist, create it.
+            if (!Directory.Exists(destinationDir))
+            {
+                Directory.CreateDirectory(destinationDir);
+            }
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destinationDir, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+            if (copySubDirs)
+            {
+                DirectoryInfo[] subDirs = dir.GetDirectories();
+                foreach (DirectoryInfo subDir in subDirs)
+                {
+                    string temppath = Path.Combine(destinationDir, subDir.Name);
+                    CopyDirectory(subDir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
         private void btnChangeDataLocation_Click(object sender, EventArgs e)
         {
-            if (!Properties.AppSettings.Default.isLogged)
+            try
             {
-                MessageBox.Show("You need to login to the program to change path.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                if (!Properties.AppSettings.Default.isLogged)
+                {
+                    MessageBox.Show("You need to login to the program to change path.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                string location = Properties.AppSettings.Default.AppDataFolder;
+                string oldPath = Properties.AppSettings.Default.AppDataFolder; //might not be needed this cause can use folderBroswerDialog.SelectedPath
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                folderBrowserDialog.ShowNewFolderButton = true;
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //=> TO COPY ALL CONTENT FROM OLD PATH TO NEW PATH AND THEN CHANGE IN THE AppSettings
+                    CopyDirectory(location + $@"\{Properties.AppSettings.Default.AppName}\", folderBrowserDialog.SelectedPath+ $@"\{Properties.AppSettings.Default.AppName}\",true);
+                    Properties.AppSettings.Default.AppDataFolder = folderBrowserDialog.SelectedPath;
+                    Properties.AppSettings.Default.Save();
+                    Settings_Load(this, null);
+                }
+                lblDataLocation.Text = location;
+                Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
+                lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
             }
-            string location = Properties.AppSettings.Default.AppDataFolder;
-            string oldPath = Properties.AppSettings.Default.AppDataFolder; //might not be needed this cause can use folderBroswerDialog.SelectedPath
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.ShowNewFolderButton = true;
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                location = folderBrowserDialog.SelectedPath;
-                //=> TO COPY ALL CONTENT FROM OLD PATH TO NEW PATH AND THEN CHANGE IN THE AppSettings
-                //Properties.AppSettings.Default.AppDataFolder = location;
-                //Properties.AppSettings.Default.Save();
-            }
-            lblDataLocation.Text = location;
-            Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
-            lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
-
-
-
-
-
+            catch { throw; }
         }
 
         private void btnDropTables_Click(object sender, EventArgs e)
         {
+            
             DialogResult dr = MessageBox.Show("YOU ARE ABOUT TO DELETE EVERYTHING FROM THE DATABASE\nARE YOU SURE ABOUT THAT?", "!!!ALERT!!!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dr == DialogResult.Yes)
             {
@@ -152,6 +188,17 @@ namespace AlbumMaker.Forms
                 Process.Start("explorer.exe", lblDataLocation.Text);
             }
             catch { throw; }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("This will reset all saved settings to default (just like first time launching the app\nAre you sure?","Reset?",MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dr == DialogResult.Yes)
+            {
+                AppSettings.Default.Reset();
+                Application.Restart();
+            }
+            
         }
     }
 }

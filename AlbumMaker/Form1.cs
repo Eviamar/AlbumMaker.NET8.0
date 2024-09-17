@@ -92,7 +92,8 @@ namespace AlbumMaker
         {
 
             Properties.AppSettings.Default.AppEXELocation = AppDomain.CurrentDomain.BaseDirectory;
-            Properties.AppSettings.Default.AppDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            if(String.IsNullOrEmpty(Properties.AppSettings.Default.AppDataFolder))
+                Properties.AppSettings.Default.AppDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
             Properties.AppSettings.Default.Save();
             AppDataBase.CreateDataBase();
             SettingsManager.SetTheme(this);

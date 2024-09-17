@@ -1,5 +1,6 @@
 ﻿using AlbumMaker.Classes;
 using AlbumMaker.Classes.Custom;
+using AlbumMaker.Classes.Db;
 using AlbumMaker.Classes.Items;
 
 namespace AlbumMaker.Forms.AlbumForms
@@ -37,8 +38,27 @@ namespace AlbumMaker.Forms.AlbumForms
             }
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
+        private async void btnUpdate_Click(object sender, EventArgs e)
         {
+            string newAlbumName = txtBoxAlbumName.Text;
+            string newAlbumDesc = txtBoxDesc.Text;
+            string newTemplate = cmbTemplate.Text;
+            album.SetNewName(newAlbumName);
+            album.SetDescription(newAlbumDesc);
+            album.SetTemplate(newTemplate);
+            if(!String.IsNullOrWhiteSpace(newAlbumName) && !String.IsNullOrWhiteSpace(newAlbumDesc) && !String.IsNullOrWhiteSpace(newTemplate))
+            {
+                bool res = await AppDataBase.UpdateAlbum(album);
+                if (res)
+                {
+                    MessageBox.Show($"Album {album.GetName()} has been updated!", "Success");
+                    EditAlbum_Load(this,null);
+                }
+                else
+                    MessageBox.Show($"Album {album.GetName()} failed to update!", "Fail");
+            }
+            else
+                MessageBox.Show($"All fields required", "Alert");
 
         }
         private void ShowImagesToEdit()

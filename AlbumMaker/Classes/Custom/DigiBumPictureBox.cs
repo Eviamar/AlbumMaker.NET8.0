@@ -38,7 +38,7 @@ namespace AlbumMaker.Classes.Custom
             DeleteButton.FlatAppearance.BorderSize = 0;
             DeleteButton.Location = new Point(Width - DeleteButton.Width, 0);
             DeleteButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Delete");
-            DeleteButton.Click += (sender, e) => { DeleteImage(sender, e, image); };
+            DeleteButton.Click += (sender, e) => { DeleteImage(sender, e, image,isEdit); };
             Controls.Add(DeleteButton);
 
             this.MouseLeave += (sender, e) => Cursor = Cursors.Default;
@@ -112,62 +112,70 @@ namespace AlbumMaker.Classes.Custom
                 UseShellExecute = true
             });
         }
-        private async void DeleteImage(object sender, EventArgs e, ImageItem image)
+        private async void DeleteImage(object sender, EventArgs e, ImageItem image,bool isEdit)
         {
             try
             {
-                DialogResult dr = MessageBox.Show($"Are you sure to delete {image.GetName()} {image.GetDescription}?", "Delete?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dr == DialogResult.Yes)
+                if (isEdit)
                 {
-                    /* TO DO:
-                    // 1. delete from database
-                    // 2.attempt delete the file
-                    // 3.delete the image from the list using SettingManager.userItem.GetAlbumItems().Find(x=>x.GetID()==image.GetRelatedAlbumID()).GetImages().Find(x=> x.GetID()==image.GetID()))
-                    // 4.remove from controls
-                    */
-                    bool res = await AppDataBase.DeleteImage(image);
-                    if (res)
+                    DialogResult dr = MessageBox.Show($"Are you sure to delete {image.GetName()} {image.GetDescription}?", "Delete?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (dr == DialogResult.Yes)
                     {
-                        //delete fild
-                        File.Delete(image.GetImagePath());
-                        if (!File.Exists(image.GetImagePath()))
+                        /* TO DO:
+                        // 1. delete from database
+                        // 2.attempt delete the file
+                        // 3.delete the image from the list using SettingManager.userItem.GetAlbumItems().Find(x=>x.GetID()==image.GetRelatedAlbumID()).GetImages().Find(x=> x.GetID()==image.GetID()))
+                        // 4.remove from controls
+                        */
+                        bool res = await AppDataBase.DeleteImage(image);
+                        if (res)
                         {
-                            MessageBox.Show("Image Deleted", "success");
-                            AlbumItem album = SettingsManager.userItem.GetAlbumItems().Find(x => x.GetID() == image.GetRelatedAlbumID());
-                            if (album != null)
-                                album.DeleteImageItem(image);
-                            else
+                            //delete fild
+                            File.Delete(image.GetImagePath());
+                            if (!File.Exists(image.GetImagePath()))
                             {
-                                if (SettingsManager.userItem.GetIsAdmin())
+                                MessageBox.Show("Image Deleted", "success");
+                                AlbumItem album = SettingsManager.userItem.GetAlbumItems().Find(x => x.GetID() == image.GetRelatedAlbumID());
+                                if (album != null)
+                                    album.DeleteImageItem(image);
+                                else
                                 {
-                                    if (SettingsManager.userItems != null)
-                                        foreach (UserItem u in SettingsManager.userItems)
+                                    if (SettingsManager.userItem.GetIsAdmin())
+                                    {
+                                        if (SettingsManager.userItems != null)
                                         {
-                                            foreach (AlbumItem a in u.GetAlbumItems())
+                                            bool foundMatch = false;
+                                            foreach (UserItem u in SettingsManager.userItems)
                                             {
-                                                if (a.GetID() == image.GetID())
+                                                foreach (AlbumItem a in u.GetAlbumItems())
                                                 {
-                                                    album.DeleteImageItem(image);
-                                                    MessageBox.Show($"Image removed from {u.GetName}'s {a.GetName()} album", "Success");
-                                                    return;
+                                                    if (a.GetID() == image.GetID())
+                                                    {
+                                                        album.DeleteImageItem(image);
+                                                        MessageBox.Show($"Image removed from {u.GetName}'s {a.GetName()} album", "Success");
+                                                        foundMatch = true;
+                                                        break;
 
+                                                    }
+                                                    if (foundMatch)
+                                                        break;
                                                 }
                                             }
                                         }
+                                           
+                                    }
                                 }
                             }
                         }
-                       
-                   
-
-                        int tabIndex = this.TabIndex;
-                        // this.Dispose();  // Dispose the PictureBox
-
-                        // Raise the event with the tabIndex as the event argument
-                        ImageDeleted?.Invoke(this, tabIndex);
                     }
                     
                 }
+
+                int tabIndex = this.TabIndex;
+                // this.Dispose();  // Dispose the PictureBox
+
+                // Raise the event with the tabIndex as the event argument
+                ImageDeleted?.Invoke(this, tabIndex);
             }
             catch { throw; }
             

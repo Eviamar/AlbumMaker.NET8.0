@@ -75,6 +75,7 @@
             // 
             // buttonSubmitAlbum
             // 
+            buttonSubmitAlbum.Cursor = Cursors.Hand;
             buttonSubmitAlbum.Location = new Point(413, 4);
             buttonSubmitAlbum.Name = "buttonSubmitAlbum";
             buttonSubmitAlbum.Size = new Size(65, 23);

@@ -78,6 +78,7 @@
             // btnMenuToggle
             // 
             btnMenuToggle.BackColor = Color.SteelBlue;
+            btnMenuToggle.Cursor = Cursors.NoMoveHoriz;
             btnMenuToggle.Dock = DockStyle.Left;
             btnMenuToggle.Location = new Point(0, 0);
             btnMenuToggle.Name = "btnMenuToggle";

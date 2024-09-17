@@ -114,6 +114,7 @@ namespace AlbumMaker.Classes
         {
             if (c is Button btn)
             {
+                btn.Cursor = Cursors.Hand;
                 float fontSize = GetFont().Size;
                 btn.Font = GetFont();
                 btn.BackColor = isDark ?
@@ -164,6 +165,7 @@ namespace AlbumMaker.Classes
             
             if (control is Button btn)
             {
+                btn.Cursor = Cursors.Hand;
                 if (btn.Name != "btnDelete" || btn.Name != "btnEdit")
                 {
                     btn.BackColor = theme ?
@@ -175,13 +177,14 @@ namespace AlbumMaker.Classes
                 }   
 
             }
-            
             else if(control is DigiBumPictureBox digiBum)
             {
                 
             }
             else if (control is TextBox txtBox)
             {
+                txtBox.Cursor = Cursors.IBeam;
+                
                 txtBox.BackColor = theme ?
              ConvertHexToColor(Properties.DarkThemeSettings.Default.TextBoxBackground)
              : ConvertHexToColor(Properties.LightThemeSettings.Default.TextBoxBackground);
@@ -208,8 +211,19 @@ namespace AlbumMaker.Classes
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.TextBoxForeground)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.TextBoxForeground);
             }
+            else if(control is ComboBox comboBox)
+            {
+                comboBox.Cursor = Cursors.Hand;
+                comboBox.BackColor = theme ?
+            ConvertHexToColor(Properties.DarkThemeSettings.Default.TextBoxBackground)
+            : ConvertHexToColor(Properties.LightThemeSettings.Default.TextBoxBackground);
+                comboBox.ForeColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.TextBoxForeground)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.TextBoxForeground);
+            }
             if(control is MenuStrip menu)
             {
+                menu.Cursor = Cursors.Hand;
                 menu.BackColor = theme ?
               ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
               : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
@@ -221,7 +235,7 @@ namespace AlbumMaker.Classes
                     item.Font = GetFont();
                 }
             }
-            else
+            else if(control is Panel || control is FlowLayoutPanel || control is GroupBox)
             {
                 control.BackColor = theme ?
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
@@ -230,7 +244,7 @@ namespace AlbumMaker.Classes
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
             }
-
+            
 
 
             foreach (Control child in control.Controls)

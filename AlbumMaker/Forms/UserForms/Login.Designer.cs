@@ -35,10 +35,10 @@
             textBoxPassword = new TextBox();
             checkBoxPassword = new CheckBox();
             btnSubmit = new Button();
-            richTextBoxQuestion = new RichTextBox();
             textBoxAnswer = new TextBox();
             btnForgot = new Button();
             checkBoxRememberMe = new CheckBox();
+            richTextBoxQuestion = new TextBox();
             SuspendLayout();
             // 
             // lblLogin
@@ -74,6 +74,7 @@
             // 
             // textBoxUsername
             // 
+            textBoxUsername.BackColor = SystemColors.Window;
             textBoxUsername.Location = new Point(3, 19);
             textBoxUsername.Name = "textBoxUsername";
             textBoxUsername.PlaceholderText = "Username";
@@ -110,19 +111,9 @@
             btnSubmit.UseVisualStyleBackColor = true;
             btnSubmit.Click += btnSubmit_Click;
             // 
-            // richTextBoxQuestion
-            // 
-            richTextBoxQuestion.Location = new Point(3, 193);
-            richTextBoxQuestion.Name = "richTextBoxQuestion";
-            richTextBoxQuestion.ReadOnly = true;
-            richTextBoxQuestion.Size = new Size(183, 48);
-            richTextBoxQuestion.TabIndex = 7;
-            richTextBoxQuestion.Text = "";
-            richTextBoxQuestion.Visible = false;
-            // 
             // textBoxAnswer
             // 
-            textBoxAnswer.Location = new Point(3, 247);
+            textBoxAnswer.Location = new Point(1, 222);
             textBoxAnswer.Name = "textBoxAnswer";
             textBoxAnswer.PlaceholderText = "Your answer";
             textBoxAnswer.Size = new Size(185, 23);
@@ -132,7 +123,7 @@
             // btnForgot
             // 
             btnForgot.AccessibleName = "";
-            btnForgot.Location = new Point(3, 276);
+            btnForgot.Location = new Point(1, 251);
             btnForgot.Name = "btnForgot";
             btnForgot.Size = new Size(185, 23);
             btnForgot.TabIndex = 9;
@@ -152,15 +143,24 @@
             checkBoxRememberMe.UseVisualStyleBackColor = true;
             checkBoxRememberMe.CheckedChanged += checkBoxRememberMe_CheckedChanged;
             // 
+            // richTextBoxQuestion
+            // 
+            richTextBoxQuestion.Location = new Point(3, 193);
+            richTextBoxQuestion.Name = "richTextBoxQuestion";
+            richTextBoxQuestion.PlaceholderText = "Secret question";
+            richTextBoxQuestion.Size = new Size(183, 23);
+            richTextBoxQuestion.TabIndex = 10;
+            richTextBoxQuestion.Visible = false;
+            // 
             // Login
             // 
             AccessibleName = "Login";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(richTextBoxQuestion);
             Controls.Add(checkBoxRememberMe);
             Controls.Add(btnForgot);
             Controls.Add(textBoxAnswer);
-            Controls.Add(richTextBoxQuestion);
             Controls.Add(btnSubmit);
             Controls.Add(checkBoxPassword);
             Controls.Add(textBoxPassword);
@@ -169,7 +169,7 @@
             Controls.Add(lblAlreadyRegistered);
             Controls.Add(lblLogin);
             Name = "Login";
-            Size = new Size(205, 316);
+            Size = new Size(205, 286);
             Load += Login_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -184,9 +184,9 @@
         private TextBox textBoxPassword;
         private CheckBox checkBoxPassword;
         private Button btnSubmit;
-        private RichTextBox richTextBoxQuestion;
         private TextBox textBoxAnswer;
         private Button btnForgot;
         private CheckBox checkBoxRememberMe;
+        private TextBox richTextBoxQuestion;
     }
 }

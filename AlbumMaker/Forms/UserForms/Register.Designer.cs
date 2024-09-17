@@ -30,18 +30,18 @@
         {
             btnSubmit = new Button();
             textBoxAnswer = new TextBox();
-            richTextBoxQuestion = new RichTextBox();
             checkBoxPassword = new CheckBox();
             textBoxPassword = new TextBox();
             textBoxUsername = new TextBox();
             lblAlreadyRegistered = new LinkLabel();
             lblRegister = new Label();
             textBoxPassword2 = new TextBox();
+            richTextBoxQuestion = new TextBox();
             SuspendLayout();
             // 
             // btnSubmit
             // 
-            btnSubmit.Location = new Point(3, 210);
+            btnSubmit.Location = new Point(3, 185);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(185, 23);
             btnSubmit.TabIndex = 6;
@@ -51,22 +51,12 @@
             // 
             // textBoxAnswer
             // 
-            textBoxAnswer.Location = new Point(3, 181);
+            textBoxAnswer.Location = new Point(3, 156);
             textBoxAnswer.MaxLength = 100;
             textBoxAnswer.Name = "textBoxAnswer";
             textBoxAnswer.PlaceholderText = "Your answer";
             textBoxAnswer.Size = new Size(185, 23);
             textBoxAnswer.TabIndex = 5;
-            // 
-            // richTextBoxQuestion
-            // 
-            richTextBoxQuestion.BorderStyle = BorderStyle.None;
-            richTextBoxQuestion.Location = new Point(3, 127);
-            richTextBoxQuestion.MaxLength = 200;
-            richTextBoxQuestion.Name = "richTextBoxQuestion";
-            richTextBoxQuestion.Size = new Size(185, 48);
-            richTextBoxQuestion.TabIndex = 4;
-            richTextBoxQuestion.Text = "Type here a question of your own.\nThis question will be used to recover your account in case you forget it.";
             // 
             // checkBoxPassword
             // 
@@ -101,7 +91,7 @@
             // lblAlreadyRegistered
             // 
             lblAlreadyRegistered.AutoSize = true;
-            lblAlreadyRegistered.Location = new Point(3, 250);
+            lblAlreadyRegistered.Location = new Point(3, 225);
             lblAlreadyRegistered.Name = "lblAlreadyRegistered";
             lblAlreadyRegistered.Size = new Size(185, 15);
             lblAlreadyRegistered.TabIndex = 7;
@@ -128,22 +118,30 @@
             textBoxPassword2.Size = new Size(183, 23);
             textBoxPassword2.TabIndex = 2;
             // 
+            // richTextBoxQuestion
+            // 
+            richTextBoxQuestion.Location = new Point(3, 127);
+            richTextBoxQuestion.Name = "richTextBoxQuestion";
+            richTextBoxQuestion.PlaceholderText = "Secret question (For acc recovery)";
+            richTextBoxQuestion.Size = new Size(185, 23);
+            richTextBoxQuestion.TabIndex = 11;
+            // 
             // Register
             // 
             AccessibleName = "Register";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(richTextBoxQuestion);
             Controls.Add(textBoxPassword2);
             Controls.Add(btnSubmit);
             Controls.Add(textBoxAnswer);
-            Controls.Add(richTextBoxQuestion);
             Controls.Add(checkBoxPassword);
             Controls.Add(textBoxPassword);
             Controls.Add(textBoxUsername);
             Controls.Add(lblAlreadyRegistered);
             Controls.Add(lblRegister);
             Name = "Register";
-            Size = new Size(193, 275);
+            Size = new Size(193, 258);
             Load += Register_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -151,7 +149,6 @@
 
         #endregion
         private TextBox textBoxAnswer;
-        private RichTextBox richTextBoxQuestion;
         private Button btnSubmit;
         private CheckBox checkBoxPassword;
         private TextBox textBoxPassword;
@@ -159,5 +156,6 @@
         private LinkLabel lblAlreadyRegistered;
         private Label lblRegister;
         private TextBox textBoxPassword2;
+        private TextBox richTextBoxQuestion;
     }
 }
