@@ -124,6 +124,7 @@ namespace AlbumMaker.Forms
             }
             else
                 checkBoxRememberMe.Checked = false;
+            
         }
 
         private void checkBoxRememberMe_CheckedChanged(object sender, EventArgs e)

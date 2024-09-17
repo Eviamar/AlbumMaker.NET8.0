@@ -45,5 +45,8 @@
     <Setting Name="AppDatabaseFileName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Database.db</Value>
     </Setting>
+    <Setting Name="UserPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -141,6 +141,7 @@
             // 
             // EditAlbum
             // 
+            AccessibleName = "Edit Album";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(flpImagesToEdit);
@@ -160,8 +161,6 @@
         }
 
         #endregion
-
-        private MenuStrip menuStrip1;
         private ToolStripMenuItem goBackToolStripMenuItem;
         private FlowLayoutPanel flpImagesToEdit;
         private Panel panelHeader;
@@ -171,5 +170,6 @@
         private TextBox txtBoxAlbumName;
         private Button btnUpdate;
         private FlowLayoutPanel flpUpdateSector;
+        public MenuStrip menuStrip1;
     }
 }

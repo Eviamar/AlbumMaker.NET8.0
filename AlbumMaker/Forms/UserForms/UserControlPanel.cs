@@ -1,6 +1,7 @@
 ﻿using AlbumMaker.Classes;
 using AlbumMaker.Classes.Db;
 using AlbumMaker.Classes.Items;
+using AlbumMaker.Properties;
 
 
 namespace AlbumMaker.Forms
@@ -10,7 +11,7 @@ namespace AlbumMaker.Forms
         public UserControlPanel()
         {
             InitializeComponent();
-           
+
 
         }
 
@@ -24,13 +25,13 @@ namespace AlbumMaker.Forms
             }
             if (String.IsNullOrWhiteSpace(richTextBoxQuestion.Text)) //add default placeholder here too
             {
-                MessageBox.Show("Question cannot be empty","Forgot something?");
+                MessageBox.Show("Question cannot be empty", "Forgot something?");
                 richTextBoxQuestion.Focus();
                 return;
             }
             if (richTextBoxQuestion.Text == textBoxAnswer.Text || richTextBoxQuestion.Text.Contains(textBoxAnswer.Text))
             {
-                MessageBox.Show("The answer cannot match the question or be in the question!","Answer is too obvious");
+                MessageBox.Show("The answer cannot match the question or be in the question!", "Answer is too obvious");
                 textBoxAnswer.Focus();
                 return;
             }
@@ -72,6 +73,10 @@ namespace AlbumMaker.Forms
             {
                 checkBoxRememberMe.Checked = false;
             }
+            if (Properties.AppSettings.Default.UserPassword != "")
+            {
+                checkBoxLoginAuto.Checked = true;
+            }
             richTextBoxQuestion.Text = SettingsManager.userItem.GetQuestion();
             textBoxAnswer.PlaceholderText = SettingsManager.userItem.GetAnswer();
         }
@@ -108,6 +113,24 @@ namespace AlbumMaker.Forms
                 textBoxCurrentPassword.PasswordChar = '*';
                 textBoxPassword2.PasswordChar = '*';
                 textBoxPassword.PasswordChar = '*';
+            }
+        }
+
+        private void checkBoxLoginAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBoxLoginAuto.Checked)
+            {
+                AppSettings.Default.userName = SettingsManager.userItem.GetName();
+                AppSettings.Default.UserPassword = SettingsManager.userItem.GetPassword();
+            }
+            else
+            {
+                AppSettings.Default.UserPassword = "";
+                if (!checkBoxRememberMe.Checked)
+                {
+                    AppSettings.Default.userName = "";
+                } 
+
             }
         }
     }

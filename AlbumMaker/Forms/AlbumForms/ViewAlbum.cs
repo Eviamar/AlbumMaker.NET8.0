@@ -40,6 +40,7 @@ namespace AlbumMaker.Forms.AlbumForms
 
         private void ViewAlbum_Load(object sender, EventArgs e)
         {
+            this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             SettingsManager.SetTheme(this);
             if (albumItem == null)
                 return;

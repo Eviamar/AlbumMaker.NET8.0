@@ -162,7 +162,7 @@
             // 
             // ViewAlbum
             // 
-            AccessibleName = "View album";
+            AccessibleName = "View Album";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(tableLayoutPanelImages);

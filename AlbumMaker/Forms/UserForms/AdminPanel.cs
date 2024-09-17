@@ -17,12 +17,22 @@ namespace AlbumMaker.Forms.UserForms
         {
             SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
-            int res = await AppDataBase.GetAllUserItems();
-            if (res > 0)
+            if (SettingsManager.userItems == null)
             {
-                LoadDataToPanel();
+                int res = await AppDataBase.GetAllUserItems();
+                if (res > 0)
+                {
+                    //MessageBox.Show("Loaded from database");
+                    LoadDataToPanel();
 
+                }
             }
+            else
+            {
+                //MessageBox.Show("Loaded from cache");
+                LoadDataToPanel();
+            }
+            
 
         }
         private void LoadDataToPanel()

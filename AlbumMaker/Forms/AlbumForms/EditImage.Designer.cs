@@ -51,11 +51,13 @@
             // 
             // EditImage
             // 
+            AccessibleName = "Edit Image";
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(menuStrip1);
             Name = "EditImage";
             Size = new Size(683, 364);
+            Load += EditImage_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);

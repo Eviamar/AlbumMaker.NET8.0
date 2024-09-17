@@ -1,0 +1,2 @@
+﻿in Edit album => find a way to transfer some kind of variable so it will display the description instead of name(which is image path)
+in Admin panel=> Editing album of user is bugged and not displaying the editing form

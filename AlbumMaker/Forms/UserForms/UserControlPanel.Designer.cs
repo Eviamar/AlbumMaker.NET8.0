@@ -40,6 +40,7 @@
             grpBoxQuestion = new GroupBox();
             grpBoxOther = new GroupBox();
             checkBoxRememberMe = new CheckBox();
+            checkBoxLoginAuto = new CheckBox();
             grpBoxPassword.SuspendLayout();
             grpBoxQuestion.SuspendLayout();
             grpBoxOther.SuspendLayout();
@@ -153,6 +154,7 @@
             // 
             // grpBoxOther
             // 
+            grpBoxOther.Controls.Add(checkBoxLoginAuto);
             grpBoxOther.Controls.Add(checkBoxRememberMe);
             grpBoxOther.Location = new Point(4, 142);
             grpBoxOther.Name = "grpBoxOther";
@@ -171,6 +173,17 @@
             checkBoxRememberMe.Text = "Remember me next login";
             checkBoxRememberMe.UseVisualStyleBackColor = true;
             checkBoxRememberMe.CheckedChanged += checkBoxRememberMe_CheckedChanged;
+            // 
+            // checkBoxLoginAuto
+            // 
+            checkBoxLoginAuto.AutoSize = true;
+            checkBoxLoginAuto.Location = new Point(6, 47);
+            checkBoxLoginAuto.Name = "checkBoxLoginAuto";
+            checkBoxLoginAuto.Size = new Size(154, 19);
+            checkBoxLoginAuto.TabIndex = 1;
+            checkBoxLoginAuto.Text = "Log me in automatically";
+            checkBoxLoginAuto.UseVisualStyleBackColor = true;
+            checkBoxLoginAuto.CheckedChanged += checkBoxLoginAuto_CheckedChanged;
             // 
             // UserControlPanel
             // 
@@ -206,5 +219,6 @@
         private CheckBox checkBoxRememberMe;
         private TextBox textBoxCurrentPassword;
         private CheckBox checkBoxShowHide;
+        private CheckBox checkBoxLoginAuto;
     }
 }

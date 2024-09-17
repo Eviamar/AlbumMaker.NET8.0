@@ -27,7 +27,12 @@ namespace AlbumMaker.Forms.AlbumForms
                 }
             }
             catch { throw; }
-           
+
+        }
+
+        private void EditImage_Load(object sender, EventArgs e)
+        {
+            this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
         }
     }
 }

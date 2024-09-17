@@ -2,6 +2,7 @@ using AlbumMaker.Classes;
 using AlbumMaker.Classes.Db;
 using AlbumMaker.Forms;
 using AlbumMaker.Forms.UserForms;
+using AlbumMaker.Properties;
 using System.Windows.Forms;
 
 
@@ -87,7 +88,7 @@ namespace AlbumMaker
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
 
             Properties.AppSettings.Default.AppEXELocation = AppDomain.CurrentDomain.BaseDirectory;
@@ -96,6 +97,21 @@ namespace AlbumMaker
             AppDataBase.CreateDataBase();
             SettingsManager.SetTheme(this);
             timerMenuOpen.Start();
+
+            if(!String.IsNullOrWhiteSpace(AppSettings.Default.userName) && !String.IsNullOrWhiteSpace(AppSettings.Default.UserPassword))
+            {
+                bool isVerfied = await AppDataBase.VerifyUser(AppSettings.Default.userName.ToLower(), AppSettings.Default.UserPassword);
+                if (isVerfied)
+                {
+                    AppSettings.Default.isLogged = true;
+                    AppSettings.Default.Save();
+                    MyAlbums myAlbums = new MyAlbums();
+                    myAlbums.Dock = DockStyle.Fill;
+                    SettingsManager.SetTheme(myAlbums);
+                    panelMain.Controls.Add(myAlbums);
+                    myAlbums.Show();
+                }
+            }
 
         }
 
