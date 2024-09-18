@@ -19,7 +19,7 @@ namespace AlbumMaker.Classes
                 SetTheme(form);
             }
         }
-
+  
         public static int GetMaxWidthMenu()
         {
             float fontSize = GetFont().Size;
@@ -235,8 +235,18 @@ namespace AlbumMaker.Classes
                     item.Font = GetFont();
                 }
             }
-            else if(control is Panel || control is FlowLayoutPanel || control is GroupBox)
+            else if(control is GroupBox grpBox)
             {
+                grpBox.BackColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
+                grpBox.ForeColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
+            }
+            else if(control is Panel || control is FlowLayoutPanel )
+            {
+               
                 control.BackColor = theme ?
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);

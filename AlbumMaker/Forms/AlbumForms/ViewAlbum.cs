@@ -14,6 +14,8 @@ namespace AlbumMaker.Forms.AlbumForms
         private int albumSize;
         private int page;
         private Dictionary<int, Image> imageCache = new Dictionary<int, Image>();
+        private Dictionary<int, MemoryStream> imageCacheStreams = new Dictionary<int, MemoryStream>();
+
 
         public ViewAlbum(AlbumItem albumItem)
         {
@@ -21,7 +23,14 @@ namespace AlbumMaker.Forms.AlbumForms
             this.albumItem = albumItem;
             index = 0;
             page = 1;
-            
+
+            //this remove the flickering UI visual while loading the content into the tableLayoutPanelImages
+            this.DoubleBuffered = true;
+            typeof(Control).InvokeMember("DoubleBuffered",
+                System.Reflection.BindingFlags.SetProperty |
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic,
+                null, tableLayoutPanelImages, new object[] { true });
         }
 
 
@@ -58,8 +67,22 @@ namespace AlbumMaker.Forms.AlbumForms
                 UseShellExecute = true
             });
         }
-
-        public void LoadImages(int index)
+        private void PreloadImagesToMemory()
+        {
+            for (int i = 0; i < albumItem.GetImages().Count; i++)
+            {
+                try
+                {
+                    string imagePath = albumItem.GetImages()[i].GetImagePath();
+                    using (Image img = Image.FromFile(imagePath))
+                    {
+                        imageCache[i] = new Bitmap(img); // Store a copy of the image in memory
+                    }
+                }
+                catch { throw; }
+            }
+        }
+        public async void LoadImages(int index)
         {
             // Set album details
             labelTitle.Text = albumItem.GetName();
@@ -67,7 +90,7 @@ namespace AlbumMaker.Forms.AlbumForms
 
             if (index < 0 || index >= albumItem.GetImages().Count)
                 return;
-
+            PreloadImagesToMemory();
             // Ensure the TableLayoutPanel has fixed row/column count and doesn't auto-expand
             tableLayoutPanelImages.RowCount = 3; // Fixed row count
             tableLayoutPanelImages.ColumnCount = 3; // Fixed column count
@@ -79,14 +102,31 @@ namespace AlbumMaker.Forms.AlbumForms
             // Loop through the images and place them in the TableLayoutPanel based on the template
             for (int j = index, i = 0; j < albumItem.GetImages().Count && i < 5; j++, i++)
             {
-                // Create the PictureBox for each image
+                
                 PictureBox p = new PictureBox()
                 {
                     Dock = DockStyle.Fill,
                     SizeMode = PictureBoxSizeMode.StretchImage,
+                    //Image = imageCache.ContainsKey(j) ? imageCache[j] : null, // Use preloaded image from cache
                     ImageLocation = albumItem.GetImages()[j].GetImagePath(),
                     
                 };
+                await Task.Run(() =>
+                {
+                    // Do the loading in a background task
+                    if (imageCache.ContainsKey(j))
+                    {
+                        p.Image = imageCache[j];
+                    }
+                    else
+                    {
+                        Image img = Image.FromFile(albumItem.GetImages()[j].GetImagePath());
+                        imageCache[j] = img; // Store in cache
+                        p.Image = img;
+                    }
+                });
+               
+                // Create the PictureBox for each image
                 p.Click += OpenImage;
                 p.MouseEnter += (sender, e) => p.Cursor = Cursors.Hand;
                 p.MouseLeave += (sender, e) => p.Cursor = Cursors.Default;
@@ -140,7 +180,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 }
 
                 // Add PictureBox to the TableLayoutPanel
-                tableLayoutPanelImages.Controls.Add(p, col, row);
+                Invoke((Action)(() => tableLayoutPanelImages.Controls.Add(p, col, row))); // Update UI safely
             }
 
             // Fill any remaining empty cells in the TableLayoutPanel
@@ -151,7 +191,7 @@ namespace AlbumMaker.Forms.AlbumForms
         private void FillRemainingCells()
         {
             int picturesCount = 0;
-            string[] pictures = { "path/to/placeholder1.png", "path/to/placeholder2.png", "path/to/placeholder3.png", "path/to/placeholder4.png" }; // Placeholder images
+            string[] pictures = { null, null, null, null }; // Placeholder images
 
             for (int row = 0; row < tableLayoutPanelImages.RowCount; row++)
             {

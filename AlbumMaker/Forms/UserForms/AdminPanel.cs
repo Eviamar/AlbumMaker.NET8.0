@@ -11,6 +11,7 @@ namespace AlbumMaker.Forms.UserForms
         public AdminPanel()
         {
             InitializeComponent();
+            this.AutoScroll = true;
         }
 
         private async void AdminPanel_Load(object sender, EventArgs e)

@@ -11,6 +11,7 @@ namespace AlbumMaker.Forms
         public Login()
         {
             InitializeComponent();
+            this.AutoScroll = true;
 
 
         }

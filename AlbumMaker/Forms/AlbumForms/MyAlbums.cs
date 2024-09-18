@@ -12,6 +12,7 @@ namespace AlbumMaker.Forms
         public MyAlbums()
         {
             InitializeComponent();
+            this.AutoScroll = true;
         }
         private void Picture_AlbumView(AlbumItem album)
         {

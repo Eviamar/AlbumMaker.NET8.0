@@ -3,6 +3,7 @@ using AlbumMaker.Classes.Items;
 using AlbumMaker.Forms;
 using AlbumMaker.Forms.UserForms;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 
 namespace AlbumMaker.Classes.Custom
@@ -24,7 +25,7 @@ namespace AlbumMaker.Classes.Custom
             Size = new Size(200, 200);
             TabIndex = image.GetID();
             SizeMode = PictureBoxSizeMode.StretchImage;
-
+          
             DeleteButton = new Button
             {
                 Name = "btnDelete",
@@ -75,7 +76,9 @@ namespace AlbumMaker.Classes.Custom
                     BackColor = Color.Transparent
                 };
                 Image = GenerateSmallerImage(image.GetImagePath(), 200, 200);
-                ImageLocation = image.GetImagePath();
+
+
+                //ImageLocation = image.GetImagePath();
                 this.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, image.GetDescription());
                 EditButton.Location = new Point(Width - EditButton.Width, Height - EditButton.Height);
                 Title.Location = new Point(0, 0);
@@ -266,7 +269,7 @@ namespace AlbumMaker.Classes.Custom
             else
             {
                 Image = GenerateSmallerImage(album.GetImages()[0].GetImagePath(), 200, 200);
-                ImageLocation = album.GetImages()[0].GetImagePath();
+                //ImageLocation = album.GetImages()[0].GetImagePath();
             }
 
             SizeMode = PictureBoxSizeMode.StretchImage;
@@ -367,16 +370,41 @@ namespace AlbumMaker.Classes.Custom
             Bitmap b = null;
             try
             {
-                using (Image img = Image.FromFile(path))
+                // Open the file and load it into a MemoryStream
+                using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    b = new Bitmap(img, width, height);
-                    img.Dispose();
-                    return b;
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        fileStream.CopyTo(memoryStream);
+                        memoryStream.Seek(0, SeekOrigin.Begin); // Reset the position for reading
+
+                        // Load the image from the MemoryStream
+                        using (Image img = Image.FromStream(memoryStream))
+                        {
+                            // Create a smaller bitmap based on the desired width and height
+                            b = new Bitmap(img, width, height);
+                        }
+                    }
                 }
-
+                return b;
             }
-            catch (Exception ex) { return null; }
-
+            catch { return null; throw; }
         }
+        //private static Image GenerateSmallerImage(string path, int width, int height)
+        //{
+        //    Bitmap b = null;
+        //    try
+        //    {
+        //        using (Image img = Image.FromFile(path))
+        //        {
+        //            b = new Bitmap(img, width, height);
+        //            img.Dispose();
+        //            return b;
+        //        }
+
+        //    }
+        //    catch (Exception ex) { return null; }
+
+        //}
     }
 }

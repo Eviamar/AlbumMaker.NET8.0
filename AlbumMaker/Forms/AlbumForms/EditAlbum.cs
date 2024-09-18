@@ -12,6 +12,8 @@ namespace AlbumMaker.Forms.AlbumForms
         {
             InitializeComponent();
             this.album= album;
+            this.AutoScroll = true;
+
 
         }
 
@@ -61,25 +63,37 @@ namespace AlbumMaker.Forms.AlbumForms
                 MessageBox.Show($"All fields required", "Alert");
 
         }
-        private void ShowImagesToEdit()
+        private async void ShowImagesToEdit()
         {
-            foreach (ImageItem image in album.GetImages())
+            flpImagesToEdit.SuspendLayout();
+            flpImagesToEdit.AutoScroll = false;
+            await Task.Run(() =>
             {
-                DigiBumPictureBox digi = new DigiBumPictureBox(image, true);
-                //TODO: find a way to transfer some kind of variable so it will display the description instead of name(which is image path)
-                digi.ImageDeleted += Picture_ImageDeleted;
-                flpImagesToEdit.Controls.Add(digi);
-            }
+                foreach (ImageItem image in album.GetImages())
+                {
+                    // Load the image on the UI thread
+                    flpImagesToEdit.Invoke(new Action(() =>
+                    {
+                        DigiBumPictureBox digi = new DigiBumPictureBox(image, true);
+                        digi.ImageDeleted += Picture_ImageDeleted;
+                        flpImagesToEdit.Controls.Add(digi);
+                    }));
+                }
+            });
+            flpImagesToEdit.AutoScroll = true;
+            flpImagesToEdit.ResumeLayout();
         }
 
         private void EditAlbum_Load(object sender, EventArgs e)
         {
+            
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             ShowImagesToEdit();
             txtBoxAlbumName.Text = album.GetName();
             txtBoxDesc.Text = album.GetDescription();
             cmbTemplate.SelectedItem = album.GetTemplate();
             labelTitle.Text = $"{album.GetName()}";
+           
             
         }
     }

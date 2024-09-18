@@ -16,6 +16,7 @@ namespace AlbumMaker.Forms
         {
             InitializeComponent();
             AddSizesToComboBox();
+            this.AutoScroll = true;
         }
         public Settings(System.Windows.Forms.Timer timerClose, System.Windows.Forms.Timer timerOpen)
         {
@@ -23,6 +24,7 @@ namespace AlbumMaker.Forms
             AddSizesToComboBox();
             this.timerClose = timerClose;
             this.timerOpen = timerOpen;
+            this.AutoScroll = true;
         }
 
         private void radioButtonLight_CheckedChanged(object sender, EventArgs e)

@@ -9,6 +9,7 @@ namespace AlbumMaker.Forms
         public Register()
         {
             InitializeComponent();
+            this.AutoScroll = true;
         }
 
         private void checkBoxPassword_CheckedChanged(object sender, EventArgs e)

@@ -11,6 +11,7 @@ namespace AlbumMaker.Forms
         public UserControlPanel()
         {
             InitializeComponent();
+            this.AutoScroll = true;
 
 
         }
