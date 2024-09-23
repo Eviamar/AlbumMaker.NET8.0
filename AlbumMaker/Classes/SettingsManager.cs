@@ -62,6 +62,9 @@ namespace AlbumMaker.Classes
                 foreach (Control c in uc.Controls)
                 {
                     SetThemeToControls(c, isDark);
+                    if (c is Panel p)
+                        if (p.Name == "panelPic")
+                            continue;
                     if (c.HasChildren)
                     {
                         foreach (Control cControl in c.Controls)
@@ -244,9 +247,11 @@ namespace AlbumMaker.Classes
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
             }
-            else if(control is Panel || control is FlowLayoutPanel )
+            else if(control is Panel || control is FlowLayoutPanel | control is TableLayoutPanel)
             {
+
                
+
                 control.BackColor = theme ?
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);

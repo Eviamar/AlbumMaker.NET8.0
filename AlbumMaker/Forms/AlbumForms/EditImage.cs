@@ -7,7 +7,7 @@ namespace AlbumMaker.Forms.AlbumForms
     {
         private ImageItem image;
         private List<string> shapes;
-        private List<KeyValuePair<string,int>> sizes;
+        private List<KeyValuePair<string, int>> sizes;
 
 
         private bool isResizing = false;
@@ -15,10 +15,8 @@ namespace AlbumMaker.Forms.AlbumForms
         public EditImage(ImageItem image)
         {
             InitializeComponent();
-            if (SettingsManager.GetFont().Size > 9)
-                panelOptions.Width = 500;
             this.image = image;
-            shapes = new List<string> 
+            shapes = new List<string>
             {
                 "Circle",
                 "Ellipse",
@@ -33,7 +31,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 new KeyValuePair<string,int>("Large",1000),
                 new KeyValuePair<string,int>("Very Large",1500),
             };
-           this.AutoScroll = true;
+            this.AutoScroll = true;
         }
 
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -57,12 +55,8 @@ namespace AlbumMaker.Forms.AlbumForms
 
         private void EditImage_Load(object sender, EventArgs e)
         {
-            grpBoxColors.Size = grpBoxColors.PreferredSize;
-            grpBoxColors.AutoSize = true;
-            grpBoxColors.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panelOptions.Size = panelOptions.PreferredSize;
-            panelOptions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panelOptions.AutoSize = true;
+            panelPic.AutoScroll = true;
+
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             using (FileStream fileStream = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
             {
@@ -78,9 +72,21 @@ namespace AlbumMaker.Forms.AlbumForms
                 } // MemoryStream is disposed of here
             } // FileStream is disposed of here
 
-            comboBoxShape.DataSource = shapes;
+            pictureBoxPic.SizeMode = PictureBoxSizeMode.AutoSize;
+            if (pictureBoxPic.Image.Width > panelPic.Width || pictureBoxPic.Image.Height > panelPic.Height)
+            {
+                panelPic.AutoScroll = true;
+            }
+
+            tlpOptions.AutoScroll = true;
+            tlpOptions.AutoSize = true;
             comboBoxShapeSize.DataSource = sizes;
-           
+
+        }
+
+        private void btnApplyShape_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
