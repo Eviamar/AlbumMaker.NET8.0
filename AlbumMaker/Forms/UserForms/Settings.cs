@@ -96,18 +96,16 @@ namespace AlbumMaker.Forms
                 Properties.AppSettings.Default.Save();
                 if (timerClose != null && timerOpen != null)
                 {
-                    timerClose.Interval = 1;
                     timerOpen.Interval = 1;
+                    timerClose.Interval = 1;
                     timerClose.Start();
-
-                    //timerOpen.Start();
-
                 }
                 SettingsManager.SetTheme();
                 SettingsManager.SetTheme(this);
-
+                
             }
         }
+
         public void CopyDirectory(string sourceDir, string destinationDir, bool copySubDirs)
         {
             // Get the subdirectories for the specified directory.

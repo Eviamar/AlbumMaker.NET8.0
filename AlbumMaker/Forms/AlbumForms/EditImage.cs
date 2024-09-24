@@ -79,9 +79,9 @@ namespace AlbumMaker.Forms.AlbumForms
             }
 
             tlpOptions.AutoScroll = true;
-            tlpOptions.AutoSize = true;
+            //tlpOptions.AutoSize = true;
             comboBoxShapeSize.DataSource = sizes;
-
+            comboBoxShape.DataSource = shapes;
         }
 
         private void btnApplyShape_Click(object sender, EventArgs e)
