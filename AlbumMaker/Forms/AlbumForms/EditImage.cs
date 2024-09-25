@@ -3,6 +3,7 @@ using AlbumMaker.Classes.Items;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 namespace AlbumMaker.Forms.AlbumForms
 {
     public partial class EditImage : UserControl
@@ -15,6 +16,7 @@ namespace AlbumMaker.Forms.AlbumForms
         private Color c1;
         private Color c2;
         private Image originalImage;
+        private int shapeSize;
 
         private const int MaxUndoSteps = 5;
         private Stack<Image> undoStack = new Stack<Image>();
@@ -39,15 +41,19 @@ namespace AlbumMaker.Forms.AlbumForms
                 new KeyValuePair<string,int>("Very Large",1500),
             };
             this.AutoScroll = true;
+            using (FileStream fs = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
+            {
+                byte[] imageData = new byte[fs.Length];
+                fs.Read(imageData, 0, (int)fs.Length);
+
+                using (MemoryStream ms = new MemoryStream(imageData))
+                {
+                    originalImage = new Bitmap(ms);
+                    pictureBoxPic.Image = originalImage;
+                }
+            }
 
         }
-
-        private void SetPoint(object sender, MouseEventArgs e)
-        {
-            selectedPoint = new Point(e.X, e.Y);
-            grpBoxShapes.Text = $"Shape - (X:{e.X},Y:{e.Y})";
-        }
-
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -66,7 +72,6 @@ namespace AlbumMaker.Forms.AlbumForms
             catch { throw; }
 
         }
-
         private void EditImage_Load(object sender, EventArgs e)
         {
             panelPic.AutoScroll = true;
@@ -74,17 +79,7 @@ namespace AlbumMaker.Forms.AlbumForms
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
 
 
-            using (FileStream fs = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
-            {
-                byte[] imageData = new byte[fs.Length];
-                fs.Read(imageData, 0, (int)fs.Length);
-
-                using (MemoryStream ms = new MemoryStream(imageData))
-                {
-                    originalImage = new Bitmap(ms);
-                    pictureBoxPic.Image = originalImage;
-                }
-            }
+           
 
 
 
@@ -117,18 +112,63 @@ namespace AlbumMaker.Forms.AlbumForms
             pictureBoxPic.MouseEnter += (sender, args) => Cursor = Cursors.Hand;
             pictureBoxPic.MouseLeave += (sender, args) => Cursor = Cursors.Default;
         }
-
         private void btnApplyShape_Click(object sender, EventArgs e)
         {
             if (!selectedPoint.IsEmpty)
             {
                 string selectedShape = comboBoxShape.Text;
-                KeyValuePair<string, int> selectedSize = (KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem;
+                
+                if (!String.IsNullOrWhiteSpace(txtBoxCustomSize.Text))
+                {
+                    //just here to check if user typed any custom size...
+                }
+                else
+                {
+                    KeyValuePair<string, int> selectedSize = (KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem;
+                    this.shapeSize = selectedSize.Value;
+                }
 
+                switch (comboBoxShape.SelectedItem)
+                {
+                    case "Circle":
+                        ShapeCircle();
+                        break;
+                    case "Ellipse":
+                        ShapeEllipse();
+                        break;
+                    case "Diamond":
+                        ShapeDiamod();
+                        break;
+                    case "Square":
+                        ShapeSquare();
+                        break;
+                    case "Rectangle":
+                        ShapeRectangle();
+                        break;
+                    default:
+                        break;
+                }
             }
 
         }
-
+        private void txtBoxCustomSize_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                bool tryParse = int.TryParse(txtBoxCustomSize.Text, out int size);
+                if (tryParse)
+                {
+                    shapeSize = size;
+                }
+                else
+                {
+                    MessageBox.Show("Only digits are allowed", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtBoxCustomSize.Clear();
+                    txtBoxCustomSize.Focus();
+                }
+            }
+            catch  { throw; }
+        }
         private void lblColor1_Click(object sender, EventArgs e)
         {
             ColorDialog c = new ColorDialog();
@@ -140,7 +180,6 @@ namespace AlbumMaker.Forms.AlbumForms
 
             }
         }
-
         private void lblColor2_Click(object sender, EventArgs e)
         {
             ColorDialog c = new ColorDialog();
@@ -151,7 +190,6 @@ namespace AlbumMaker.Forms.AlbumForms
                 lblColor2.Text = c2.Name;
             }
         }
-
         private void linkLabelRandomColors_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -170,7 +208,6 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
-
         private void btnFilter_Click(object sender, EventArgs e)
         {
             try
@@ -180,14 +217,7 @@ namespace AlbumMaker.Forms.AlbumForms
                     MessageBox.Show("Choose colors", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                if (undoStack.Count >= MaxUndoSteps)
-                {
-                    // Remove the oldest entry when max limit is reached
-                    var tempUndoStack = new Stack<Image>(undoStack.Reverse());
-                    tempUndoStack.Pop();  // Remove oldest
-                    undoStack = new Stack<Image>(tempUndoStack.Reverse());  // Rebuild the stack
-                }
-                undoStack.Push(new Bitmap(pictureBoxPic.Image)); // Save current state before applying changes
+                UndoFunc();
 
                 // Create a filtered bitmap
                 Bitmap filteredBitmap = new Bitmap(originalImage);
@@ -225,45 +255,289 @@ namespace AlbumMaker.Forms.AlbumForms
                 // Enable Undo and clear Redo stack
                 btnUndo.Enabled = true;
                 //redoStack.Clear(); // Optionally, you can avoid clearing the redo stack if you don't want to lose redo history
-            
+
 
             }
             catch (Exception) { }
         }
-
         private void btnUndo_Click(object sender, EventArgs e)
         {
+            if (undoStack.Count > 0)
             {
-                if (undoStack.Count > 0)
+                // Save the current image state in the redo stack
+                if (pictureBoxPic.Image != null)
                 {
-                    redoStack.Push((Image)pictureBoxPic.Image.Clone()); // Save current state to redo
-
-                    Image lastState = undoStack.Pop();
-                    pictureBoxPic.Image = lastState;
-
-                    // Enforce the redo stack size limit
-                    if (redoStack.Count > MaxUndoSteps)
-                    {
-                        redoStack = new Stack<Image>(redoStack.Take(MaxUndoSteps)); // Trim the oldest images
-                    }
+                    redoStack.Push(new Bitmap(pictureBoxPic.Image));
                 }
+
+                // Restore the last image from the undo stack
+                pictureBoxPic.Image = undoStack.Pop();
+                btnRedo.Enabled = true;  // Enable redo button
+            }
+
+            // Disable the undo button if no more steps are left
+            if (undoStack.Count == 0)
+            {
+                btnUndo.Enabled = false;
             }
         }
         private void btnRedo_Click(object sender, EventArgs e)
         {
             if (redoStack.Count > 0)
             {
-                undoStack.Push((Image)pictureBoxPic.Image.Clone()); // Save current state to undo
-
-                Image nextState = redoStack.Pop();
-                pictureBoxPic.Image = nextState;
-
-                // Enforce the undo stack size limit
-                if (undoStack.Count > MaxUndoSteps)
+                // Save the current image state in the undo stack
+                if (pictureBoxPic.Image != null)
                 {
-                    undoStack = new Stack<Image>(undoStack.Take(MaxUndoSteps)); // Trim the oldest images
+                    undoStack.Push(new Bitmap(pictureBoxPic.Image));
                 }
+
+                // Restore the last image from the redo stack
+                pictureBoxPic.Image = redoStack.Pop();
+                btnUndo.Enabled = true;  // Enable undo button
+            }
+
+            // Disable the redo button if no more steps are left
+            if (redoStack.Count == 0)
+            {
+                btnRedo.Enabled = false;
             }
         }
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            pictureBoxPic.Image = originalImage;
+            undoStack.Clear();
+            redoStack.Clear();
+            c1 = new Color();
+            c2 = new Color();
+            lblColor1.Text = "Color1";
+            lblColor2.Text = "Color2";
+            selectedPoint = new Point();
+            grpBoxShapes.Text = "Shape";
+            lblColor1.BackColor = c1;
+            lblColor2.BackColor = c2;
+            btnUndo.Enabled = false;
+            btnRedo.Enabled = false;
+
+        }
+
+
+        #region Functions
+        private void UndoFunc()
+        {
+            if (undoStack.Count >= MaxUndoSteps)
+            {
+                // Remove the oldest entry when max limit is reached
+                var tempUndoStack = new Stack<Image>(undoStack.Reverse());
+                tempUndoStack.Pop();  // Remove oldest
+                                      // undoStack = new Stack<Image>(tempUndoStack.Reverse());  // Rebuild the stack
+                undoStack = new Stack<Image>(undoStack.Reverse().Skip(1));
+            }
+            undoStack.Push(new Bitmap(pictureBoxPic.Image)); // Save current state before applying changes
+        }
+        private void SetPoint(object sender, MouseEventArgs e)
+        {
+            selectedPoint = new Point(e.X, e.Y);
+            grpBoxShapes.Text = $"Shape - (X:{e.X},Y:{e.Y})";
+        }
+        private void ShapeCircle()
+        {
+            try
+            {
+
+                if (selectedPoint.IsEmpty)
+                {
+                    MessageBox.Show("No focus point\nClick anywhere on the image where you want the shape to take place", "Pick position", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (shapeSize == 0)
+                {
+                    MessageBox.Show("Choose shape size or type your desired size manually in the textbox where sizes are.", "Pick size", MessageBoxButtons.OK, MessageBoxIcon.Information); return;
+                }
+                UndoFunc();
+                GraphicsPath path = new GraphicsPath();
+                Bitmap modifiedBitmap = new Bitmap(pictureBoxPic.Image);
+                using (Graphics g = Graphics.FromImage(modifiedBitmap))
+                {
+                    // Draw the original image onto the bitmap
+                    g.DrawImage(pictureBoxPic.Image, new Point(0, 0));
+
+                    // Add the circular region to the GraphicsPath
+                    path.AddEllipse(selectedPoint.X - shapeSize / 2, selectedPoint.Y - shapeSize / 2, shapeSize, shapeSize);
+
+                    // Set the clip region of the Graphics object to the circular region
+                    g.SetClip(path, CombineMode.Exclude);
+
+                    // Clear the region outside the circular area
+                    g.Clear(Color.Transparent);
+                }
+                pictureBoxPic.Image = modifiedBitmap;
+                pictureBoxPic.Invalidate();
+                btnUndo.Enabled = true;
+            }
+            catch { throw; }
+        }
+        private void ShapeEllipse()
+        {
+            try
+            {
+                if (selectedPoint.IsEmpty)
+                {
+                    MessageBox.Show("No focus point\nClick anywhere on the image where you want the shape to take place", "Pick position", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (shapeSize == 0)
+                {
+                    MessageBox.Show("Choose shape size or type your desired size manually in the textbox where sizes are.", "Pick size", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                UndoFunc();
+                GraphicsPath path = new GraphicsPath();
+                Bitmap modifiedBitmap = new Bitmap(pictureBoxPic.Image);
+                using (Graphics g = Graphics.FromImage(modifiedBitmap))
+                {
+                    // Draw the original image onto the bitmap
+                    g.DrawImage(pictureBoxPic.Image, new Point(0, 0));
+
+                    // Add the circular region to the GraphicsPath
+                    path.AddEllipse(selectedPoint.X - shapeSize / 2, selectedPoint.Y - shapeSize / 2, shapeSize, shapeSize * 1.5f); // Adjust the second parameter for the height
+
+                    // Set the clip region of the Graphics object to the circular region
+                    g.SetClip(path, CombineMode.Exclude);
+
+                    // Clear the region outside the circular area
+                    g.Clear(Color.Transparent);
+                }
+                pictureBoxPic.Image = modifiedBitmap;
+                pictureBoxPic.Invalidate();
+                btnUndo.Enabled = true;
+            }
+            catch { throw; }
+        }
+        private void ShapeDiamod()
+        {
+            try
+            {
+                if (selectedPoint.IsEmpty)
+                {
+                    MessageBox.Show("No focus point\nClick anywhere on the image where you want the shape to take place", "Pick position", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (shapeSize == 0)
+                {
+                    MessageBox.Show("Choose shape size or type your desired size manually in the textbox where sizes are.", "Pick size", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                UndoFunc();
+                GraphicsPath path = new GraphicsPath();
+                Bitmap modifiedBitmap = new Bitmap(pictureBoxPic.Image);
+                using (Graphics g = Graphics.FromImage(modifiedBitmap))
+                {
+                    // Draw the original image onto the bitmap
+                    g.DrawImage(pictureBoxPic.Image, new Point(0, 0));
+
+                    // Add the diamond region to the GraphicsPath
+                    PointF[] diamondPoints = new PointF[]
+                    {
+            new PointF(selectedPoint.X, selectedPoint.Y - shapeSize / 2),
+            new PointF(selectedPoint.X + shapeSize / 2, selectedPoint.Y),
+            new PointF(selectedPoint.X, selectedPoint.Y + shapeSize / 2),
+            new PointF(selectedPoint.X - shapeSize / 2, selectedPoint.Y)
+                    };
+                    path.AddPolygon(diamondPoints);
+
+                    // Set the clip region of the Graphics object to the diamond region
+                    g.SetClip(path, CombineMode.Exclude);
+
+                    // Clear the region outside the diamond area
+                    g.Clear(Color.Transparent);
+                }
+                pictureBoxPic.Image = modifiedBitmap;
+                pictureBoxPic.Invalidate();
+                btnUndo.Enabled = true;
+            }
+            catch { throw; }
+        }
+        private void ShapeSquare()
+        {
+            try
+            {
+                if (selectedPoint.IsEmpty)
+                {
+                    MessageBox.Show("No focus point\nClick anywhere on the image where you want the shape to take place", "Pick position", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (shapeSize == 0)
+                {
+                    MessageBox.Show("Choose shape size or type your desired size manually in the textbox where sizes are.", "Pick size", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                UndoFunc();
+                GraphicsPath path = new GraphicsPath();
+                Bitmap modifiedBitmap = new Bitmap(pictureBoxPic.Image);
+                using (Graphics g = Graphics.FromImage(modifiedBitmap))
+                {
+                    // Draw the original image onto the bitmap
+                    g.DrawImage(pictureBoxPic.Image, new Point(0, 0));
+
+                    // Add the square region to the GraphicsPath
+                    path.AddRectangle(new RectangleF(selectedPoint.X - shapeSize / 2, selectedPoint.Y - shapeSize / 2, shapeSize, shapeSize));
+
+                    // Set the clip region of the Graphics object to the square region
+                    g.SetClip(path, CombineMode.Exclude);
+
+                    // Clear the region outside the square area
+                    g.Clear(Color.Transparent);
+                }
+                pictureBoxPic.Image = modifiedBitmap;
+                pictureBoxPic.Invalidate();
+                btnUndo.Enabled = true;
+            }
+            catch { throw; }
+        }
+        private void ShapeRectangle()
+        {
+            try
+            {
+                if (selectedPoint.IsEmpty)
+                {
+                    MessageBox.Show("No focus point\nClick anywhere on the image where you want the shape to take place", "Pick position", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (shapeSize == 0)
+                {
+                    MessageBox.Show("Choose shape size or type your desired size manually in the textbox where sizes are.", "Pick size", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                UndoFunc();
+                GraphicsPath path = new GraphicsPath();
+                Bitmap modifiedBitmap = new Bitmap(pictureBoxPic.Image);
+                using (Graphics g = Graphics.FromImage(modifiedBitmap))
+                {
+                    // Draw the original image onto the bitmap
+                    g.DrawImage(pictureBoxPic.Image, new Point(0, 0));
+
+                    // Add the rectangular region to the GraphicsPath
+                    float rectangleWidth = shapeSize * 2; // You can adjust the width as needed
+                    float rectangleHeight = shapeSize * 1.5f; // You can adjust the height as needed
+
+                    path.AddRectangle(new RectangleF(selectedPoint.X - rectangleWidth / 2, selectedPoint.Y - rectangleHeight / 2, rectangleWidth, rectangleHeight));
+
+                    // Set the clip region of the Graphics object to the rectangular region
+                    g.SetClip(path, CombineMode.Exclude);
+
+                    // Clear the region outside the rectangular area
+                    g.Clear(Color.Transparent);
+                }
+                pictureBoxPic.Image = modifiedBitmap;
+                pictureBoxPic.Invalidate();
+                btnUndo.Enabled = true;
+            }
+            catch { throw; }
+        }
+
+        #endregion Functions
+
+
+
     }
 }

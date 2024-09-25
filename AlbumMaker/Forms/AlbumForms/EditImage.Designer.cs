@@ -203,6 +203,7 @@
             txtBoxCustomSize.PlaceholderText = "Custom size";
             txtBoxCustomSize.Size = new Size(141, 23);
             txtBoxCustomSize.TabIndex = 3;
+            txtBoxCustomSize.TextChanged += txtBoxCustomSize_TextChanged;
             // 
             // btnApplyShape
             // 
@@ -221,7 +222,6 @@
             grpBoxDesc.Dock = DockStyle.Fill;
             grpBoxDesc.Location = new Point(3, 477);
             grpBoxDesc.Name = "grpBoxDesc";
-            grpBoxDesc.Padding = new Padding(10);
             grpBoxDesc.RightToLeft = RightToLeft.No;
             grpBoxDesc.Size = new Size(297, 152);
             grpBoxDesc.TabIndex = 10;
@@ -235,9 +235,9 @@
             flp4GrpBoxDesc.Controls.Add(lblImgeDesc);
             flp4GrpBoxDesc.Controls.Add(btnApplyDesc);
             flp4GrpBoxDesc.Dock = DockStyle.Fill;
-            flp4GrpBoxDesc.Location = new Point(10, 26);
+            flp4GrpBoxDesc.Location = new Point(3, 19);
             flp4GrpBoxDesc.Name = "flp4GrpBoxDesc";
-            flp4GrpBoxDesc.Size = new Size(277, 116);
+            flp4GrpBoxDesc.Size = new Size(291, 130);
             flp4GrpBoxDesc.TabIndex = 1;
             // 
             // textBoxDesc
@@ -437,6 +437,7 @@
             // btnUndo
             // 
             btnUndo.AutoSize = true;
+            btnUndo.Enabled = false;
             btnUndo.Location = new Point(6, 6);
             btnUndo.Name = "btnUndo";
             btnUndo.Size = new Size(75, 25);
@@ -448,6 +449,7 @@
             // btnRedo
             // 
             btnRedo.AutoSize = true;
+            btnRedo.Enabled = false;
             btnRedo.Location = new Point(87, 6);
             btnRedo.Name = "btnRedo";
             btnRedo.Size = new Size(75, 25);
@@ -465,6 +467,7 @@
             btnClear.TabIndex = 2;
             btnClear.Text = "Clear all  changes";
             btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += btnClear_Click;
             // 
             // btnSave
             // 
@@ -478,7 +481,7 @@
             // 
             // pictureBoxPic
             // 
-            pictureBoxPic.Location = new Point(3, 6);
+            pictureBoxPic.Location = new Point(0, 0);
             pictureBoxPic.Name = "pictureBoxPic";
             pictureBoxPic.Size = new Size(325, 325);
             pictureBoxPic.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -491,6 +494,7 @@
             panelPic.Controls.Add(pictureBoxPic);
             panelPic.Dock = DockStyle.Fill;
             panelPic.Location = new Point(0, 24);
+            panelPic.Margin = new Padding(0);
             panelPic.Name = "panelPic";
             panelPic.Size = new Size(806, 778);
             panelPic.TabIndex = 2;
