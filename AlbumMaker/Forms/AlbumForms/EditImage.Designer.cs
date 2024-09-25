@@ -60,6 +60,7 @@
             grpBoxBtnsSaveUndo = new GroupBox();
             flp4GrpBoxUndoSave = new FlowLayoutPanel();
             btnUndo = new Button();
+            btnRedo = new Button();
             btnClear = new Button();
             btnSave = new Button();
             pictureBoxPic = new PictureBox();
@@ -324,6 +325,7 @@
             lblColor1.TabIndex = 0;
             lblColor1.Text = "Color 1";
             lblColor1.TextAlign = ContentAlignment.MiddleCenter;
+            lblColor1.Click += lblColor1_Click;
             // 
             // lblColor2
             // 
@@ -335,6 +337,7 @@
             lblColor2.TabIndex = 1;
             lblColor2.Text = "Color 2";
             lblColor2.TextAlign = ContentAlignment.MiddleCenter;
+            lblColor2.Click += lblColor2_Click;
             // 
             // linkLabelRandomColors
             // 
@@ -348,6 +351,7 @@
             linkLabelRandomColors.TabStop = true;
             linkLabelRandomColors.Text = "Random";
             linkLabelRandomColors.TextAlign = ContentAlignment.MiddleCenter;
+            linkLabelRandomColors.LinkClicked += linkLabelRandomColors_LinkClicked;
             // 
             // btnFilter
             // 
@@ -358,6 +362,7 @@
             btnFilter.TabIndex = 3;
             btnFilter.Text = "Active filter";
             btnFilter.UseVisualStyleBackColor = true;
+            btnFilter.Click += btnFilter_Click;
             // 
             // grpBoxFlip
             // 
@@ -418,6 +423,7 @@
             // 
             flp4GrpBoxUndoSave.AutoScroll = true;
             flp4GrpBoxUndoSave.Controls.Add(btnUndo);
+            flp4GrpBoxUndoSave.Controls.Add(btnRedo);
             flp4GrpBoxUndoSave.Controls.Add(btnClear);
             flp4GrpBoxUndoSave.Controls.Add(btnSave);
             flp4GrpBoxUndoSave.Dock = DockStyle.Fill;
@@ -437,11 +443,23 @@
             btnUndo.TabIndex = 1;
             btnUndo.Text = "Undo";
             btnUndo.UseVisualStyleBackColor = true;
+            btnUndo.Click += btnUndo_Click;
+            // 
+            // btnRedo
+            // 
+            btnRedo.AutoSize = true;
+            btnRedo.Location = new Point(87, 6);
+            btnRedo.Name = "btnRedo";
+            btnRedo.Size = new Size(75, 25);
+            btnRedo.TabIndex = 3;
+            btnRedo.Text = "Redo";
+            btnRedo.UseVisualStyleBackColor = true;
+            btnRedo.Click += btnRedo_Click;
             // 
             // btnClear
             // 
             btnClear.AutoSize = true;
-            btnClear.Location = new Point(87, 6);
+            btnClear.Location = new Point(168, 6);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(109, 25);
             btnClear.TabIndex = 2;
@@ -451,7 +469,7 @@
             // btnSave
             // 
             btnSave.AutoSize = true;
-            btnSave.Location = new Point(202, 6);
+            btnSave.Location = new Point(6, 37);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(68, 25);
             btnSave.TabIndex = 0;
@@ -559,5 +577,6 @@
         private Button btnSave;
         private PictureBox pictureBoxPic;
         private Panel panelPic;
+        private Button btnRedo;
     }
 }
