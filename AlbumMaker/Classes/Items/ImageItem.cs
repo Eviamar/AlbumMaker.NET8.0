@@ -16,6 +16,7 @@ namespace AlbumMaker.Classes.Items
         }
         public string GetDescription()=> description;
         public int GetRelatedAlbumID() => relatedAlbumID;
+        public void SetDescription(string description) => this.description = description;
         public override string ToString()
         {
             return base.ToString()+$"Path: {path}\nDescription:{description}";

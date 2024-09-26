@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using AlbumMaker.Classes.Db;
 namespace AlbumMaker.Forms.AlbumForms
 {
     public partial class EditImage : UserControl
@@ -38,6 +39,7 @@ namespace AlbumMaker.Forms.AlbumForms
                     pictureBoxPic.Image = originalImage;
                 }
             }
+            lblImgeDesc.Text = image.GetDescription();
             shapes = new List<string>
             {
                 "Circle",
@@ -54,7 +56,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 new KeyValuePair<string,int>("Very Large",1500),
             };
             this.AutoScroll = true;
-            
+
             trackBarBrightness.Value = (trackBarBrightness.Minimum + trackBarBrightness.Maximum) / 2;
 
         }
@@ -257,7 +259,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 pictureBoxPic.Image = filteredBitmap;
 
                 // Enable Undo and clear Redo stack
-                
+
                 //redoStack.Clear(); // Optionally, you can avoid clearing the redo stack if you don't want to lose redo history
 
 
@@ -279,7 +281,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 pictureBoxPic.Image = undoStack.Pop();
                 imageToDispose?.Dispose();
                 btnRedo.Enabled = true;  // Enable redo button
-                
+
             }
 
             // Disable the undo button if no more steps are left
@@ -302,7 +304,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 pictureBoxPic.Image = redoStack.Pop();
                 imageToDispose?.Dispose();
                 btnUndo.Enabled = true;  // Enable undo button
-                
+
             }
 
             // Disable the redo button if no more steps are left
@@ -316,9 +318,9 @@ namespace AlbumMaker.Forms.AlbumForms
             pictureBoxPic.Image = null;
             foreach (var img in undoStack)
                 img.Dispose();
-            foreach(var img in redoStack) 
+            foreach (var img in redoStack)
                 img.Dispose();
-       
+
             undoStack.Clear();
             redoStack.Clear();
             c1 = new Color();
@@ -377,7 +379,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 else
                     btnFlipUpDown.Text = "Up";
             }
-            catch  { throw; }
+            catch { throw; }
         }
 
         private void btnFlipLeftRight_Click(object sender, EventArgs e)
@@ -396,6 +398,40 @@ namespace AlbumMaker.Forms.AlbumForms
 
             }
             catch { throw; }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(lblImgeDesc.Text))
+                {
+                    DialogResult dr = MessageBox.Show("Seems like you forgot to add description to this image\nWould you like to?", "No description", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dr == DialogResult.Yes)
+                        textBoxDesc.Focus();
+                    else
+                        SaveImage();
+                }
+                else
+                    SaveImage();
+
+            }
+            catch { throw; }
+        }
+        private async void btnApplyDesc_Click(object sender, EventArgs e)
+        {
+            
+            //TODO: connect to database and update image there
+            if (!String.IsNullOrWhiteSpace(textBoxDesc.Text))
+            {
+
+                image.SetDescription(textBoxDesc.Text);
+                bool res = await AppDataBase.UpdateImage(image);
+                if (!res)
+                    MessageBox.Show("Failed to update image description","Failed",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                else
+                    lblImgeDesc.Text = textBoxDesc.Text;
+            }
         }
 
         #region Functions
@@ -671,11 +707,24 @@ namespace AlbumMaker.Forms.AlbumForms
             }
         }
 
+        private void SaveImage()
+        {
+            try
+            {
+                Image img = pictureBoxPic.Image;
+                img.Save(image.GetImagePath());
+                goBackToolStripMenuItem.PerformClick();
+            }
+            catch { throw; }
+
+        }
 
         #endregion Functions
 
 
 
 
+
+       
     }
 }

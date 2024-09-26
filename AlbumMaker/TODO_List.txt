@@ -1,2 +1,4 @@
-﻿in Edit album => find a way to transfer some kind of variable so it will display the description instead of name(which is image path)
+﻿in creating album =>  now deleting an image is bugged and not deleting the right image for some reason......
+
+in Edit album => find a way to transfer some kind of variable so it will display the description instead of name(which is image path)
 in Admin panel=> Editing album of user is bugged and not displaying the editing form

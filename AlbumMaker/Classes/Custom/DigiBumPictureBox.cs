@@ -57,15 +57,15 @@ namespace AlbumMaker.Classes.Custom
                     ForeColor = Color.White,
                 };
                 EditButton.FlatAppearance.BorderSize = 0;
-                Title = new Label
-                {
-                    Name = "lblTitle",
-
-                    Text = (this.Tag !=null && this.Tag == "Edit Album" ? image.GetDescription() : image.GetName()),
-                    Font = new Font(Font.FontFamily, 20, FontStyle.Bold),
-                    AutoSize = true,
-                    BackColor = Color.Transparent
-                };
+                //Title = new Label
+                //{
+                //    Name = "lblTitle",
+                //    // TO DO: NEED TO GET IT WORKING: when in edit album to not display name cause its a long path, instead just display empty string
+                //    Text = (this.Tag !=null && this.Tag == "Edit Album" ? image.GetDescription() : image.GetName()),
+                //    Font = new Font(Font.FontFamily, 20, FontStyle.Bold),
+                //    AutoSize = true,
+                //    BackColor = Color.Transparent
+                //};
 
                 Description = new Label
                 {
@@ -81,7 +81,7 @@ namespace AlbumMaker.Classes.Custom
                 //ImageLocation = image.GetImagePath();
                 this.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, image.GetDescription());
                 EditButton.Location = new Point(Width - EditButton.Width, Height - EditButton.Height);
-                Title.Location = new Point(0, 0);
+                //Title.Location = new Point(0, 0);
                 Description.Location = new Point(0, Height - Description.Height);
                 EditButton.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, "Edit");
                 EditButton.Click += (sender, e) => { EditImage(sender, e, image); };
@@ -109,6 +109,8 @@ namespace AlbumMaker.Classes.Custom
         private void OpenImage(object sender, EventArgs e,bool isEdit)
         {
             DigiBumPictureBox digi = (DigiBumPictureBox)sender;
+            if (String.IsNullOrEmpty(digi.ImageLocation))
+                return;
             Process.Start(new ProcessStartInfo
             {
                 FileName = digi.ImageLocation,

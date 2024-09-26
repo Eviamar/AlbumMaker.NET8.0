@@ -266,19 +266,19 @@
             lblImgeDesc.AutoSize = true;
             lblImgeDesc.Location = new Point(203, 0);
             lblImgeDesc.Name = "lblImgeDesc";
-            lblImgeDesc.Size = new Size(67, 15);
+            lblImgeDesc.Size = new Size(0, 15);
             lblImgeDesc.TabIndex = 2;
-            lblImgeDesc.Text = "image desc";
             // 
             // btnApplyDesc
             // 
             btnApplyDesc.AutoSize = true;
-            btnApplyDesc.Location = new Point(3, 32);
+            btnApplyDesc.Location = new Point(209, 3);
             btnApplyDesc.Name = "btnApplyDesc";
             btnApplyDesc.Size = new Size(75, 25);
             btnApplyDesc.TabIndex = 1;
             btnApplyDesc.Text = "Apply ";
             btnApplyDesc.UseVisualStyleBackColor = true;
+            btnApplyDesc.Click += btnApplyDesc_Click;
             // 
             // grpBoxFilter
             // 
@@ -492,6 +492,7 @@
             btnSave.TabIndex = 0;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // pictureBoxPic
             // 
