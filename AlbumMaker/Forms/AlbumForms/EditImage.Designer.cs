@@ -34,6 +34,7 @@
             tlpOptions = new TableLayoutPanel();
             grpBoxBrightness = new GroupBox();
             flp4GrpBoxBrightness = new FlowLayoutPanel();
+            trackBar1 = new TrackBar();
             grpBoxShapes = new GroupBox();
             flp4GrpBoxShape = new FlowLayoutPanel();
             comboBoxShape = new ComboBox();
@@ -69,6 +70,8 @@
             panelOptions.SuspendLayout();
             tlpOptions.SuspendLayout();
             grpBoxBrightness.SuspendLayout();
+            flp4GrpBoxBrightness.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             grpBoxShapes.SuspendLayout();
             flp4GrpBoxShape.SuspendLayout();
             grpBoxDesc.SuspendLayout();
@@ -148,12 +151,21 @@
             // flp4GrpBoxBrightness
             // 
             flp4GrpBoxBrightness.AutoScroll = true;
+            flp4GrpBoxBrightness.Controls.Add(trackBar1);
             flp4GrpBoxBrightness.Dock = DockStyle.Fill;
             flp4GrpBoxBrightness.FlowDirection = FlowDirection.TopDown;
             flp4GrpBoxBrightness.Location = new Point(3, 19);
             flp4GrpBoxBrightness.Name = "flp4GrpBoxBrightness";
             flp4GrpBoxBrightness.Size = new Size(291, 130);
             flp4GrpBoxBrightness.TabIndex = 1;
+            // 
+            // trackBar1
+            // 
+            trackBar1.Location = new Point(3, 3);
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(161, 45);
+            trackBar1.TabIndex = 0;
+            trackBar1.Scroll += trackBar1_Scroll;
             // 
             // grpBoxShapes
             // 
@@ -397,6 +409,7 @@
             btnFlipUpDown.TabIndex = 0;
             btnFlipUpDown.Text = "Up";
             btnFlipUpDown.UseVisualStyleBackColor = true;
+            btnFlipUpDown.Click += btnFlipUpDown_Click;
             // 
             // btnFlipLeftRight
             // 
@@ -407,6 +420,7 @@
             btnFlipLeftRight.TabIndex = 1;
             btnFlipLeftRight.Text = "Left";
             btnFlipLeftRight.UseVisualStyleBackColor = true;
+            btnFlipLeftRight.Click += btnFlipLeftRight_Click;
             // 
             // grpBoxBtnsSaveUndo
             // 
@@ -516,6 +530,9 @@
             panelOptions.PerformLayout();
             tlpOptions.ResumeLayout(false);
             grpBoxBrightness.ResumeLayout(false);
+            flp4GrpBoxBrightness.ResumeLayout(false);
+            flp4GrpBoxBrightness.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             grpBoxShapes.ResumeLayout(false);
             flp4GrpBoxShape.ResumeLayout(false);
             flp4GrpBoxShape.PerformLayout();
@@ -582,5 +599,6 @@
         private PictureBox pictureBoxPic;
         private Panel panelPic;
         private Button btnRedo;
+        private TrackBar trackBar1;
     }
 }

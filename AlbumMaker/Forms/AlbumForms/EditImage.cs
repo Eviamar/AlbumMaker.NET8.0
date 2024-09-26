@@ -17,7 +17,8 @@ namespace AlbumMaker.Forms.AlbumForms
         private Color c2;
         private Image originalImage;
         private int shapeSize;
-
+        private bool flipUpDown = false;
+        private bool flipSide = false;
         private const int MaxUndoSteps = 5;
         private Stack<Image> undoStack = new Stack<Image>();
         private Stack<Image> redoStack = new Stack<Image>();
@@ -79,7 +80,7 @@ namespace AlbumMaker.Forms.AlbumForms
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
 
 
-           
+
 
 
 
@@ -117,7 +118,7 @@ namespace AlbumMaker.Forms.AlbumForms
             if (!selectedPoint.IsEmpty)
             {
                 string selectedShape = comboBoxShape.Text;
-                
+
                 if (!String.IsNullOrWhiteSpace(txtBoxCustomSize.Text))
                 {
                     //just here to check if user typed any custom size...
@@ -167,7 +168,7 @@ namespace AlbumMaker.Forms.AlbumForms
                     txtBoxCustomSize.Focus();
                 }
             }
-            catch  { throw; }
+            catch { throw; }
         }
         private void lblColor1_Click(object sender, EventArgs e)
         {
@@ -253,7 +254,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 pictureBoxPic.Image = filteredBitmap;
 
                 // Enable Undo and clear Redo stack
-                btnUndo.Enabled = true;
+                
                 //redoStack.Clear(); // Optionally, you can avoid clearing the redo stack if you don't want to lose redo history
 
 
@@ -269,10 +270,13 @@ namespace AlbumMaker.Forms.AlbumForms
                 {
                     redoStack.Push(new Bitmap(pictureBoxPic.Image));
                 }
+                Image imageToDispose = pictureBoxPic.Image;
 
                 // Restore the last image from the undo stack
                 pictureBoxPic.Image = undoStack.Pop();
+                imageToDispose?.Dispose();
                 btnRedo.Enabled = true;  // Enable redo button
+                
             }
 
             // Disable the undo button if no more steps are left
@@ -290,10 +294,12 @@ namespace AlbumMaker.Forms.AlbumForms
                 {
                     undoStack.Push(new Bitmap(pictureBoxPic.Image));
                 }
-
+                Image imageToDispose = pictureBoxPic.Image;
                 // Restore the last image from the redo stack
                 pictureBoxPic.Image = redoStack.Pop();
+                imageToDispose?.Dispose();
                 btnUndo.Enabled = true;  // Enable undo button
+                
             }
 
             // Disable the redo button if no more steps are left
@@ -304,7 +310,12 @@ namespace AlbumMaker.Forms.AlbumForms
         }
         private void btnClear_Click(object sender, EventArgs e)
         {
-            pictureBoxPic.Image = originalImage;
+            pictureBoxPic.Image = null;
+            foreach (var img in undoStack)
+                img.Dispose();
+            foreach(var img in redoStack) 
+                img.Dispose();
+       
             undoStack.Clear();
             redoStack.Clear();
             c1 = new Color();
@@ -317,22 +328,76 @@ namespace AlbumMaker.Forms.AlbumForms
             lblColor2.BackColor = c2;
             btnUndo.Enabled = false;
             btnRedo.Enabled = false;
+            flipUpDown = false;
+            flipSide = false;
+            btnFlipLeftRight.Text = "Left";
+            btnFlipUpDown.Text = "Up";
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            pictureBoxPic.Image = originalImage;
+
+        }
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
 
         }
 
+        private void btnFlipUpDown_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UndoFunc();
+
+                flipUpDown = !flipUpDown;
+                Bitmap flippedImage = new Bitmap(pictureBoxPic.Image);
+                // processedBitmap.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                flippedImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                pictureBoxPic.Image = flippedImage;
+
+                if (flipUpDown == true)
+                    btnFlipUpDown.Text = "Down";
+                else
+                    btnFlipUpDown.Text = "Up";
+            }
+            catch  { throw; }
+        }
+
+        private void btnFlipLeftRight_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UndoFunc();
+                flipSide = !flipSide;
+                Bitmap flippedImage = new Bitmap(pictureBoxPic.Image);
+                flippedImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                pictureBoxPic.Image = flippedImage;
+                if (flipSide == true)
+                    btnFlipLeftRight.Text = "Right";
+                else
+                    btnFlipLeftRight.Text = "Left";
+
+            }
+            catch { throw; }
+        }
 
         #region Functions
         private void UndoFunc()
         {
             if (undoStack.Count >= MaxUndoSteps)
             {
-                // Remove the oldest entry when max limit is reached
+                // Remove and dispose of the oldest entry when max limit is reached
                 var tempUndoStack = new Stack<Image>(undoStack.Reverse());
-                tempUndoStack.Pop();  // Remove oldest
-                                      // undoStack = new Stack<Image>(tempUndoStack.Reverse());  // Rebuild the stack
-                undoStack = new Stack<Image>(undoStack.Reverse().Skip(1));
+                Image oldestImage = tempUndoStack.Pop();  // Remove oldest image
+                oldestImage?.Dispose();  // Dispose of the oldest image to free memory
+
+                // Rebuild the undoStack with the remaining images
+                undoStack = new Stack<Image>(tempUndoStack.Reverse());
             }
-            undoStack.Push(new Bitmap(pictureBoxPic.Image)); // Save current state before applying changes
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            // Save current state before applying changes
+            undoStack.Push(new Bitmap(pictureBoxPic.Image));
+            btnUndo.Enabled = true;
         }
         private void SetPoint(object sender, MouseEventArgs e)
         {
@@ -539,5 +604,6 @@ namespace AlbumMaker.Forms.AlbumForms
 
 
 
+        
     }
 }
