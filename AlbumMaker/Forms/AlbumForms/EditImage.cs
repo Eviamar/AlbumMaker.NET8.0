@@ -25,7 +25,19 @@ namespace AlbumMaker.Forms.AlbumForms
         public EditImage(ImageItem image)
         {
             InitializeComponent();
+
             this.image = image;
+            using (FileStream fs = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
+            {
+                byte[] imageData = new byte[fs.Length];
+                fs.Read(imageData, 0, (int)fs.Length);
+
+                using (MemoryStream ms = new MemoryStream(imageData))
+                {
+                    originalImage = new Bitmap(ms);
+                    pictureBoxPic.Image = originalImage;
+                }
+            }
             shapes = new List<string>
             {
                 "Circle",
@@ -42,17 +54,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 new KeyValuePair<string,int>("Very Large",1500),
             };
             this.AutoScroll = true;
-            using (FileStream fs = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
-            {
-                byte[] imageData = new byte[fs.Length];
-                fs.Read(imageData, 0, (int)fs.Length);
-
-                using (MemoryStream ms = new MemoryStream(imageData))
-                {
-                    originalImage = new Bitmap(ms);
-                    pictureBoxPic.Image = originalImage;
-                }
-            }
+            
+            trackBarBrightness.Value = (trackBarBrightness.Minimum + trackBarBrightness.Maximum) / 2;
 
         }
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -339,6 +342,21 @@ namespace AlbumMaker.Forms.AlbumForms
         }
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
+            UndoFunc();
+            if (trackBarBrightness.Value == trackBarBrightness.Maximum / 2)
+            {
+                // Restore the original image
+                pictureBoxPic.Image = new Bitmap(originalImage);  // Ensure it's a new Bitmap to avoid issues
+                grpBoxBrightness.Text = $"Brightness -  ({trackBarBrightness.Value})";
+                return;
+            }
+
+            // Calculate brightness value based on the trackbar position
+            float brightnessValue = CalculateBrightness(trackBarBrightness.Value);
+
+            // Adjust the brightness
+            AdjustBrightness(brightnessValue);
+            grpBoxBrightness.Text = $"Brightness -  ({trackBarBrightness.Value})";
 
         }
 
@@ -600,10 +618,64 @@ namespace AlbumMaker.Forms.AlbumForms
             catch { throw; }
         }
 
+        private float CalculateBrightness(int trackbarValue)
+        {
+            // Example: Convert trackbar value to a brightness multiplier (can tweak formula as needed)
+            float brightness = 1.0f + (trackbarValue - (trackBarBrightness.Maximum / 2)) * 0.1f;
+            return brightness;
+        }
+
+        private void AdjustBrightness(float brightnessValue)
+        {
+            try
+            {
+                if (pictureBoxPic.Image == null || originalImage == null) return;
+
+                // Clone the original image for editing
+                Bitmap originalBitmap = new Bitmap(originalImage);
+
+                // Create a new bitmap for the adjusted image
+                Bitmap adjustedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
+
+                using (Graphics g = Graphics.FromImage(adjustedBitmap))
+                {
+                    // Set up a brightness adjustment matrix
+                    float[][] brightnessMatrix =
+                    {
+                new float[] { brightnessValue, 0, 0, 0, 0 },
+                new float[] { 0, brightnessValue, 0, 0, 0 },
+                new float[] { 0, 0, brightnessValue, 0, 0 },
+                new float[] { 0, 0, 0, 1, 0 },
+                new float[] { 0, 0, 0, 0, 1 }
+            };
+
+                    ColorMatrix colorMatrix = new ColorMatrix(brightnessMatrix);
+                    using (ImageAttributes attributes = new ImageAttributes())
+                    {
+                        attributes.SetColorMatrix(colorMatrix);
+                        g.DrawImage(originalBitmap, new Rectangle(0, 0, adjustedBitmap.Width, adjustedBitmap.Height),
+                            0, 0, originalBitmap.Width, originalBitmap.Height, GraphicsUnit.Pixel, attributes);
+                    }
+                }
+
+                // Update the PictureBox to display the adjusted image
+                pictureBoxPic.Image = adjustedBitmap;
+
+                // Dispose the old adjusted bitmap
+                originalBitmap.Dispose();
+            }
+            catch { throw; }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+
         #endregion Functions
 
 
 
-        
+
     }
 }
