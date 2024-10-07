@@ -259,7 +259,31 @@ namespace AlbumMaker.Classes
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
             }
-            
+            else if(control is DataGridView dgv)
+            {
+                dgv.BackgroundColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
+                dgv.ForeColor = ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
+                dgv.GridColor = ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
+
+            }
+            else if(control is DateTimePicker dtp)
+            {
+                dtp.CalendarForeColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
+                dtp.CalendarTitleBackColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
+                dtp.CalendarTitleForeColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Foreground)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
+                dtp.CalendarTrailingForeColor = theme ?
+                    ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
+                
+            }
 
 
             foreach (Control child in control.Controls)
