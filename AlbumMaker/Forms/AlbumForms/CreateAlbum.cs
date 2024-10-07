@@ -74,11 +74,12 @@ namespace AlbumMaker.Forms
                         {
                             foreach (string image in ofd.FileNames)
                             {
-                                ImageItem imageItem = new ImageItem(TabIndex,image,"",-1);
+                                
                                 // Check if the image is already added
                                 if (!images.Any(item => item.Value == image))
                                 {
                                     int tabIndex = imageCount++;
+                                    ImageItem imageItem = new ImageItem(tabIndex, image, "", -1);
                                     images.Add(new KeyValuePair<int, string>(tabIndex, image));
                                     Invoke((Action)(() =>
                                     {
@@ -100,13 +101,20 @@ namespace AlbumMaker.Forms
         }
         private void Picture_ImageDeleted(object sender, int tabIndex)
         {
-            // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
-            var controlToRemove = FLPAlbumData.Controls.Cast<Control>().FirstOrDefault(c => c.TabIndex == tabIndex);
-           
-             images.RemoveAt(controlToRemove.TabIndex);
-            if (controlToRemove != null)
+            // Find the image in the list that has the matching TabIndex
+            var imageToRemove = images.FirstOrDefault(item => item.Key == tabIndex);
+
+            // If found, remove the image from the list
+            if (imageToRemove.Key != 0 || imageToRemove.Value != null)
             {
-                FLPAlbumData.Controls.Remove(controlToRemove);
+                images.Remove(imageToRemove);
+
+                // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
+                var controlToRemove = FLPAlbumData.Controls.Cast<Control>().FirstOrDefault(c => c.TabIndex == tabIndex);
+                if (controlToRemove != null)
+                {
+                    FLPAlbumData.Controls.Remove(controlToRemove);
+                }
             }
         }
         private async Task<List<ImageItem>> ConvertSelectedPicturesToImageItem(int albumID)
@@ -157,6 +165,11 @@ namespace AlbumMaker.Forms
         {
             try
             {
+                if (FLPAlbumData.Controls.Count == 0)
+                {
+                    MessageBox.Show("Cannot create album with no pictures.\nYou need to add pictures to your album.", "Choose images!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
                 string albumTitle, albumDesc, albumTemplate = null;
                 albumTitle = textBoxAlbumName.Text;
                 albumDesc = textBoxAlbumDescription.Text;
@@ -167,11 +180,7 @@ namespace AlbumMaker.Forms
                     MessageBox.Show("All fields are required!", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (FLPAlbumData.Controls.Count == 0)
-                {
-                    MessageBox.Show("Cannot create album with no pictures.\nYou need to add pictures to your album.", "Choose images!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                
                 bool dataBaseSuccess = false;
                 bool copySuccess = false;
                 

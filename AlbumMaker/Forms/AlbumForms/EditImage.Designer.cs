@@ -166,6 +166,7 @@
             trackBarBrightness.Size = new Size(161, 45);
             trackBarBrightness.TabIndex = 0;
             trackBarBrightness.Scroll += trackBar1_Scroll;
+            trackBarBrightness.MouseLeave += trackBarBrightness_MouseLeave;
             // 
             // grpBoxShapes
             // 

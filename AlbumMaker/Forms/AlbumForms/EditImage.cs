@@ -23,6 +23,8 @@ namespace AlbumMaker.Forms.AlbumForms
         private const int MaxUndoSteps = 5;
         private Stack<Image> undoStack = new Stack<Image>();
         private Stack<Image> redoStack = new Stack<Image>();
+        private Image brightnessImage;
+        private bool brightnessScroll = false;
         public EditImage(ImageItem image)
         {
             InitializeComponent();
@@ -345,18 +347,28 @@ namespace AlbumMaker.Forms.AlbumForms
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             UndoFunc();
+            if (!brightnessScroll)
+            {
+                brightnessImage = new Bitmap(pictureBoxPic.Image); // Clone the image to avoid modifying the original
+                brightnessScroll = true;
+            }
+
+
             if (trackBarBrightness.Value == trackBarBrightness.Maximum / 2)
             {
-                // Restore the original image
-                pictureBoxPic.Image = new Bitmap(originalImage);  // Ensure it's a new Bitmap to avoid issues
+                // Reset to the original brightness when trackbar is in the middle position
+                pictureBoxPic.Image?.Dispose(); // Dispose of the current image before replacing it
+                pictureBoxPic.Image = new Bitmap(brightnessImage);  // Restore from the original unmodified image
+
                 grpBoxBrightness.Text = $"Brightness -  ({trackBarBrightness.Value})";
+                brightnessScroll = false; // Reset the scroll flag
                 return;
             }
 
-            // Calculate brightness value based on the trackbar position
+            // Calculate the brightness value based on the trackbar position
             float brightnessValue = CalculateBrightness(trackBarBrightness.Value);
 
-            // Adjust the brightness
+            // Adjust the brightness of the image
             AdjustBrightness(brightnessValue);
             grpBoxBrightness.Text = $"Brightness -  ({trackBarBrightness.Value})";
 
@@ -420,7 +432,7 @@ namespace AlbumMaker.Forms.AlbumForms
         }
         private async void btnApplyDesc_Click(object sender, EventArgs e)
         {
-            
+
             //TODO: connect to database and update image there
             if (!String.IsNullOrWhiteSpace(textBoxDesc.Text))
             {
@@ -428,7 +440,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 image.SetDescription(textBoxDesc.Text);
                 bool res = await AppDataBase.UpdateImage(image);
                 if (!res)
-                    MessageBox.Show("Failed to update image description","Failed",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    MessageBox.Show("Failed to update image description", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     lblImgeDesc.Text = textBoxDesc.Text;
             }
@@ -656,7 +668,7 @@ namespace AlbumMaker.Forms.AlbumForms
 
         private float CalculateBrightness(int trackbarValue)
         {
-            // Example: Convert trackbar value to a brightness multiplier (can tweak formula as needed)
+            // Convert trackbar value to a brightness multiplier
             float brightness = 1.0f + (trackbarValue - (trackBarBrightness.Maximum / 2)) * 0.1f;
             return brightness;
         }
@@ -665,10 +677,10 @@ namespace AlbumMaker.Forms.AlbumForms
         {
             try
             {
-                if (pictureBoxPic.Image == null || originalImage == null) return;
+                if (brightnessImage == null) return;
 
-                // Clone the original image for editing
-                Bitmap originalBitmap = new Bitmap(originalImage);
+                // Clone the original unmodified image for editing
+                Bitmap originalBitmap = new Bitmap(brightnessImage);
 
                 // Create a new bitmap for the adjusted image
                 Bitmap adjustedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
@@ -694,13 +706,17 @@ namespace AlbumMaker.Forms.AlbumForms
                     }
                 }
 
-                // Update the PictureBox to display the adjusted image
+                // Dispose of the previous image in the PictureBox before setting the new one
+                pictureBoxPic.Image?.Dispose();
                 pictureBoxPic.Image = adjustedBitmap;
 
-                // Dispose the old adjusted bitmap
+                // Dispose the original bitmap to free resources
                 originalBitmap.Dispose();
             }
-            catch { throw; }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
             finally
             {
                 Cursor.Current = Cursors.Default;
@@ -725,6 +741,12 @@ namespace AlbumMaker.Forms.AlbumForms
 
 
 
-       
+
+        private void trackBarBrightness_MouseLeave(object sender, EventArgs e)
+        {
+            if(brightnessImage!=null)
+                brightnessImage.Dispose();
+            brightnessScroll = false;
+        }
     }
 }
