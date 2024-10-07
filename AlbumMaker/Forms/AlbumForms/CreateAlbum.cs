@@ -4,6 +4,8 @@ using AlbumMaker.Classes.Db;
 using AlbumMaker.Classes.Items;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography;
 
 
 namespace AlbumMaker.Forms
@@ -17,6 +19,32 @@ namespace AlbumMaker.Forms
         {
             InitializeComponent();
         }
+        public CreateAlbum(List<string> images)
+        {
+            InitializeComponent();
+            LoadImagesFromScan(images);
+        }
+        private async void LoadImagesFromScan(List<string> images)
+        {
+            await Task.Run(() =>
+            {
+                for (int i = 0; i < images.Count; i++)
+                {
+                    ImageItem imageItem = new ImageItem(i, images[i], "", -1);
+                    this.images.Add(new KeyValuePair<int, string>(i, images[i]));
+
+                    Invoke((Action)(() =>
+                    {
+                        DigiBumPictureBox picture = new DigiBumPictureBox(imageItem, false);
+                        picture.ImageDeleted += Picture_ImageDeleted;
+                        FLPAlbumData.Controls.Add(picture);
+                        progressBar1.Value++;
+                    }));
+                }
+            });
+        }
+
+
 
         private void scanFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -56,6 +84,12 @@ namespace AlbumMaker.Forms
         {
             try
             {
+                if(FLPAlbumData.Controls.Count > 0)
+                {
+                    DialogResult dr = MessageBox.Show("This will wipe all images displayed!\nProceed?", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dr == DialogResult.No)
+                        return;
+                }
                 using (OpenFileDialog ofd = new OpenFileDialog())
                 {
                     ofd.Multiselect = true;

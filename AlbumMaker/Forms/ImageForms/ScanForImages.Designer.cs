@@ -45,6 +45,7 @@
             fileItemBindingSource1 = new BindingSource(components);
             fileItemBindingSource = new BindingSource(components);
             fileItemBindingSource2 = new BindingSource(components);
+            btnConfirm = new Button();
             flowLayoutPanelDrives.SuspendLayout();
             panelDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -98,6 +99,8 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.Location = new Point(0, 24);
@@ -107,6 +110,7 @@
             // 
             // panelFilter
             // 
+            panelFilter.Controls.Add(btnConfirm);
             panelFilter.Controls.Add(btnAdd);
             panelFilter.Controls.Add(btnFilter);
             panelFilter.Controls.Add(dateTimePicker1);
@@ -118,7 +122,7 @@
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(6, 110);
+            btnAdd.Location = new Point(6, 84);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(114, 23);
             btnAdd.TabIndex = 2;
@@ -185,6 +189,16 @@
             // 
             fileItemBindingSource2.DataSource = typeof(Classes.Items.FileItem);
             // 
+            // btnConfirm
+            // 
+            btnConfirm.Location = new Point(6, 113);
+            btnConfirm.Name = "btnConfirm";
+            btnConfirm.Size = new Size(114, 23);
+            btnConfirm.TabIndex = 3;
+            btnConfirm.Text = "Confirm";
+            btnConfirm.UseVisualStyleBackColor = true;
+            btnConfirm.Click += btnConfirm_Click;
+            // 
             // ScanForImages
             // 
             AccessibleName = "Scan images";
@@ -229,5 +243,6 @@
         private Button btnAdd;
         private Button btnFilter;
         private DataGridView dataGridView1;
+        private Button btnConfirm;
     }
 }

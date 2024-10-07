@@ -38,14 +38,14 @@ namespace AlbumMaker.Forms
 
         private void DataGridView1_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if(e.RowIndex >= 0)
+            if (e.RowIndex >= 0)
             {
                 FileItem file = scannedFiles[e.RowIndex];
-                if(file != null)
+                if (file != null)
                 {
                     selectedFile = file;
                 }
-                
+
             }
         }
 
@@ -278,10 +278,10 @@ namespace AlbumMaker.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if(selectedFile != null)
+            if (selectedFile != null)
             {
                 var alreadyExist = flpSelectedImages.Controls.Cast<DigiBumPictureBox>().FirstOrDefault(c => c.ImageLocation == selectedFile.GetName());
-                if(alreadyExist == null)
+                if (alreadyExist == null)
                 {
                     ImageItem imageItem = new ImageItem(selectedFile.GetID(), selectedFile.GetName(), "", -1);
                     DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(imageItem, false);
@@ -290,23 +290,47 @@ namespace AlbumMaker.Forms
                 }
                 else
                 {
-                    MessageBox.Show("The picture is already added","Information",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    MessageBox.Show("The picture is already added", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                
+
             }
-            
-            
+
+
         }
 
         private void Picture_ImageDeleted(object? sender, int e)
         {
             DigiBumPictureBox digi = (DigiBumPictureBox)sender;
-            if(digi!= null)
+            if (digi != null)
             {
                 var controlToRemove = flpSelectedImages.Controls.Cast<DigiBumPictureBox>().FirstOrDefault(c => c.ImageLocation == digi.ImageLocation);
                 if (controlToRemove != null)
                 {
                     flpSelectedImages.Controls.Remove(controlToRemove);
+                }
+            }
+        }
+
+        private void btnConfirm_Click(object sender, EventArgs e)
+        {
+            List<string> images = new List<string>();
+            foreach(Control c in flpSelectedImages.Controls)
+            {
+                if(c is DigiBumPictureBox digi)
+                {
+                    images.Add(digi.ImageLocation);
+                }
+            }
+            if(images.Count > 0)
+            {
+                CreateAlbum createAlbum = new CreateAlbum(images);
+                Panel p = this.Parent as Panel;
+                if (p != null)
+                {
+                    p.Controls.Add(createAlbum);
+                    createAlbum.Dock = DockStyle.Fill;
+                    this.Dispose();
+                    createAlbum.Show();
                 }
             }
         }
