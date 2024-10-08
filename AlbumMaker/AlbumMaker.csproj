@@ -10,6 +10,9 @@
 
   <ItemGroup>
     <Folder Include="Icons\" />
+    <Folder Include="StockImgs\Birthday\" />
+    <Folder Include="StockImgs\Vacation\" />
+    <Folder Include="StockImgs\Wedding\" />
   </ItemGroup>
 
   <ItemGroup>

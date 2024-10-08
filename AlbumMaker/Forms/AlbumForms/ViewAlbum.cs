@@ -190,9 +190,27 @@ namespace AlbumMaker.Forms.AlbumForms
         // Function to fill empty cells with placeholder PictureBoxes
         private void FillRemainingCells()
         {
+            string[] pictures = null; // Placeholder images
             int picturesCount = 0;
-            string[] pictures = { null, null, null, null }; // Placeholder images
-
+            string folderPath = string.Empty;
+            switch (albumItem.GetTemplate())
+            {
+                case "Wedding":
+                    folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StockImgs", "Wedding");
+                    break;
+                case "Birthday":
+                    folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StockImgs", "Birthday");
+                    break;
+                case "Vacation":
+                    folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StockImgs", "Vacation");
+                    break;
+            }
+            if (!String.IsNullOrEmpty(folderPath))
+            {
+                if(Directory.Exists(folderPath)) 
+                    pictures = Directory.GetFiles(folderPath);
+            }
+            if(pictures != null) 
             for (int row = 0; row < tableLayoutPanelImages.RowCount; row++)
             {
                 for (int col = 0; col < tableLayoutPanelImages.ColumnCount; col++)
@@ -204,7 +222,7 @@ namespace AlbumMaker.Forms.AlbumForms
                         {
                             Dock = DockStyle.Fill,
                             SizeMode = PictureBoxSizeMode.StretchImage,
-                            ImageLocation = pictures[picturesCount % pictures.Length] // Use a placeholder image
+                            ImageLocation = pictures[picturesCount % pictures.Length], // Use a placeholder image
                         };
                         picturesCount++;
 
