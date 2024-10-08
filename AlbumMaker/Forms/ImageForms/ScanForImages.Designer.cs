@@ -35,6 +35,8 @@
             panelDisplay = new Panel();
             dataGridView1 = new DataGridView();
             panelFilter = new Panel();
+            lblInfoFilter = new Label();
+            btnConfirm = new Button();
             btnAdd = new Button();
             btnFilter = new Button();
             dateTimePicker1 = new DateTimePicker();
@@ -45,7 +47,6 @@
             fileItemBindingSource1 = new BindingSource(components);
             fileItemBindingSource = new BindingSource(components);
             fileItemBindingSource2 = new BindingSource(components);
-            btnConfirm = new Button();
             flowLayoutPanelDrives.SuspendLayout();
             panelDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -105,11 +106,12 @@
             dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.Location = new Point(0, 24);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(195, 139);
+            dataGridView1.Size = new Size(195, 156);
             dataGridView1.TabIndex = 4;
             // 
             // panelFilter
             // 
+            panelFilter.Controls.Add(lblInfoFilter);
             panelFilter.Controls.Add(btnConfirm);
             panelFilter.Controls.Add(btnAdd);
             panelFilter.Controls.Add(btnFilter);
@@ -117,12 +119,30 @@
             panelFilter.Dock = DockStyle.Right;
             panelFilter.Location = new Point(195, 24);
             panelFilter.Name = "panelFilter";
-            panelFilter.Size = new Size(126, 139);
+            panelFilter.Size = new Size(126, 156);
             panelFilter.TabIndex = 3;
+            // 
+            // lblInfoFilter
+            // 
+            lblInfoFilter.AutoSize = true;
+            lblInfoFilter.Location = new Point(8, 58);
+            lblInfoFilter.Name = "lblInfoFilter";
+            lblInfoFilter.Size = new Size(0, 15);
+            lblInfoFilter.TabIndex = 4;
+            // 
+            // btnConfirm
+            // 
+            btnConfirm.Location = new Point(6, 127);
+            btnConfirm.Name = "btnConfirm";
+            btnConfirm.Size = new Size(114, 23);
+            btnConfirm.TabIndex = 3;
+            btnConfirm.Text = "Confirm";
+            btnConfirm.UseVisualStyleBackColor = true;
+            btnConfirm.Click += btnConfirm_Click;
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(6, 84);
+            btnAdd.Location = new Point(6, 98);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(114, 23);
             btnAdd.TabIndex = 2;
@@ -152,9 +172,9 @@
             // 
             flpSelectedImages.AutoScroll = true;
             flpSelectedImages.Dock = DockStyle.Bottom;
-            flpSelectedImages.Location = new Point(0, 163);
+            flpSelectedImages.Location = new Point(0, 180);
             flpSelectedImages.Name = "flpSelectedImages";
-            flpSelectedImages.Size = new Size(321, 120);
+            flpSelectedImages.Size = new Size(321, 103);
             flpSelectedImages.TabIndex = 1;
             // 
             // menuStrip1
@@ -189,16 +209,6 @@
             // 
             fileItemBindingSource2.DataSource = typeof(Classes.Items.FileItem);
             // 
-            // btnConfirm
-            // 
-            btnConfirm.Location = new Point(6, 113);
-            btnConfirm.Name = "btnConfirm";
-            btnConfirm.Size = new Size(114, 23);
-            btnConfirm.TabIndex = 3;
-            btnConfirm.Text = "Confirm";
-            btnConfirm.UseVisualStyleBackColor = true;
-            btnConfirm.Click += btnConfirm_Click;
-            // 
             // ScanForImages
             // 
             AccessibleName = "Scan images";
@@ -217,6 +227,7 @@
             panelDisplay.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             panelFilter.ResumeLayout(false);
+            panelFilter.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)fileItemBindingSource3).EndInit();
@@ -244,5 +255,6 @@
         private Button btnFilter;
         private DataGridView dataGridView1;
         private Button btnConfirm;
+        private Label lblInfoFilter;
     }
 }

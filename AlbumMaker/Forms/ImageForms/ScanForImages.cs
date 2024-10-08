@@ -20,7 +20,6 @@ namespace AlbumMaker.Forms
         private Task scan;
         private CancellationTokenSource cancellationTokenSource;
         private BindingList<FileItem> scannedFiles; // Use BindingList for automatic UI updates
-        private BindingList<FileItem> filteredFiles;
         private List<string> accessDeniedFiles;
         private FileItem selectedFile;
         public ScanForImages()
@@ -119,7 +118,7 @@ namespace AlbumMaker.Forms
 
 
                 dataGridView1.DataSource = scannedFiles;
-                MessageBox.Show($"Finished, {scannedFiles.Count} images were scanned.", "Scan completed");
+                lblInfoFilter.Text = $"Finished!\n{scannedFiles.Count} imgs found.";
 
                 if (accessDeniedFiles.Count > 0)
                 {
@@ -136,7 +135,7 @@ namespace AlbumMaker.Forms
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Scanning was canceled.", "Canceled");
+                lblInfoFilter.Text = "Scanning was canceled.";
             }
             finally
             {
@@ -262,18 +261,37 @@ namespace AlbumMaker.Forms
         {
             if (scannedFiles.Count == 0)
             {
-                MessageBox.Show("Scan first please.", "Nothing to filter");
+                //MessageBox.Show("Scan first please.", "Nothing to filter");
+                lblInfoFilter.Text = "Scan a drive first please.";
                 return;
             }
-            //MessageBox.Show(dateTimePicker1.Text);
-            filteredFiles = new BindingList<FileItem>();
+            
+            BindingList<FileItem> filteredFiles = new BindingList<FileItem>();
+            BindingList<FileItem> filteredFilesByYear = new BindingList<FileItem>();
             foreach (FileItem file in scannedFiles)
             {
-                if (file.CreatedDate.ToString().Contains(dateTimePicker1.Text) || file.ModifiedDate.ToString().Contains(dateTimePicker1.Text))
+                if (file.CreatedDate.Date == dateTimePicker1.Value.Date || file.ModifiedDate.Date == dateTimePicker1.Value.Date)
+                {
                     filteredFiles.Add(file);
+                }
+                else if (file.CreatedDate.Year == dateTimePicker1.Value.Year || file.ModifiedDate.Year == dateTimePicker1.Value.Year)
+                {
+                    filteredFilesByYear.Add(file);
+                }
             }
             if (filteredFiles.Count > 0)
+            {
                 dataGridView1.DataSource = filteredFiles;
+                return;
+            }
+            if(filteredFilesByYear.Count > 0)
+            {
+                DialogResult dr = MessageBox.Show("Could not find any files with the date you selected..\nBUT I found some files that match the year you selected.\nWould you like to see them?", "Search completed",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+                if (dr == DialogResult.Yes) 
+                    dataGridView1.DataSource= filteredFilesByYear;
+                return;
+            }
+            lblInfoFilter.Text = "Could not find any files matched to the date you picked";
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
