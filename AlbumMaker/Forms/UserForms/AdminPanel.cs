@@ -18,21 +18,23 @@ namespace AlbumMaker.Forms.UserForms
         {
             SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
-            if (SettingsManager.userItems == null)
-            {
-                int res = await AppDataBase.GetAllUserItems();
-                if (res > 0)
-                {
-                    //MessageBox.Show("Loaded from database");
-                    LoadDataToPanel();
+            await AppDataBase.GetAllUserItems();
+            LoadDataToPanel();
+            //if (SettingsManager.userItems == null)
+            //{
+            //    int res = await AppDataBase.GetAllUserItems();
+            //    if (res > 0)
+            //    {
+            //        //MessageBox.Show("Loaded from database");
+            //        LoadDataToPanel();
 
-                }
-            }
-            else
-            {
-                //MessageBox.Show("Loaded from cache");
-                LoadDataToPanel();
-            }
+            //    }
+            //}
+            //else
+            //{
+            //    //MessageBox.Show("Loaded from cache");
+            //    LoadDataToPanel();
+            //}
             
 
         }
@@ -45,14 +47,14 @@ namespace AlbumMaker.Forms.UserForms
                     GroupBox grpBox = new GroupBox();
                     grpBox.Name = u.GetID().ToString();
                     grpBox.Text = $"User: {u.GetName()} - Albums: {u.GetAlbumItems().Count}";
-                    grpBox.Size = new Size(255, 300);
-
+                    grpBox.Size = new Size(260, 260);
 
                     if (u.GetAlbumItems().Count == 0)
                     {
                         Label lbl = new Label();
                         lbl.Text = $"{u.GetName()} has no albums";
-                        lbl.Size = new Size(250, 250);
+                        //lbl.Size = new Size(250, 250);
+                        lbl.AutoSize = true;
                         lbl.Dock = DockStyle.Fill;
                         grpBox.Controls.Add(lbl);
                     }
@@ -64,6 +66,7 @@ namespace AlbumMaker.Forms.UserForms
                         flowLayoutPanel.Location = new Point(0, 0);
                         flowLayoutPanel.Dock = DockStyle.Fill;
                         flowLayoutPanel.Size = new Size(250, 250);
+                        
                         foreach (AlbumItem album in u.GetAlbumItems())
                         {
                             DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(album, true);

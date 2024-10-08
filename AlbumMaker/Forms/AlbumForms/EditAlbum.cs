@@ -54,7 +54,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 if (res)
                 {
                     MessageBox.Show($"Album {album.GetName()} has been updated!", "Success");
-                    EditAlbum_Load(this,null);
+                    //EditAlbum_Load(this,null);
                 }
                 else
                     MessageBox.Show($"Album {album.GetName()} failed to update!", "Fail");

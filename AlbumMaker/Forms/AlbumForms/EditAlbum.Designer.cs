@@ -92,11 +92,12 @@
             // 
             // btnUpdate
             // 
+            btnUpdate.AutoSize = true;
             btnUpdate.Cursor = Cursors.Hand;
             btnUpdate.Location = new Point(457, 4);
             btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new Size(65, 23);
-            btnUpdate.TabIndex = 5;
+            btnUpdate.Size = new Size(65, 25);
+            btnUpdate.TabIndex = 3;
             btnUpdate.Text = "Update";
             btnUpdate.UseVisualStyleBackColor = true;
             btnUpdate.Click += btnUpdate_Click;
@@ -108,7 +109,7 @@
             txtBoxAlbumName.Name = "txtBoxAlbumName";
             txtBoxAlbumName.PlaceholderText = "Album name";
             txtBoxAlbumName.Size = new Size(154, 23);
-            txtBoxAlbumName.TabIndex = 1;
+            txtBoxAlbumName.TabIndex = 0;
             // 
             // cmbTemplate
             // 
@@ -117,7 +118,7 @@
             cmbTemplate.Location = new Point(330, 4);
             cmbTemplate.Name = "cmbTemplate";
             cmbTemplate.Size = new Size(121, 23);
-            cmbTemplate.TabIndex = 3;
+            cmbTemplate.TabIndex = 2;
             // 
             // txtBoxDesc
             // 
@@ -126,7 +127,7 @@
             txtBoxDesc.Name = "txtBoxDesc";
             txtBoxDesc.PlaceholderText = "Album description";
             txtBoxDesc.Size = new Size(161, 23);
-            txtBoxDesc.TabIndex = 2;
+            txtBoxDesc.TabIndex = 1;
             // 
             // panelHeader
             // 

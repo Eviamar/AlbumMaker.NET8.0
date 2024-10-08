@@ -357,7 +357,50 @@ namespace AlbumMaker.Classes.Custom
                         {
                             Directory.Delete(albumFolderPath,true);
                         }
-                        SettingsManager.userItem.DeleteSpecificAlbum(album);
+
+                        if(SettingsManager.userItems.Count > 0)
+                        {
+                            /*
+                            bool isDeleted = false;
+                            bool isAdminDeleteItsAlbumFromAdminPanel = false;
+                            foreach (UserItem user in SettingsManager.userItems)
+                            {
+                                foreach (AlbumItem userAlbum in user.GetAlbumItems())
+                                {
+                                    if (userAlbum == album)
+                                    {
+                                        user.DeleteSpecificAlbum(album);
+                                        isDeleted = true;
+                                        isAdminDeleteItsAlbumFromAdminPanel = user.GetID() == SettingsManager.userItem.GetID();
+                                        if (isAdminDeleteItsAlbumFromAdminPanel)
+                                        {
+                                            SettingsManager.userItem.DeleteSpecificAlbum(album);
+
+
+                                        }
+                                        break;
+                                    }
+                                }
+                                if (isDeleted)
+                                    break;
+                            }
+                            */
+                            //it connects to database to update the variables userItem and userItems since they are static variables its the only way to update them (see code above that didnt work).
+                            //- this solution cause when deleting something from admin panel and going back to MyAlbum, the album stays there.. thats why this method insuring the variable gets updated
+                            //checks if the deleted album is the current admin trying to delete it
+                            foreach (AlbumItem item in SettingsManager.userItem.GetAlbumItems())
+                            {
+                                if(item == album)
+                                    await AppDataBase.VerifyUser(SettingsManager.userItem.GetName(), SettingsManager.userItem.GetPassword());
+
+                            }
+                            await AppDataBase.GetAllUserItems();
+                        }
+                        else
+                        {
+                            await AppDataBase.VerifyUser(SettingsManager.userItem.GetName(), SettingsManager.userItem.GetPassword());
+                            //SettingsManager.userItem.DeleteSpecificAlbum(album);
+                        }
                         this.Dispose();
                     }
                     

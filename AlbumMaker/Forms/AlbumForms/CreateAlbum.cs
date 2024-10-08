@@ -244,10 +244,23 @@ namespace AlbumMaker.Forms
                 if (dataBaseSuccess && copySuccess)
                 {
                     MessageBox.Show("Album created successfully!\nYou are being redirected to your user panel where you can view and edit your albums.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    NavigateToMyAlbums();
                 }
 
             }
             catch { throw; }
+        }
+        private void NavigateToMyAlbums()
+        {
+            MyAlbums myAlbums = new MyAlbums();
+            Panel p = this.Parent as Panel;
+            if (p != null)
+            {
+                p.Controls.Add(myAlbums);
+                myAlbums.Dock = DockStyle.Fill;
+                this.Dispose();
+                myAlbums.Show();
+            }
         }
     }
 }

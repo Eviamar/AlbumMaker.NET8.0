@@ -37,7 +37,7 @@
             flpUsers.Location = new Point(0, 0);
             flpUsers.Name = "flpUsers";
             flpUsers.Size = new Size(410, 326);
-            flpUsers.TabIndex = 0;
+            flpUsers.TabIndex = 1;
             // 
             // AdminPanel
             // 
