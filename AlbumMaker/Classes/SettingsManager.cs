@@ -178,7 +178,6 @@ namespace AlbumMaker.Classes
                         ConvertHexToColor(Properties.DarkThemeSettings.Default.ButtonForeground)
                         : ConvertHexToColor(Properties.LightThemeSettings.Default.ButtonForeground);
                 }   
-
             }
             else if(control is DigiBumPictureBox digiBum)
             {

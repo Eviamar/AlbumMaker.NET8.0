@@ -2,6 +2,7 @@
 using AlbumMaker.Classes.Custom;
 using AlbumMaker.Classes.Db;
 using AlbumMaker.Classes.Items;
+using AlbumMaker.Properties;
 
 
 namespace AlbumMaker.Forms.UserForms
@@ -48,7 +49,10 @@ namespace AlbumMaker.Forms.UserForms
                     grpBox.Name = u.GetID().ToString();
                     grpBox.Text = $"User: {u.GetName()} - Albums: {u.GetAlbumItems().Count}";
                     grpBox.Size = new Size(260, 260);
-
+                    grpBox.ForeColor = Properties.AppSettings.Default.isDark ? Color.White : Color.Black;
+                    grpBox.MouseEnter+= (sender, e) => Cursor = Cursors.Hand;
+                    grpBox.MouseLeave += (sender, e) => Cursor = Cursors.Default;
+                    grpBox.DoubleClick += (sender,args) => GrpBox_DoubleClick(sender,args,u);
                     if (u.GetAlbumItems().Count == 0)
                     {
                         Label lbl = new Label();
@@ -80,6 +84,13 @@ namespace AlbumMaker.Forms.UserForms
             }
             catch { throw; }
             
+        }
+
+        private void GrpBox_DoubleClick(object? sender, EventArgs e,UserItem u)
+        {
+            MsgBox msgBox = new MsgBox(u,$"Editing user - {u.GetName()}");
+            SettingsManager.SetTheme(msgBox);
+            msgBox.ShowDialog();
         }
     }
 }
