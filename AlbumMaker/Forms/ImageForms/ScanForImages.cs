@@ -22,6 +22,9 @@ namespace AlbumMaker.Forms
         private BindingList<FileItem> scannedFiles; // Use BindingList for automatic UI updates
         private List<string> accessDeniedFiles;
         private FileItem selectedFile;
+
+        private SortOrder sortOrder;
+        private string lastSortedColumn;
         public ScanForImages()
         {
             InitializeComponent();
@@ -33,7 +36,73 @@ namespace AlbumMaker.Forms
             cancellationTokenSource = new CancellationTokenSource();
             dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
             dataGridView1.CellClick += DataGridView1_CellClick;
+            dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
+
+            sortOrder = SortOrder.None;
+            lastSortedColumn = string.Empty;
         }
+
+        private void DataGridView1_ColumnHeaderMouseClick(object? sender, DataGridViewCellMouseEventArgs e)
+        {
+            // Get the column that was clicked
+            string columnName = dataGridView1.Columns[e.ColumnIndex].DataPropertyName;
+
+            // Toggle the sort order if the same column is clicked again
+            if (lastSortedColumn == columnName)
+            {
+                sortOrder = (sortOrder == SortOrder.Ascending) ? SortOrder.Descending : SortOrder.Ascending;
+            }
+            else
+            {
+                sortOrder = SortOrder.Ascending;
+            }
+
+            lastSortedColumn = columnName; // Update the last sorted column
+
+            // Sort the data based on the column clicked
+            switch (columnName)
+            {
+                case "Name": // Assuming the property is called Name in FileItem
+                case "Extension":
+                case "RootDrive":
+                    SortDataAlphabetically(columnName);
+                    break;
+                case "CreatedDate":
+                case "ModifiedDate":
+                    SortDataByDate(columnName);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void SortDataAlphabetically(string columnName)
+        {
+            // Sort alphabetically based on the sortOrder
+            if (sortOrder == SortOrder.Ascending)
+            {
+                dataGridView1.DataSource = new BindingList<FileItem>(scannedFiles.OrderBy(f => typeof(FileItem).GetProperty(columnName).GetValue(f, null)).ToList());
+            }
+            else
+            {
+                dataGridView1.DataSource = new BindingList<FileItem>(scannedFiles.OrderByDescending(f => typeof(FileItem).GetProperty(columnName).GetValue(f, null)).ToList());
+            }
+        }
+
+        private void SortDataByDate(string columnName)
+        {
+            // Sort by date based on the sortOrder
+            if (sortOrder == SortOrder.Ascending)
+            {
+                dataGridView1.DataSource = new BindingList<FileItem>(scannedFiles.OrderBy(f => (DateTime)typeof(FileItem).GetProperty(columnName).GetValue(f, null)).ToList());
+            }
+            else
+            {
+                dataGridView1.DataSource = new BindingList<FileItem>(scannedFiles.OrderByDescending(f => (DateTime)typeof(FileItem).GetProperty(columnName).GetValue(f, null)).ToList());
+            }
+        }
+
+
 
         private void DataGridView1_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
@@ -281,14 +350,18 @@ namespace AlbumMaker.Forms
             }
             if (filteredFiles.Count > 0)
             {
-                dataGridView1.DataSource = filteredFiles;
+                scannedFiles = filteredFiles;
+                dataGridView1.DataSource = scannedFiles;
                 return;
             }
             if(filteredFilesByYear.Count > 0)
             {
                 DialogResult dr = MessageBox.Show("Could not find any files with the date you selected..\nBUT I found some files that match the year you selected.\nWould you like to see them?", "Search completed",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
-                if (dr == DialogResult.Yes) 
-                    dataGridView1.DataSource= filteredFilesByYear;
+                if (dr == DialogResult.Yes)
+                {
+                    scannedFiles = filteredFilesByYear;
+                    dataGridView1.DataSource = scannedFiles;
+                }
                 return;
             }
             lblInfoFilter.Text = "Could not find any files matched to the date you picked";
