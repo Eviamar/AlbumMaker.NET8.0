@@ -1,7 +1,13 @@
-﻿in creating album =>  now deleting an image is bugged and not deleting the right image for some reason......
+﻿V IMPORTANT: in creating album => maybe try to find a way to append images instead of wiping them when clicking scan/select images (or ask to keep or delete)
+V multiple choosing images even after choosing a bunch
+*fix issue where you change location of the app and then restore settings to default, the files needs to be copied
+*fix issue where after choosing shape and then changing filter it revert the shape
+*fix issue where clicking on delete button and answer NO to delete it delete the image from the UI
 
-in Edit album => find a way to transfer some kind of variable so it will display the description instead of name(which is image path)
-in Admin panel=> Editing album of user is bugged and not displaying the editing form
+V in creating album =>  now deleting an image is bugged and not deleting the right image for some reason......
+
+No need - in Edit album => find a way to transfer some kind of variable so it will display the description instead of name(which is image path)
+
 
 
 
@@ -10,4 +16,4 @@ in Admin panel=> Editing album of user is bugged and not displaying the editing 
 
 //////////
 * add option to delete specific image from album
-* add option to edit users in admin panel or at least option for admin to enable admin to other accounts
+* partially done => add option to edit users in admin panel or at least option for admin to enable admin to other accounts

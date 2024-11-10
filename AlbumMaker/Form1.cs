@@ -8,11 +8,7 @@ using System.Windows.Forms;
 
 namespace AlbumMaker
 {
-    /*
-     
-    // optional: 
-        -allow to change app save images location (this option will need to update the entire database image paths...
-     */
+   
     public partial class Form1 : Form
     {
         private bool menuOpen = true;

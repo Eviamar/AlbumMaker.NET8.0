@@ -21,11 +21,12 @@ namespace AlbumMaker.Forms
         private CancellationTokenSource cancellationTokenSource;
         private BindingList<FileItem> scannedFiles; // Use BindingList for automatic UI updates
         private List<string> accessDeniedFiles;
+        private List<string> images;
         private FileItem selectedFile;
 
         private SortOrder sortOrder;
         private string lastSortedColumn;
-        public ScanForImages()
+        public ScanForImages(List<string> images)
         {
             InitializeComponent();
             GetDrives();
@@ -40,6 +41,11 @@ namespace AlbumMaker.Forms
 
             sortOrder = SortOrder.None;
             lastSortedColumn = string.Empty;
+
+            if (images.Count == 0 || images is null)
+                this.images = new List<string>();
+            else
+                this.images = images;
         }
 
         private void DataGridView1_ColumnHeaderMouseClick(object? sender, DataGridViewCellMouseEventArgs e)
@@ -322,6 +328,16 @@ namespace AlbumMaker.Forms
         {
             SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
+            if (images.Count > 0)
+            {
+                //int count = 0;
+                foreach (string image in images)
+                {
+                    DigiBumPictureBox digiBox = new DigiBumPictureBox(new ImageItem(0, image, "", 0), false);
+                    digiBox.ImageDeleted += Picture_ImageDeleted;
+                    flpSelectedImages.Controls.Add(digiBox);
+                }
+            }
 
 
         }
@@ -334,7 +350,7 @@ namespace AlbumMaker.Forms
                 lblInfoFilter.Text = "Scan a drive first please.";
                 return;
             }
-            
+
             BindingList<FileItem> filteredFiles = new BindingList<FileItem>();
             BindingList<FileItem> filteredFilesByYear = new BindingList<FileItem>();
             foreach (FileItem file in scannedFiles)
@@ -354,9 +370,9 @@ namespace AlbumMaker.Forms
                 dataGridView1.DataSource = scannedFiles;
                 return;
             }
-            if(filteredFilesByYear.Count > 0)
+            if (filteredFilesByYear.Count > 0)
             {
-                DialogResult dr = MessageBox.Show("Could not find any files with the date you selected..\nBUT I found some files that match the year you selected.\nWould you like to see them?", "Search completed",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+                DialogResult dr = MessageBox.Show("Could not find any files with the date you selected..\nBUT I found some files that match the year you selected.\nWould you like to see them?", "Search completed", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dr == DialogResult.Yes)
                 {
                     scannedFiles = filteredFilesByYear;
@@ -374,6 +390,7 @@ namespace AlbumMaker.Forms
                 var alreadyExist = flpSelectedImages.Controls.Cast<DigiBumPictureBox>().FirstOrDefault(c => c.ImageLocation == selectedFile.GetName());
                 if (alreadyExist == null)
                 {
+
                     ImageItem imageItem = new ImageItem(selectedFile.GetID(), selectedFile.GetName(), "", -1);
                     DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(imageItem, false);
                     digiBumPictureBox.ImageDeleted += Picture_ImageDeleted;
@@ -385,8 +402,6 @@ namespace AlbumMaker.Forms
                 }
 
             }
-
-
         }
 
         private void Picture_ImageDeleted(object? sender, int e)
@@ -404,6 +419,11 @@ namespace AlbumMaker.Forms
 
         private void btnConfirm_Click(object sender, EventArgs e)
         {
+            if (flpSelectedImages.Controls.Count == 0 && this.images.Count == 0 || flpSelectedImages.Controls.Count == 0)
+            {
+                MessageBox.Show($"You didn't select any image(s) yet.\nPlease scan and select and then click confirm.","No images");
+                return;
+            }
             List<string> images = new List<string>();
             foreach(Control c in flpSelectedImages.Controls)
             {

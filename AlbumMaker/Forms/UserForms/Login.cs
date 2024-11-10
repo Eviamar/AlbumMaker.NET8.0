@@ -46,8 +46,6 @@ namespace AlbumMaker.Forms
                 else
                     lblForgot.Text = "Forgot password?";
             }
-            
-
         }
 
         private void lblAlreadyRegistered_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

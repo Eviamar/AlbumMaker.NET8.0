@@ -358,7 +358,7 @@ namespace AlbumMaker.Classes.Custom
                             Directory.Delete(albumFolderPath,true);
                         }
 
-                        if(SettingsManager.userItems.Count > 0)
+                        if(SettingsManager.userItems !=null && SettingsManager.userItems.Count > 0)
                         {
                             /*
                             bool isDeleted = false;

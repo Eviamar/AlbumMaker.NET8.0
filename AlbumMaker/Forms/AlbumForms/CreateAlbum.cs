@@ -15,6 +15,7 @@ namespace AlbumMaker.Forms
         private string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\";
         private int imageCount = 0;
         List<KeyValuePair<int,string>> images = new List<KeyValuePair<int,string>>();
+
         public CreateAlbum()
         {
             InitializeComponent();
@@ -43,19 +44,54 @@ namespace AlbumMaker.Forms
                 }
             });
         }
-
-
-
         private void scanFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ScanForImages scan = new ScanForImages();
-            Panel p = this.Parent as Panel;
-            if (p != null)
+            if(FLPAlbumData.Controls.Count == 0)
             {
-                p.Controls.Add(scan);
-                scan.Dock = DockStyle.Fill;
-                this.Dispose();
-                scan.Show();
+                ScanForImages scan = new ScanForImages(new List<string>());
+                Panel p = this.Parent as Panel;
+                if (p != null && scan != null)
+                {
+                    p.Controls.Add(scan);
+                    scan.Dock = DockStyle.Fill;
+                    this.Dispose();
+                    scan.Show();
+                }
+            }
+            if (FLPAlbumData.Controls.Count > 0)
+            {
+                DialogResult dr = MessageBox.Show("You have images selected, if to keep them click YES?" +
+                    "\nClick No to not (this will wipe the already selected)." +
+                    "\nCancel ignore and do nothing.", 
+                    "Alert", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+                ScanForImages scan = null;
+                if (dr == DialogResult.Yes)
+                {
+                    List<string>temp = new List<string>();
+                    foreach(var img in images)
+                    {
+                        temp.Add(img.Value);
+                    }
+                    scan = new ScanForImages(temp);
+                }
+                else if (dr == DialogResult.No)
+                {
+                    scan = new ScanForImages(new List<string>());
+                }
+                else if (dr == DialogResult.Cancel)
+                    return;
+                Panel p = this.Parent as Panel;
+                if (p != null  && scan != null)
+                {
+                    p.Controls.Add(scan);
+                    scan.Dock = DockStyle.Fill;
+                    this.Dispose();
+                    scan.Show();
+                }
+                else
+                {
+                    throw new Exception("Something went wrong");
+                }
             }
         }
 
@@ -84,12 +120,12 @@ namespace AlbumMaker.Forms
         {
             try
             {
-                if(FLPAlbumData.Controls.Count > 0)
-                {
-                    DialogResult dr = MessageBox.Show("This will wipe all images displayed!\nProceed?", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (dr == DialogResult.No)
-                        return;
-                }
+                //if(FLPAlbumData.Controls.Count > 0)
+                //{
+                //    DialogResult dr = MessageBox.Show("This will wipe all images displayed!\nProceed?", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                //    if (dr == DialogResult.No)
+                //        return;
+                //}
                 using (OpenFileDialog ofd = new OpenFileDialog())
                 {
                     ofd.Multiselect = true;
