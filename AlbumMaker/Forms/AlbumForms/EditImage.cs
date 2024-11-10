@@ -25,6 +25,7 @@ namespace AlbumMaker.Forms.AlbumForms
         private Stack<Image> redoStack = new Stack<Image>();
         private Image brightnessImage;
         private bool brightnessScroll = false;
+        private KeyValuePair<string,int> selectedShape = default;
         public EditImage(ImageItem image)
         {
             InitializeComponent();
@@ -60,6 +61,7 @@ namespace AlbumMaker.Forms.AlbumForms
             this.AutoScroll = true;
 
             trackBarBrightness.Value = (trackBarBrightness.Minimum + trackBarBrightness.Maximum) / 2;
+
 
         }
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -124,7 +126,9 @@ namespace AlbumMaker.Forms.AlbumForms
         {
             if (!selectedPoint.IsEmpty)
             {
-                string selectedShape = comboBoxShape.Text;
+                //if(selectedShape.Key == null && selectedShape.Value == 0)
+                    selectedShape = new KeyValuePair<string, int>(comboBoxShape.Text, ((KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem).Value);
+                //MessageBox.Show(selectedShape.ToString());
 
                 if (!String.IsNullOrWhiteSpace(txtBoxCustomSize.Text))
                 {
@@ -135,7 +139,6 @@ namespace AlbumMaker.Forms.AlbumForms
                     KeyValuePair<string, int> selectedSize = (KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem;
                     this.shapeSize = selectedSize.Value;
                 }
-
                 switch (comboBoxShape.SelectedItem)
                 {
                     case "Circle":
@@ -225,6 +228,7 @@ namespace AlbumMaker.Forms.AlbumForms
                     MessageBox.Show("Choose colors", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
+                
                 UndoFunc();
 
                 // Create a filtered bitmap
@@ -263,7 +267,11 @@ namespace AlbumMaker.Forms.AlbumForms
                 // Enable Undo and clear Redo stack
 
                 //redoStack.Clear(); // Optionally, you can avoid clearing the redo stack if you don't want to lose redo history
-
+                if (selectedShape.Key != null && selectedShape.Value != 0)
+                {
+                    
+                    btnApplyShape_Click(sender, e);
+                }
 
             }
             catch (Exception) { }

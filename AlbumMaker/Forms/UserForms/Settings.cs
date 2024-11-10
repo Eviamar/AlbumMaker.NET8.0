@@ -2,6 +2,7 @@
 using AlbumMaker.Classes.Db;
 using AlbumMaker.Properties;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
 using System.Windows.Forms;
 
 
@@ -47,8 +48,10 @@ namespace AlbumMaker.Forms
         {
             SettingsManager.SetTheme(this);
             isLoading = true;
-
-            lblDataLocation.Text = Properties.AppSettings.Default.AppDataFolder + $@"\{Properties.AppSettings.Default.AppName}";
+            if (Properties.AppSettings.Default.AppDataFolder[Properties.AppSettings.Default.AppDataFolder.Length-1] == '\\')
+                lblDataLocation.Text = Properties.AppSettings.Default.AppDataFolder + $@"{Properties.AppSettings.Default.AppName}";
+            else
+                lblDataLocation.Text = Properties.AppSettings.Default.AppDataFolder + $@"\{Properties.AppSettings.Default.AppName}";
             Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
             lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
 
@@ -141,6 +144,14 @@ namespace AlbumMaker.Forms
                 }
             }
         }
+        private void CopyAppContent(string source, string destination)
+        {
+            try
+            {
+
+            }
+            catch { throw; }
+        }
         private void btnChangeDataLocation_Click(object sender, EventArgs e)
         {
             try
@@ -151,20 +162,50 @@ namespace AlbumMaker.Forms
                     return;
                 }
                 string location = Properties.AppSettings.Default.AppDataFolder;
-                string oldPath = Properties.AppSettings.Default.AppDataFolder; //might not be needed this cause can use folderBroswerDialog.SelectedPath
+                //string oldPath = Properties.AppSettings.Default.AppDataFolder; //might not be needed this cause can use folderBroswerDialog.SelectedPath
                 FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
                 folderBrowserDialog.ShowNewFolderButton = true;
+                bool folderExist = false;
                 if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
                     //=> TO COPY ALL CONTENT FROM OLD PATH TO NEW PATH AND THEN CHANGE IN THE AppSettings
-                    CopyDirectory(location + $@"\{Properties.AppSettings.Default.AppName}\", folderBrowserDialog.SelectedPath+ $@"\{Properties.AppSettings.Default.AppName}\",true);
-                    Properties.AppSettings.Default.AppDataFolder = folderBrowserDialog.SelectedPath;
-                    Properties.AppSettings.Default.Save();
-                    Settings_Load(this, null);
+                    if (Directory.Exists($@"{folderBrowserDialog.SelectedPath}\{Properties.AppSettings.Default.AppName}\")) 
+                    {
+                        folderExist = true;
+                        DialogResult dr = MessageBox.Show($"Selelected path already have a folder named: {Properties.AppSettings.Default.AppName}" +
+                            $"\nWould you like to delete it and proceed to copy?",
+                            "Folder exist",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+
+                        if (dr == DialogResult.Yes)
+                        {
+                           Directory.Delete(folderBrowserDialog.SelectedPath + $@"\{Properties.AppSettings.Default.AppName}\", true);
+                            folderExist = false;
+                        }
+                        else
+                            return;
+                    }
+                    if (!folderExist)
+                    {
+                        CopyDirectory(location + $@"\{Properties.AppSettings.Default.AppName}\", folderBrowserDialog.SelectedPath + $@"\{Properties.AppSettings.Default.AppName}\", true);
+                        Properties.AppSettings.Default.AppDataFolder = folderBrowserDialog.SelectedPath;
+                        Properties.AppSettings.Default.Save();
+                        Settings_Load(this, null);
+
+                        if (folderBrowserDialog.SelectedPath[folderBrowserDialog.SelectedPath.Length - 1] == '\\')
+                            lblDataLocation.Text = folderBrowserDialog.SelectedPath + $@"{Properties.AppSettings.Default.AppName}";
+                        else
+                            lblDataLocation.Text = folderBrowserDialog.SelectedPath + $@"\{Properties.AppSettings.Default.AppName}";
+
+                        Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
+                        lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
+                    }
+                    else
+                        MessageBox.Show("Cannot copy because a folder with the same name of the application exist in the location you have selected." +
+                            "\nPlease try again and click Yes to delete or delete it manually.","Folder exist.");
+
                 }
-                lblDataLocation.Text = location;
-                Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
-                lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
+
+                
             }
             catch { throw; }
         }
@@ -177,6 +218,7 @@ namespace AlbumMaker.Forms
             {
                 AppDataBase.DropTables();
                 SettingsManager.userItem = null;
+      
                 Application.Restart();
             }
         }
@@ -195,7 +237,11 @@ namespace AlbumMaker.Forms
             DialogResult dr = MessageBox.Show("This will reset all saved settings to default (just like first time launching the app\nAre you sure?","Reset?",MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dr == DialogResult.Yes)
             {
+                string oldPath = Properties.AppSettings.Default.AppDataFolder;
                 AppSettings.Default.Reset();
+                MessageBox.Show(oldPath);
+                MessageBox.Show(Properties.AppSettings.Default.AppDataFolder);
+               // CopyDirectory(oldPath + $@"\{Properties.AppSettings.Default.AppName}\", Properties.AppSettings.Default.AppDataFolder + $@"\{Properties.AppSettings.Default.AppName}\", true);
                 Application.Restart();
             }
             

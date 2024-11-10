@@ -123,7 +123,7 @@ namespace AlbumMaker.Classes.Custom
             {
                 if (isEdit)
                 {
-                    DialogResult dr = MessageBox.Show($"Are you sure to delete {image.GetName()} {image.GetDescription}?", "Delete?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult dr = MessageBox.Show($"Are you sure to delete {image.GetName()}?", "Delete?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dr == DialogResult.Yes)
                     {
                         /* TO DO:
@@ -139,7 +139,7 @@ namespace AlbumMaker.Classes.Custom
                             File.Delete(image.GetImagePath());
                             if (!File.Exists(image.GetImagePath()))
                             {
-                                MessageBox.Show("Image Deleted", "success");
+                                //MessageBox.Show("Image Deleted", "success");
                                 AlbumItem album = SettingsManager.userItem.GetAlbumItems().Find(x => x.GetID() == image.GetRelatedAlbumID());
                                 if (album != null)
                                     album.DeleteImageItem(image);
@@ -167,12 +167,14 @@ namespace AlbumMaker.Classes.Custom
                                                 }
                                             }
                                         }
-                                           
+
                                     }
                                 }
                             }
                         }
                     }
+                    else
+                        return;
                     
                 }
 
