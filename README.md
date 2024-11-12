@@ -1,1 +1,3 @@
 # AlbumMaker
+also on last commit, worked around in edit image where choosing shape and then activating filter will apply shape again to the new filter, until i come up with another solution hopefully.
+in that case it does append to undo/redo list the full image filter without the shape and the shaped filtered one aswell...
