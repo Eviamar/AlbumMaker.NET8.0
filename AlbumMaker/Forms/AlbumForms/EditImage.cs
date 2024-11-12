@@ -127,7 +127,7 @@ namespace AlbumMaker.Forms.AlbumForms
             if (!selectedPoint.IsEmpty)
             {
                 //if(selectedShape.Key == null && selectedShape.Value == 0)
-                    selectedShape = new KeyValuePair<string, int>(comboBoxShape.Text, ((KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem).Value);
+                selectedShape = new KeyValuePair<string, int>(comboBoxShape.Text, ((KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem).Value);
                 //MessageBox.Show(selectedShape.ToString());
 
                 if (!String.IsNullOrWhiteSpace(txtBoxCustomSize.Text))
@@ -160,6 +160,8 @@ namespace AlbumMaker.Forms.AlbumForms
                         break;
                 }
             }
+            else
+                MessageBox.Show("Please click anywhere in the image to create a point where the shape will apply around it.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
         private void txtBoxCustomSize_TextChanged(object sender, EventArgs e)

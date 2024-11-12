@@ -72,6 +72,7 @@ namespace AlbumMaker.Classes.Custom
                     {
                         user.SetNewName(txtBoxName.Text);
                         user.SetNewPassword(txtBoxPassword.Text);
+                        user.SetIsAdmin(checkBox.Checked);
                         await AppDataBase.UpdateUser(user);
                         Properties.AppSettings.Default.userName = "";
                         Properties.AppSettings.Default.isLogged = false;
@@ -87,11 +88,20 @@ namespace AlbumMaker.Classes.Custom
                 {
                     user.SetNewName(txtBoxName.Text);
                     user.SetNewPassword(txtBoxPassword.Text);
+                    user.SetIsAdmin(checkBox.Checked);
                     bool res = await AppDataBase.UpdateUser(user);
                     if (res) 
                         MessageBox.Show("User updated.","Success");
                     this.Close();
                 }
+            }
+            else if(checkBox.Checked != user.GetIsAdmin())
+            {
+                user.SetIsAdmin(checkBox.Checked);
+                bool res = await AppDataBase.UpdateUser(user);
+                if (res)
+                    MessageBox.Show("User admin status updated.", "Success");
+                this.Close();
             }
         }
 
