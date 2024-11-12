@@ -15,11 +15,19 @@ namespace AlbumMaker.Classes.Custom
 {
     public partial class MsgBox : Form
     {
+        private TextBox txtBoxName;
+        private TextBox txtBoxPassword;
+        private CheckBox checkBox;
+        private UserItem user;
         private string msgBoxTitle;
         public MsgBox(UserItem user, string title)
         {
             InitializeComponent();
-            UserEdit(user);
+            this.user = user;
+            txtBoxName = new TextBox();
+            txtBoxPassword = new TextBox();
+            checkBox = new CheckBox();
+            UserEdit(this.user);
             this.Text = title;
             SettingsManager.SetTheme(this);
         }
@@ -27,30 +35,64 @@ namespace AlbumMaker.Classes.Custom
         {
             //TextBox txt = new TextBox();
             //txt.Text = u.GetName();
-            CheckBox checkBox = new CheckBox();
+            FlowLayoutPanel flp = new FlowLayoutPanel();
             checkBox.Checked = u.GetIsAdmin();
             checkBox.Text = $"{u.GetName()} is admin?";
-            Button btn = new Button();
-            btn.Click += (sender, args) => Btn_Click(sender, args, u);
-            //FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
-            ////flowLayoutPanel.Controls.Add(txt);
-            //flowLayoutPanel.Controls.Add(checkBox);
-            //flowLayoutPanel.Dock = DockStyle.Fill;
-            //this.Controls.Add(flowLayoutPanel);
-            this.Controls.Add(checkBox);
-            //btn.Dock = DockStyle.Bottom;
-            btn.Text = "Apply";
-            btn.AutoSize = true;
-            btn.AutoEllipsis = true;
-            btn.Location = new Point(0, checkBox.Height);
-            this.Controls.Add(btn);
+            Button btnSubmit = new Button();
+            txtBoxName.PlaceholderText = u.GetName();
+            txtBoxPassword.PlaceholderText = $"new password";
+            btnSubmit.Click += Btn_Click;
+            btnSubmit.Text = "Apply";
+            btnSubmit.AutoSize = true;
+            btnSubmit.AutoEllipsis = true;
+            btnSubmit.Location = new Point(0, checkBox.Height);
+            this.Controls.Add(flp);
+            flp.Controls.Add(txtBoxName);
+            flp.Controls.Add(txtBoxPassword);
+            flp.Controls.Add(checkBox);
+            flp.Controls.Add(btnSubmit);
         }
 
-        private async void Btn_Click(object? sender, EventArgs e, UserItem u)
+        private async void Btn_Click(object? sender, EventArgs e)
         {
-            u.SetIsAdmin(!u.GetIsAdmin());
-            await AppDataBase.UpdateUser(u);
-            this.Close();
+
+            if(user.GetID() == 1 && checkBox.Checked != user.GetIsAdmin())
+            {
+                MessageBox.Show("This user is the root user, cannot revoke admin rights from this user.",
+                   "Information",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!String.IsNullOrWhiteSpace(txtBoxPassword.Text) && !String.IsNullOrWhiteSpace(txtBoxName.Text))
+            {
+                if (SettingsManager.userItem.GetName() == user.GetName())
+                {
+                    DialogResult dr = MessageBox.Show("Because you are trying to change your own name the application needs to perform restart.\nClick OK to change and restart.\nClick cancel to cancel", "Changing name", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    if (dr == DialogResult.OK)
+                    {
+                        user.SetNewName(txtBoxName.Text);
+                        user.SetNewPassword(txtBoxPassword.Text);
+                        await AppDataBase.UpdateUser(user);
+                        Properties.AppSettings.Default.userName = "";
+                        Properties.AppSettings.Default.isLogged = false;
+                        Properties.AppSettings.Default.currentUser = "";
+                        Properties.AppSettings.Default.UserPassword = "";
+                        Properties.AppSettings.Default.Save();
+                        Application.Restart();
+                    }
+                    else
+                        return;
+                }
+                else
+                {
+                    user.SetNewName(txtBoxName.Text);
+                    user.SetNewPassword(txtBoxPassword.Text);
+                    bool res = await AppDataBase.UpdateUser(user);
+                    if (res) 
+                        MessageBox.Show("User updated.","Success");
+                    this.Close();
+                }
+            }
         }
 
         private void MsgBox_Load(object sender, EventArgs e)

@@ -21,21 +21,6 @@ namespace AlbumMaker.Forms.UserForms
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             await AppDataBase.GetAllUserItems();
             LoadDataToPanel();
-            //if (SettingsManager.userItems == null)
-            //{
-            //    int res = await AppDataBase.GetAllUserItems();
-            //    if (res > 0)
-            //    {
-            //        //MessageBox.Show("Loaded from database");
-            //        LoadDataToPanel();
-
-            //    }
-            //}
-            //else
-            //{
-            //    //MessageBox.Show("Loaded from cache");
-            //    LoadDataToPanel();
-            //}
             
 
         }
@@ -53,6 +38,7 @@ namespace AlbumMaker.Forms.UserForms
                     grpBox.MouseEnter+= (sender, e) => Cursor = Cursors.Hand;
                     grpBox.MouseLeave += (sender, e) => Cursor = Cursors.Default;
                     grpBox.DoubleClick += (sender,args) => GrpBox_DoubleClick(sender,args,u);
+                    grpBox.MouseEnter += GrpBox_MouseEnter;
                     if (u.GetAlbumItems().Count == 0)
                     {
                         Label lbl = new Label();
@@ -84,6 +70,12 @@ namespace AlbumMaker.Forms.UserForms
             }
             catch { throw; }
             
+        }
+
+        private void GrpBox_MouseEnter(object? sender, EventArgs e)
+        {
+            ToolTip tt = new ToolTip();
+            tt.SetToolTip((GroupBox)sender, "Double click to edit user.");
         }
 
         private void GrpBox_DoubleClick(object? sender, EventArgs e,UserItem u)
