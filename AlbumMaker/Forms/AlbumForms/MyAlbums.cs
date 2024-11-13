@@ -45,6 +45,21 @@ namespace AlbumMaker.Forms
         {
             try
             {
+                if (SettingsManager.userItem.GetAlbumItems().Count == 0) 
+                {
+                    flpDisplayAlbums.Hide();
+                    Label lblNoAlbums = new Label();
+                    lblNoAlbums.Text = $"Hello {SettingsManager.userItem.GetName()},\nYou do not have any albums.\nCreate albums and they will be displayed here.";
+                    lblNoAlbums.AutoSize = true;
+                    lblNoAlbums.AutoEllipsis = true;
+                    lblNoAlbums.BorderStyle = BorderStyle.FixedSingle;
+                    //lblNoAlbums.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+                    lblNoAlbums.Location = new Point(this.Width/5, this.Height/2);
+                    lblNoAlbums.Font = new Font(this.Font.FontFamily, Properties.AppSettings.Default.FontSize);
+                    lblNoAlbums.ForeColor = Properties.AppSettings.Default.isDark ? Color.White : Color.Black;
+                    this.Controls.Add(lblNoAlbums);  
+                }
+                else
                 foreach(AlbumItem album in SettingsManager.userItem.GetAlbumItems())
                 {
                     DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(album,true);

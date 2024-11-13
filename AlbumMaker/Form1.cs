@@ -142,7 +142,9 @@ namespace AlbumMaker
         {
             ExitMethod();
             SettingsManager.userItem = null;
-            Navigate(new Login());
+            Properties.AppSettings.Default.UserPassword = "";
+            Properties.AppSettings.Default.Save();
+           Navigate(new Login());
         }
 
         private void timerCheckUserLoggedIn_Tick(object sender, EventArgs e)

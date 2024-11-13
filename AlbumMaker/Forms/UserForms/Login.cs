@@ -19,12 +19,12 @@ namespace AlbumMaker.Forms
 
         private async void lblForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            
+
             if (lblForgot.Text == "Forgot password?")
             {
                 if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
                 {
-                  
+
                     MessageBox.Show("You need to type your username", "Need username to recover its password", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     textBoxUsername.Focus();
                     return;
@@ -123,7 +123,7 @@ namespace AlbumMaker.Forms
             }
             else
                 checkBoxRememberMe.Checked = false;
-            
+
         }
 
         private void checkBoxRememberMe_CheckedChanged(object sender, EventArgs e)

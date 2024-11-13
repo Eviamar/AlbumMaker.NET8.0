@@ -88,19 +88,39 @@ namespace AlbumMaker.Classes.Custom
                 {
                     user.SetNewName(txtBoxName.Text);
                     user.SetNewPassword(txtBoxPassword.Text);
+                    bool beforeChange = user.GetIsAdmin();
                     user.SetIsAdmin(checkBox.Checked);
+                    
                     bool res = await AppDataBase.UpdateUser(user);
-                    if (res) 
+                    if (res)
+                    {
+                        Properties.AppSettings.Default.Save();
                         MessageBox.Show("User updated.","Success");
+                        if (beforeChange && user.GetID() == SettingsManager.userItem.GetID())
+                        {
+                            MessageBox.Show("Because you disabled admin role from yourself the application will perform a restart", "Information");
+                            Application.Restart();
+                        }
+
+                    }
                     this.Close();
                 }
             }
             else if(checkBox.Checked != user.GetIsAdmin())
             {
+                bool beforeChange = user.GetIsAdmin();
                 user.SetIsAdmin(checkBox.Checked);
                 bool res = await AppDataBase.UpdateUser(user);
                 if (res)
+                {
+                    Properties.AppSettings.Default.Save();
                     MessageBox.Show("User admin status updated.", "Success");
+                    if (beforeChange && user.GetID() == SettingsManager.userItem.GetID())
+                    {
+                        MessageBox.Show("Because you disabled admin role from yourself the application will perform a restart", "Information");
+                        Application.Restart();
+                    }
+                }
                 this.Close();
             }
         }

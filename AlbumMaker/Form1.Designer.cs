@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             flpMenu = new FlowLayoutPanel();
             panelMenu = new Panel();
             btnMenuToggle = new Button();
+            pictureBox1 = new PictureBox();
             btnLogin = new Button();
             btnMyAlbums = new Button();
             btnUserControlPanel = new Button();
@@ -45,6 +47,7 @@
             timerMenuOpen = new System.Windows.Forms.Timer(components);
             flpMenu.SuspendLayout();
             panelMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // flpMenu
@@ -52,6 +55,7 @@
             flpMenu.BackColor = SystemColors.ControlDark;
             flpMenu.BorderStyle = BorderStyle.FixedSingle;
             flpMenu.Controls.Add(panelMenu);
+            flpMenu.Controls.Add(pictureBox1);
             flpMenu.Controls.Add(btnLogin);
             flpMenu.Controls.Add(btnMyAlbums);
             flpMenu.Controls.Add(btnUserControlPanel);
@@ -88,10 +92,20 @@
             btnMenuToggle.UseVisualStyleBackColor = false;
             btnMenuToggle.Click += btnMenuToggle_Click;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(3, 31);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(131, 95);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 8;
+            pictureBox1.TabStop = false;
+            // 
             // btnLogin
             // 
             btnLogin.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btnLogin.Location = new Point(3, 31);
+            btnLogin.Location = new Point(3, 132);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(131, 23);
             btnLogin.TabIndex = 1;
@@ -101,7 +115,7 @@
             // 
             // btnMyAlbums
             // 
-            btnMyAlbums.Location = new Point(3, 60);
+            btnMyAlbums.Location = new Point(3, 161);
             btnMyAlbums.Name = "btnMyAlbums";
             btnMyAlbums.Size = new Size(131, 23);
             btnMyAlbums.TabIndex = 2;
@@ -111,7 +125,7 @@
             // 
             // btnUserControlPanel
             // 
-            btnUserControlPanel.Location = new Point(3, 89);
+            btnUserControlPanel.Location = new Point(3, 190);
             btnUserControlPanel.Name = "btnUserControlPanel";
             btnUserControlPanel.Size = new Size(131, 23);
             btnUserControlPanel.TabIndex = 3;
@@ -122,7 +136,7 @@
             // btnSettings
             // 
             btnSettings.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btnSettings.Location = new Point(3, 118);
+            btnSettings.Location = new Point(3, 219);
             btnSettings.Name = "btnSettings";
             btnSettings.Size = new Size(131, 23);
             btnSettings.TabIndex = 4;
@@ -132,7 +146,7 @@
             // 
             // btnAdminPanel
             // 
-            btnAdminPanel.Location = new Point(3, 147);
+            btnAdminPanel.Location = new Point(3, 248);
             btnAdminPanel.Name = "btnAdminPanel";
             btnAdminPanel.Size = new Size(131, 23);
             btnAdminPanel.TabIndex = 5;
@@ -143,7 +157,7 @@
             // 
             // btnLogout
             // 
-            btnLogout.Location = new Point(3, 176);
+            btnLogout.Location = new Point(3, 277);
             btnLogout.Name = "btnLogout";
             btnLogout.Size = new Size(131, 23);
             btnLogout.TabIndex = 6;
@@ -153,7 +167,7 @@
             // 
             // btnExit
             // 
-            btnExit.Location = new Point(3, 205);
+            btnExit.Location = new Point(3, 306);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(131, 23);
             btnExit.TabIndex = 7;
@@ -190,6 +204,7 @@
             ClientSize = new Size(790, 561);
             Controls.Add(panelMain);
             Controls.Add(flpMenu);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(2560, 1440);
             MinimumSize = new Size(800, 600);
             Name = "Form1";
@@ -198,6 +213,7 @@
             Load += Form1_Load;
             flpMenu.ResumeLayout(false);
             panelMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -214,8 +230,9 @@
         private Button btnLogout;
         private Button btnExit;
         private System.Windows.Forms.Timer timerCheckUserLoggedIn;
-        private Button btnAdminPanel;
         private System.Windows.Forms.Timer timerMenuOpen;
         protected internal Panel panelMain;
+        private PictureBox pictureBox1;
+        public Button btnAdminPanel;
     }
 }
