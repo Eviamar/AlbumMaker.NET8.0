@@ -23,13 +23,16 @@ namespace AlbumMaker.Forms
         private List<string> accessDeniedFiles;
         private List<string> images;
         private FileItem selectedFile;
+        private string[] albumInfo;
+
 
         private SortOrder sortOrder;
         private string lastSortedColumn;
-        public ScanForImages(List<string> images)
+        public ScanForImages(List<string> images, string[] albumInfo)
         {
             InitializeComponent();
             GetDrives();
+            this.albumInfo = albumInfo;
             scannedFiles = new BindingList<FileItem>(); // Initialize BindingList
             accessDeniedFiles = new List<string>();
 
@@ -434,7 +437,7 @@ namespace AlbumMaker.Forms
             }
             if(images.Count > 0)
             {
-                CreateAlbum createAlbum = new CreateAlbum(images);
+                CreateAlbum createAlbum = new CreateAlbum(images, albumInfo);
                 Panel p = this.Parent as Panel;
                 if (p != null)
                 {

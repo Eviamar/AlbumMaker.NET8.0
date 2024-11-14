@@ -33,12 +33,14 @@ namespace AlbumMaker.Classes.Custom
         }
         private void UserEdit(UserItem u)
         {
-            //TextBox txt = new TextBox();
-            //txt.Text = u.GetName();
+            txtBoxName.TabIndex = 0;
+            txtBoxPassword.TabIndex = 1;
+            checkBox.TabIndex = 2;
             FlowLayoutPanel flp = new FlowLayoutPanel();
             checkBox.Checked = u.GetIsAdmin();
             checkBox.Text = $"{u.GetName()} is admin?";
             Button btnSubmit = new Button();
+            btnSubmit.TabIndex = 3;
             txtBoxName.PlaceholderText = u.GetName();
             txtBoxPassword.PlaceholderText = $"new password";
             btnSubmit.Click += Btn_Click;

@@ -96,6 +96,7 @@
             // textBoxAlbumDescription
             // 
             textBoxAlbumDescription.Location = new Point(139, 4);
+            textBoxAlbumDescription.MaxLength = 200;
             textBoxAlbumDescription.Name = "textBoxAlbumDescription";
             textBoxAlbumDescription.PlaceholderText = "Album description";
             textBoxAlbumDescription.Size = new Size(131, 23);

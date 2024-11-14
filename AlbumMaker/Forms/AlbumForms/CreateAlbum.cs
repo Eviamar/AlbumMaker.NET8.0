@@ -14,21 +14,23 @@ namespace AlbumMaker.Forms
     {
         private string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\";
         private int imageCount = 0;
-        List<KeyValuePair<int,string>> images = new List<KeyValuePair<int,string>>();
-
+        private List<KeyValuePair<int,string>> images = new List<KeyValuePair<int,string>>();
+        private string[] albumInfo = new string[2];
         public CreateAlbum()
         {
             InitializeComponent();
         }
-        public CreateAlbum(List<string> images)
+        public CreateAlbum(List<string> images, string[] albumInfo)
         {
             InitializeComponent();
-            LoadImagesFromScan(images);
+            LoadImagesFromScan(images,albumInfo);
         }
-        private async void LoadImagesFromScan(List<string> images)
+        private async void LoadImagesFromScan(List<string> images, string[] albumInfo)
         {
             await Task.Run(() =>
             {
+                textBoxAlbumName.Text = albumInfo[0];   
+                textBoxAlbumDescription.Text = albumInfo[1];
                 for (int i = 0; i < images.Count; i++)
                 {
                     ImageItem imageItem = new ImageItem(i, images[i], "", -1);
@@ -46,9 +48,11 @@ namespace AlbumMaker.Forms
         }
         private void scanFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            albumInfo[0] = textBoxAlbumName.Text;
+            albumInfo[1] = textBoxAlbumDescription.Text;
             if(FLPAlbumData.Controls.Count == 0)
             {
-                ScanForImages scan = new ScanForImages(new List<string>());
+                ScanForImages scan = new ScanForImages(new List<string>(),albumInfo);
                 Panel p = this.Parent as Panel;
                 if (p != null && scan != null)
                 {
@@ -72,11 +76,11 @@ namespace AlbumMaker.Forms
                     {
                         temp.Add(img.Value);
                     }
-                    scan = new ScanForImages(temp);
+                    scan = new ScanForImages(temp, albumInfo);
                 }
                 else if (dr == DialogResult.No)
                 {
-                    scan = new ScanForImages(new List<string>());
+                    scan = new ScanForImages(new List<string>(), albumInfo);
                 }
                 else if (dr == DialogResult.Cancel)
                     return;

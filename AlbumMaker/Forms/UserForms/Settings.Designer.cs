@@ -148,19 +148,20 @@
             // 
             // btnDropTables
             // 
-            btnDropTables.Location = new Point(6, 195);
+            btnDropTables.Location = new Point(6, 204);
             btnDropTables.Name = "btnDropTables";
-            btnDropTables.Size = new Size(75, 23);
+            btnDropTables.Size = new Size(24, 14);
             btnDropTables.TabIndex = 4;
             btnDropTables.Text = "DropTables";
             btnDropTables.UseVisualStyleBackColor = true;
+            btnDropTables.Visible = false;
             btnDropTables.Click += btnDropTables_Click;
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(87, 180);
+            btnReset.Location = new Point(12, 180);
             btnReset.Name = "btnReset";
-            btnReset.Size = new Size(136, 38);
+            btnReset.Size = new Size(211, 28);
             btnReset.TabIndex = 5;
             btnReset.Text = "Restore default settings";
             btnReset.UseVisualStyleBackColor = true;

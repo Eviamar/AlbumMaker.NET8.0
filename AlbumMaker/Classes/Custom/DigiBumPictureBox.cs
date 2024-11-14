@@ -3,6 +3,7 @@ using AlbumMaker.Classes.Items;
 using AlbumMaker.Forms;
 using AlbumMaker.Forms.UserForms;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 
@@ -57,15 +58,6 @@ namespace AlbumMaker.Classes.Custom
                     ForeColor = Color.White,
                 };
                 EditButton.FlatAppearance.BorderSize = 0;
-                //Title = new Label
-                //{
-                //    Name = "lblTitle",
-                //    // TO DO: NEED TO GET IT WORKING: when in edit album to not display name cause its a long path, instead just display empty string
-                //    Text = (this.Tag !=null && this.Tag == "Edit Album" ? image.GetDescription() : image.GetName()),
-                //    Font = new Font(Font.FontFamily, 20, FontStyle.Bold),
-                //    AutoSize = true,
-                //    BackColor = Color.Transparent
-                //};
 
                 Description = new Label
                 {
@@ -76,7 +68,7 @@ namespace AlbumMaker.Classes.Custom
                     BackColor = Color.Transparent
                 };
                 Image = GenerateSmallerImage(image.GetImagePath(), 200, 200);
-
+                Description.Paint += DigiLabelPaint;
 
                 //ImageLocation = image.GetImagePath();
                 this.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, image.GetDescription());
@@ -205,11 +197,57 @@ namespace AlbumMaker.Classes.Custom
         }
         #endregion constructor for image view
         #region constructor for album view
+        private void DigiLabelPaint(object sender, PaintEventArgs e)
+        {
+            Label lbl = sender as Label;
+
+            if (lbl != null)
+            {
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                string text = lbl.Text;
+                Font font = lbl.Font;
+
+                // Define colors for stroke and fill
+                Color strokeColor = Color.Black; // Border color
+                Color textColor = lbl.ForeColor; // Text color
+
+                // Stroke width
+                float strokeWidth = 2f;
+
+                // Create brushes
+                using (Brush textBrush = new SolidBrush(textColor))
+                using (Pen strokePen = new Pen(strokeColor, strokeWidth))
+                {
+                    strokePen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round; // Prevent sharp edges
+
+                    // Measure text size
+                    SizeF textSize = e.Graphics.MeasureString(text, font);
+
+                    // Get text position
+                    PointF textPosition = new PointF(
+                        (lbl.Width - textSize.Width) / 2, // Center horizontally
+                        (lbl.Height - textSize.Height) / 2 // Center vertically
+                    );
+
+                    // Draw stroke (outline) by drawing text multiple times around the position
+                    for (float x = -strokeWidth; x <= strokeWidth; x += 1f)
+                    {
+                        for (float y = -strokeWidth; y <= strokeWidth; y += 1f)
+                        {
+                            e.Graphics.DrawString(text, font, strokePen.Brush, textPosition.X + x, textPosition.Y + y);
+                        }
+                    }
+
+                    // Draw the actual text on top of the stroke
+                    e.Graphics.DrawString(text, font, textBrush, textPosition);
+                }
+            }
+        }
         public DigiBumPictureBox(AlbumItem album,bool isEdit)
         {
             Size = new Size(200, 200);
-
-            // Initialize buttons and labels
+            
             if (isEdit)
             { 
                 DeleteButton = new Button
@@ -219,8 +257,8 @@ namespace AlbumMaker.Classes.Custom
                     Font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold),
                     FlatStyle = FlatStyle.Flat,
                     Width = 30,
-                    BackColor = Color.Transparent,
-                    ForeColor = Color.Red,
+                    BackColor = Color.Red,
+                    ForeColor = Color.White,
                 };
                 DeleteButton.FlatAppearance.BorderSize = 0;
 
@@ -231,8 +269,8 @@ namespace AlbumMaker.Classes.Custom
                     Font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold),
                     FlatStyle = FlatStyle.Flat,
                     Width = 30,
-                    BackColor = Color.Transparent,
-                    ForeColor = Color.Green,
+                    BackColor = Color.Green,
+                    ForeColor = Color.White,
                 };
                 EditButton.FlatAppearance.BorderSize = 0;
                 DeleteButton.Click += (sender, e) => { DeleteAlbum(sender, e, album); };
@@ -244,7 +282,7 @@ namespace AlbumMaker.Classes.Custom
                 Controls.Add(DeleteButton);
                 Controls.Add(EditButton);
             }
-            
+
 
             Title = new Label
             {
@@ -263,7 +301,8 @@ namespace AlbumMaker.Classes.Custom
                 AutoSize = true,
                 BackColor = Color.Transparent
             };
-
+            Title.Paint += DigiLabelPaint;
+            Description.Paint += DigiLabelPaint;
             // Setup image
             if (album.GetImages().Count == 0)
             {
@@ -284,7 +323,7 @@ namespace AlbumMaker.Classes.Custom
             Controls.Add(Description);
 
             // Position controls
-            
+
             Title.Location = new Point(0, 0);
             Description.Location = new Point(0, Height - Description.Height);
 
@@ -362,34 +401,7 @@ namespace AlbumMaker.Classes.Custom
 
                         if(SettingsManager.userItems !=null && SettingsManager.userItems.Count > 0)
                         {
-                            /*
-                            bool isDeleted = false;
-                            bool isAdminDeleteItsAlbumFromAdminPanel = false;
-                            foreach (UserItem user in SettingsManager.userItems)
-                            {
-                                foreach (AlbumItem userAlbum in user.GetAlbumItems())
-                                {
-                                    if (userAlbum == album)
-                                    {
-                                        user.DeleteSpecificAlbum(album);
-                                        isDeleted = true;
-                                        isAdminDeleteItsAlbumFromAdminPanel = user.GetID() == SettingsManager.userItem.GetID();
-                                        if (isAdminDeleteItsAlbumFromAdminPanel)
-                                        {
-                                            SettingsManager.userItem.DeleteSpecificAlbum(album);
-
-
-                                        }
-                                        break;
-                                    }
-                                }
-                                if (isDeleted)
-                                    break;
-                            }
-                            */
-                            //it connects to database to update the variables userItem and userItems since they are static variables its the only way to update them (see code above that didnt work).
-                            //- this solution cause when deleting something from admin panel and going back to MyAlbum, the album stays there.. thats why this method insuring the variable gets updated
-                            //checks if the deleted album is the current admin trying to delete it
+                           
                             foreach (AlbumItem item in SettingsManager.userItem.GetAlbumItems())
                             {
                                 if(item == album)
@@ -401,7 +413,6 @@ namespace AlbumMaker.Classes.Custom
                         else
                         {
                             await AppDataBase.VerifyUser(SettingsManager.userItem.GetName(), SettingsManager.userItem.GetPassword());
-                            //SettingsManager.userItem.DeleteSpecificAlbum(album);
                         }
                         this.Dispose();
                     }
@@ -437,21 +448,7 @@ namespace AlbumMaker.Classes.Custom
             }
             catch { return null; throw; }
         }
-        //private static Image GenerateSmallerImage(string path, int width, int height)
-        //{
-        //    Bitmap b = null;
-        //    try
-        //    {
-        //        using (Image img = Image.FromFile(path))
-        //        {
-        //            b = new Bitmap(img, width, height);
-        //            img.Dispose();
-        //            return b;
-        //        }
 
-        //    }
-        //    catch (Exception ex) { return null; }
-
-        //}
+        
     }
 }
