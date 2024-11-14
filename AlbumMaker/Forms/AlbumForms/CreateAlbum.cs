@@ -124,12 +124,7 @@ namespace AlbumMaker.Forms
         {
             try
             {
-                //if(FLPAlbumData.Controls.Count > 0)
-                //{
-                //    DialogResult dr = MessageBox.Show("This will wipe all images displayed!\nProceed?", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                //    if (dr == DialogResult.No)
-                //        return;
-                //}
+
                 using (OpenFileDialog ofd = new OpenFileDialog())
                 {
                     ofd.Multiselect = true;

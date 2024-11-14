@@ -43,7 +43,6 @@ namespace AlbumMaker.Forms.UserForms
                     {
                         Label lbl = new Label();
                         lbl.Text = $"{u.GetName()} has no albums";
-                        //lbl.Size = new Size(250, 250);
                         lbl.AutoSize = true;
                         lbl.Dock = DockStyle.Fill;
                         grpBox.Controls.Add(lbl);

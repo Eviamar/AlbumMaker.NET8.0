@@ -70,7 +70,7 @@ namespace AlbumMaker.Forms
                 textBoxAnswer.Focus();
                 return;
             }
-            if (String.IsNullOrWhiteSpace(richTextBoxQuestion.Text)) //add default placeholder here too
+            if (String.IsNullOrWhiteSpace(richTextBoxQuestion.Text)) 
             {
                 MessageBox.Show("Question cannot be empty");
                 richTextBoxQuestion.Focus();

@@ -95,7 +95,6 @@ namespace AlbumMaker.Forms.AlbumForms
             }
 
             tlpOptions.AutoScroll = true;
-            //tlpOptions.AutoSize = true;
             comboBoxShapeSize.DataSource = sizes;
             comboBoxShape.DataSource = shapes;
             pictureBoxPic.MouseClick += SetPoint;
@@ -106,9 +105,7 @@ namespace AlbumMaker.Forms.AlbumForms
         {
             if (!selectedPoint.IsEmpty)
             {
-                //if(selectedShape.Key == null && selectedShape.Value == 0)
                 selectedShape = new KeyValuePair<string, int>(comboBoxShape.Text, ((KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem).Value);
-                //MessageBox.Show(selectedShape.ToString());
 
                 if (!String.IsNullOrWhiteSpace(txtBoxCustomSize.Text))
                 {
@@ -245,10 +242,8 @@ namespace AlbumMaker.Forms.AlbumForms
 
                 // Enable Undo and clear Redo stack
 
-                //redoStack.Clear(); // Optionally, you can avoid clearing the redo stack if you don't want to lose redo history
                 if (selectedShape.Key != null && selectedShape.Value != 0)
                 {
-                    
                     btnApplyShape_Click(sender, e);
                 }
 
@@ -370,7 +365,6 @@ namespace AlbumMaker.Forms.AlbumForms
 
                 flipUpDown = !flipUpDown;
                 Bitmap flippedImage = new Bitmap(pictureBoxPic.Image);
-                // processedBitmap.RotateFlip(RotateFlipType.RotateNoneFlipX);
                 flippedImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
                 pictureBoxPic.Image = flippedImage;
 
@@ -421,7 +415,6 @@ namespace AlbumMaker.Forms.AlbumForms
         private async void btnApplyDesc_Click(object sender, EventArgs e)
         {
 
-            //TODO: connect to database and update image there
             if (!String.IsNullOrWhiteSpace(textBoxDesc.Text))
             {
 

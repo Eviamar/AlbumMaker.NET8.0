@@ -4,7 +4,6 @@ namespace AlbumMaker.Classes.Items
 {
     public class ImageItem : Item
     {
-        //maybe consider add id of related album so you can put it in the path {albumID}\\{this.imageName} //instead of this.path => change path field name to "imageName"
         private string path;
         private string description;
         private int relatedAlbumID;

@@ -162,7 +162,6 @@ namespace AlbumMaker.Forms
                     return;
                 }
                 string location = Properties.AppSettings.Default.AppDataFolder;
-                //string oldPath = Properties.AppSettings.Default.AppDataFolder; //might not be needed this cause can use folderBroswerDialog.SelectedPath
                 FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
                 folderBrowserDialog.ShowNewFolderButton = true;
                 bool folderExist = false;

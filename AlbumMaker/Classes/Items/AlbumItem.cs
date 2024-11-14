@@ -23,7 +23,6 @@ namespace AlbumMaker.Classes.Items
         public string GetTemplate()=> template;
         public List<ImageItem> GetImages() => images;
         public void AddImage(ImageItem image) => images.Add(image);
-        public void DeleteAllImages() => images.Clear();
         public bool DeleteImageItem(ImageItem image)
         {
             for (int i = 0; i < images.Count; i++)

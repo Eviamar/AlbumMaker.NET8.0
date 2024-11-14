@@ -182,7 +182,6 @@ namespace AlbumMaker
         }
         public void Navigate(UserControl userControl)
         {
-            //TO DO: apply visual sizing according to control opens
             userControl.Dock = DockStyle.Fill;
             panelMain.AutoScroll = true;
             panelMain.VerticalScroll.Enabled = true;

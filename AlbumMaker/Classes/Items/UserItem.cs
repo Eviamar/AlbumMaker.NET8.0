@@ -31,15 +31,8 @@ namespace AlbumMaker.Classes.Items
         public List<AlbumItem> GetAlbumItems() => albumItems;
         public void AddAlbumItem(AlbumItem albumItem) => albumItems.Add(albumItem);
         public void SetAlbumItems(List<AlbumItem> albumItems) => this.albumItems = albumItems;
-        public void DeleteAllAlbums()=> albumItems.Clear();
         public void DeleteSpecificAlbum(AlbumItem album) => albumItems.Remove(album);
-        public void SearchAlbumByName(string name)
-        {
-            foreach(AlbumItem albumItem in albumItems)
-            {
-                
-            }
-        }
+        
        
     }
     

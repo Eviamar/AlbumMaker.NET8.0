@@ -23,13 +23,6 @@ namespace AlbumMaker.Classes.Items
             FileItem other = (FileItem)obj;
             return other.GetName() == this.GetName();
         }
-        //public string GetRootDrive()=> this.rootDrive;
-        //public string GetExtension() => this.extension;
-        //public DateTime GetCreatedDate() => this.createdDate;
-        //public DateTime GetModifiedDate() => this.modifiedDate;
-        //public override string ToString()
-        //{
-        //    return $"Name: {this.GetName()}\nExtension: {this.extension}\nDrive: {this.rootDrive}\nCreated Date: {this.createdDate}\nModified Date: {this.modifiedDate}";
-        //}
+        
     }
 }
