@@ -12,6 +12,7 @@ namespace AlbumMaker.Forms
             this.AutoScroll = true;
         }
 
+        // This function is a checkbox check event that hides or show password
         private void checkBoxPassword_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxPassword.Checked)
@@ -25,11 +26,12 @@ namespace AlbumMaker.Forms
                 textBoxPassword2.PasswordChar = '*';
             }
         }
-
+        // This function is a link label click event to navigate user to login 'page'.
         private void lblAlreadyRegistered_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             NavigateToLogin();
         }
+        // This function navigate the user to login 'page'.
         private void NavigateToLogin()
         {
             Login login = new Login();
@@ -43,6 +45,9 @@ namespace AlbumMaker.Forms
                 login.Show();
             }
         }
+
+        // This function is a button event click that handle the register logic and check user input
+        // If everything is right it register the user and automatically navigate to login.
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
 

@@ -6,10 +6,15 @@ using System.Windows.Forms;
 
 namespace AlbumMaker.Classes
 {
+    // Where to begin.... this class handles the UI in the application but not only.
     internal static class SettingsManager
     {
+        // Because this class is already a static class we used to store userItem (the current logged user)
+        // We also store a list of users in userItems (for admin purposes).
         public static UserItem userItem { get; set; }
         internal static List<UserItem> userItems { get; set; }
+
+        // This function applies theme to an active FORM.
         public static void SetTheme()
         {
             Form form = Form.ActiveForm;
@@ -20,6 +25,7 @@ namespace AlbumMaker.Classes
             }
         }
   
+        // This function made for limiting the side menu size so it will work properly according to font size.
         public static int GetMaxWidthMenu()
         {
             float fontSize = GetFont().Size;
@@ -40,10 +46,13 @@ namespace AlbumMaker.Classes
 
 
         }
+        // This tiny function just returns font size.
         public static Font GetFont()
         {
             return new Font(Form.DefaultFont.FontFamily, Properties.AppSettings.Default.FontSize);
         }
+
+        // This function apply theme to USER-CONTROL (we use User Control for displaying each "page" inside the main form1)
         public static void SetTheme(UserControl uc)
         {
             bool isDark = Properties.AppSettings.Default.isDark;
@@ -77,12 +86,13 @@ namespace AlbumMaker.Classes
             
 
         }
+
+        // This function set the theme into a form.
         public static void SetTheme(Form f)
         {
             bool isDark = Properties.AppSettings.Default.isDark;
             foreach (Control c in f.Controls)
             {
-                
                 if (c is FlowLayoutPanel)
                 {
                     FlowLayoutPanel flp = (FlowLayoutPanel)c;
@@ -113,6 +123,8 @@ namespace AlbumMaker.Classes
 
             }
         }
+
+        // This function set the theme to the CONTROLS in the side menu 
         public static void SetThemeToMenu(Control c, bool isDark)
         {
             if (c is Button btn)
@@ -151,6 +163,7 @@ namespace AlbumMaker.Classes
             }
 
         }
+        // This function set the theme to the side menu 
         public static void SetThemeToMenu(FlowLayoutPanel flp, bool isDark)
         {
             
@@ -163,6 +176,9 @@ namespace AlbumMaker.Classes
             
         }
 
+
+        // This function set the theme to controls which are used in the application (see if statement).
+        // It is also a recursive function if the control has controls inside it its being called again.
         public static void SetThemeToControls(Control control, bool theme)
         {
             
@@ -291,6 +307,9 @@ namespace AlbumMaker.Classes
             }
 
         }
+
+        // This function converts Hexadecimal value to a of Color the .NET controls reads
+        // EX: Label.Forecolor = Color.White || so for example #ffffff translate to Color.White
         public static Color ConvertHexToColor(string hexColor)
         {
             // Ensure the hex string starts with '#'
@@ -302,6 +321,10 @@ namespace AlbumMaker.Classes
             // Use ColorTranslator to convert the hex string to a Color object
             return ColorTranslator.FromHtml(hexColor);
         }
+
+        // Does the opposite of the above function but not in used in the application
+        // Was created in case will need it in future.
+        // kept cause why not ;)
         public static string ConvertColorToHex(Color color)
         {
             return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";

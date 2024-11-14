@@ -1,6 +1,8 @@
 ﻿
 namespace AlbumMaker.Classes.Items
 {
+
+    // This class was made to handle albums 
     public class AlbumItem : Item
     {
         

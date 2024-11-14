@@ -5,6 +5,7 @@ using AlbumMaker.Classes.Items;
 
 namespace AlbumMaker.Forms.AlbumForms
 {
+    // This User Control class handles all editing of an album
     public partial class EditAlbum : UserControl
     {
         private AlbumItem album;
@@ -16,7 +17,7 @@ namespace AlbumMaker.Forms.AlbumForms
 
 
         }
-
+        // This function is a toolstrip menu click that takes back the user one 'page' back
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyAlbums myAlbums = new MyAlbums();
@@ -29,6 +30,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 myAlbums.Show();
             }
         }
+
+        // This function handles deleting of an image; it deletes the iamge from the UI.
         private void Picture_ImageDeleted(object sender, int tabIndex)
         {
             // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
@@ -40,6 +43,7 @@ namespace AlbumMaker.Forms.AlbumForms
             }
         }
 
+        // This function updates in the database the album's name/description/template according to the user decides.
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
             string newAlbumName = txtBoxAlbumName.Text;
@@ -62,6 +66,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 MessageBox.Show($"All fields required", "Alert");
 
         }
+        
+        // This fucntion loads the images that in the album to the UI.
         private async void ShowImagesToEdit()
         {
             flpImagesToEdit.SuspendLayout();
@@ -82,6 +88,7 @@ namespace AlbumMaker.Forms.AlbumForms
             flpImagesToEdit.AutoScroll = true;
             flpImagesToEdit.ResumeLayout();
         }
+
 
         private void EditAlbum_Load(object sender, EventArgs e)
         {

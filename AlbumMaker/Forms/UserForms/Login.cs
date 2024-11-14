@@ -5,6 +5,7 @@ using AlbumMaker.Classes.Db;
 
 namespace AlbumMaker.Forms
 {
+    // This User Control handles the login
     public partial class Login : UserControl
     {
         private bool isQuestion = false;
@@ -16,7 +17,7 @@ namespace AlbumMaker.Forms
 
         }
 
-
+        // This function is label event click used to let the user go into hidden section (in UI) for retrieving forgotten password. 
         private async void lblForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
 
@@ -48,6 +49,8 @@ namespace AlbumMaker.Forms
             }
         }
 
+
+        // This function navigate the user to the register 'page'
         private void lblAlreadyRegistered_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Register register = new Register();
@@ -61,7 +64,7 @@ namespace AlbumMaker.Forms
                 register.Show();
             }
         }
-
+        // This function is check box event check to show password or hide it with ****
         private void checkBoxPassword_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxPassword.Checked)
@@ -70,6 +73,7 @@ namespace AlbumMaker.Forms
                 textBoxPassword.PasswordChar = '*';
         }
 
+        // This function is a button event click to submit input by user and handles the login logic.
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
@@ -112,6 +116,7 @@ namespace AlbumMaker.Forms
 
         }
 
+
         private void Login_Load(object sender, EventArgs e)
         {
             SettingsManager.SetTheme(this);
@@ -125,7 +130,9 @@ namespace AlbumMaker.Forms
                 checkBoxRememberMe.Checked = false;
 
         }
-
+         
+         /* This function is check box event change that makes the application remember the user's user name for next login 
+          * so it will automatically will be filled in and only password will be required. */
         private void checkBoxRememberMe_CheckedChanged(object sender, EventArgs e)
         {
             if (!checkBoxRememberMe.Checked)
@@ -134,7 +141,8 @@ namespace AlbumMaker.Forms
                 Properties.AppSettings.Default.Save();
             }
         }
-
+        /* This funciton is a button event click that handles the forget password logic to retrive forgotten password.
+         * The user needs to answer to their question to get their password */
         private void btnForgot_Click(object sender, EventArgs e)
         {
             if (textBoxAnswer.Text == SettingsManager.userItem.GetAnswer())

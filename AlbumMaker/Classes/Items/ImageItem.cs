@@ -2,6 +2,7 @@
 
 namespace AlbumMaker.Classes.Items
 {
+    // This class was made to handle Images
     public class ImageItem : Item
     {
         private string path;

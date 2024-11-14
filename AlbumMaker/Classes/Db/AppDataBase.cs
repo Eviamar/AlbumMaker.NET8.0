@@ -5,13 +5,20 @@ using System.Data.SQLite;
 
 namespace AlbumMaker.Classes.Db
 {
+    // This class control and handle queries to the app's database.
     internal static class AppDataBase
     {
+        // this is where the location of the db file
         private static readonly string dataSource = $@"{Properties.AppSettings.Default.AppDataFolder}\\{Properties.AppSettings.Default.AppName}\\{Properties.AppSettings.Default.AppDatabaseFolderName}";
+        // this is the database file name
         private static readonly string dataBaseFileName = $"{Properties.AppSettings.Default.AppDatabaseFileName}";
+        // aand this one is the connection string combining both strings above (this made to be easy to change in the future without editing too much code)
         private static readonly string connectionString = @$"Data Source={dataSource}\{dataBaseFileName};Version=3";
 
         #region generic database queries
+
+        // This function creates the database file, it runs 3 queries: 1. Users, 2. Albums(holds related id of user), 3. Images (holds related id of album)
+        // in this way we store the data and connect each image to its album and each album to the user by using IDs.
         public static async void CreateDataBase()
         {
             try
@@ -58,6 +65,9 @@ namespace AlbumMaker.Classes.Db
             }
             catch { throw; }
         }
+        
+        // This function runs queries to drop all tables (not really in used, it was made for testing along the developing).
+        // also dont tell anyone there is a hidden button in the app that runs it (its hidden so dw about client pressing it hehe)
         public static async void DropTables()
         {
             try
@@ -88,6 +98,8 @@ namespace AlbumMaker.Classes.Db
         #endregion generic
 
         #region user queries
+
+        // This function gets user name and a password and connects to database and checks if there is a user by that name and if so the password given is matched.
         public static async Task<bool> VerifyUser(string userName, string password)
         {
             try
@@ -158,6 +170,9 @@ namespace AlbumMaker.Classes.Db
             }
             catch  { throw; }
         }
+        
+        // This function checks if there are any rows inside the users table (it was made so that upon creating the first user it makes it admin by default aka root user)
+        // Also not related to this function the root user (whoever user id is equal to 1 cannot remove its admin role)
         private static async Task<bool> AreThereAnyUsers() 
         {
             try
@@ -178,6 +193,9 @@ namespace AlbumMaker.Classes.Db
             catch
             { return false; throw; }
         }
+
+        // This function is made to recover password of a user whom forgot their password
+        // more on that later
         public static async Task<bool> RecoverPassword(string userName)
         {
             try
@@ -226,6 +244,8 @@ namespace AlbumMaker.Classes.Db
             }
             catch { throw; }
         }
+        
+        // This function create a user in the database
         public static async Task<bool> CreateUser(string UserName, string Password,string userQuestion,string userAnswer)
         {
             try
@@ -256,45 +276,8 @@ namespace AlbumMaker.Classes.Db
             }
             catch { return false; throw;}
         }
-        public static async Task<List<UserItem>> GetAllUsers()
-        {
-            List<UserItem> users = new List<UserItem>();
 
-            try
-            {
-                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    string query = "SELECT * FROM Users"; // Query to get all users
-                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
-                    {
-                        // Asynchronously execute the command and get a data reader
-                        using (SQLiteDataReader reader =  command.ExecuteReader())
-                        {
-                            // Iterate through all rows
-                            while (await reader.ReadAsync())
-                            {
-                                int userID = reader.GetInt32(reader.GetOrdinal("USER_ID"));
-                                string userName = reader.GetString(reader.GetOrdinal("user_Name"));
-                                string storedPassword = reader.GetString(reader.GetOrdinal("user_Password"));
-                                int isAdmin = reader.GetInt32(reader.GetOrdinal("isAdmin"));
-                                string question = reader.GetString(reader.GetOrdinal("userSecret"));
-                                string answer = reader.GetString(reader.GetOrdinal("userSecretAnswer"));
-
-                                // Create a new UserItem for each row and add it to the list
-                                UserItem user = new UserItem(userID, userName, storedPassword, question, answer, isAdmin == 1);
-                                await GetAllAlbumsOfUser(user);
-                                users.Add(user);
-                            }
-                        }
-                    }
-                    await connection.CloseAsync();
-                    return users;
-                }
-            }
-            catch { throw; }
-        }
+        // This function handles updating user, it gets UserItem which was manipulated before according to the needs)
         public static async Task<bool> UpdateUser(UserItem user)
         {
             
@@ -325,6 +308,8 @@ namespace AlbumMaker.Classes.Db
             }
             catch {  return false; throw; }
         }
+
+        // This function delete the user from database (never implemented as we dont see any need for that but good to keep for further needs if clients request this feature hehe).
         public static async Task<bool> DeleteUser(UserItem user)
         {
             if (user == null) 
@@ -380,6 +365,7 @@ namespace AlbumMaker.Classes.Db
 
 
         }
+        // this function gets all users from database and populate UserItems which located in SettingsManager class for admin puposes.
         public static async Task<int> GetAllUserItems()
         {
             List<UserItem> users = new List<UserItem>();
@@ -428,6 +414,7 @@ namespace AlbumMaker.Classes.Db
         #endregion user
 
         #region album queries
+        // This function gets all albums of a user (for loading user albums for normal user or in admin panel for each user in database)
         public static async Task<int> GetAllAlbumsOfUser(UserItem user)
         {
             List<AlbumItem> albums = new List<AlbumItem>();
@@ -474,6 +461,8 @@ namespace AlbumMaker.Classes.Db
 
 
         }
+
+        // The function handles the creating of a new album
         public static async Task<int> CreateAlbum(UserItem user, string albumName, string albumDescription,string albumTemplate)
         {
             try
@@ -510,6 +499,8 @@ namespace AlbumMaker.Classes.Db
             }
             catch { return -1; throw; }
         }
+
+        // The function handles updating an album giving to it
         public static async Task<bool> UpdateAlbum(AlbumItem album)
         {
             if (album == null)
@@ -538,6 +529,8 @@ namespace AlbumMaker.Classes.Db
             }
             catch { return false; throw; }
         }
+
+        //The function handles deleting album (deleting files is not handled here)
         public static async Task<bool> DeleteAlbum(AlbumItem album)
         {
             if (album == null)
@@ -581,6 +574,8 @@ namespace AlbumMaker.Classes.Db
         #endregion albums
 
         #region image queries
+
+        // The fucntion gets an album and by its id searches in the images table all images related to the album id and returns them as a list
         public static async Task<int> GetAllImagesOfAlbum(AlbumItem album)
         {
             List<ImageItem> images = new List<ImageItem>();
@@ -618,6 +613,7 @@ namespace AlbumMaker.Classes.Db
             return album.GetImages().Count;
              
         }
+        // The function creates a image in images table.
         public static async Task<bool> CreateImage(AlbumItem album, string imagePath, string imageDescription)
         {
             try
@@ -652,6 +648,8 @@ namespace AlbumMaker.Classes.Db
             }
             catch  { return false; throw; }
         }
+
+        // The function update image, it can update location on the disk of the image or description (but its used really for updating description)
         public static async Task<bool> UpdateImage(ImageItem image)
         {
             if (image == null)
@@ -681,6 +679,8 @@ namespace AlbumMaker.Classes.Db
 
 
         }
+
+        // The function delete from database (deleting from disk is not handled here)
         public static async Task<bool> DeleteImage(ImageItem image)
         {
             if (image == null)

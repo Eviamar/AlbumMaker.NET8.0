@@ -13,6 +13,7 @@ using System.Windows.Forms;
 
 namespace AlbumMaker.Classes.Custom
 {
+    // This class was meant to be a custom messagbox but actually became the way of how we edit users ;)
     public partial class MsgBox : Form
     {
         private TextBox txtBoxName;

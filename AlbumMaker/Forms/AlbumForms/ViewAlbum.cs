@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace AlbumMaker.Forms.AlbumForms
 {
+    // This User Control is made for displaying the album in a nice view.
     public partial class ViewAlbum : UserControl
     {
         private int albumID;
@@ -33,7 +34,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 null, tableLayoutPanelImages, new object[] { true });
         }
 
-
+        // Function to navigate back to My Album 'page'.
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyAlbums myAlbums = new MyAlbums();
@@ -46,7 +47,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 myAlbums.Show();
             }
         }
-
+        
         private void ViewAlbum_Load(object sender, EventArgs e)
         {
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
@@ -58,6 +59,9 @@ namespace AlbumMaker.Forms.AlbumForms
             LoadImages(index);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {albumItem}";
         }
+
+        // Function that allows the user to click on the image and open it with the default windows picture viewer for a bigger screen view.
+        // Used this option to save from our app another window for opening the image in a new form as a background on maximized window
         private void OpenImage(object sender, EventArgs e)
         {
             PictureBox p = (PictureBox)sender;
@@ -67,6 +71,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 UseShellExecute = true
             });
         }
+        // This function loads the images from the album to the memory for faster loading to the UI.
         private void PreloadImagesToMemory()
         {
             for (int i = 0; i < albumItem.GetImages().Count; i++)
@@ -82,6 +87,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 catch { throw; }
             }
         }
+        // This function add the stroke visual to the text (the border to the letters) so it will be clearer to watch the text if the image is too bright.
         private void DigiLabelPaint(object sender, PaintEventArgs e)
         {
             Label lbl = sender as Label;
@@ -129,6 +135,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 }
             }
         }
+        // This function loads the images to the UI
         public async void LoadImages(int index)
         {
             // Set album details
@@ -281,6 +288,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 }
             }
         }
+        // "Navigate" to previous 'page' in the album view 
         private void btnLeft_Click(object sender, EventArgs e)
         {
             // Check if we can move back by 5 images
@@ -299,7 +307,7 @@ namespace AlbumMaker.Forms.AlbumForms
             // Ensure the right button is enabled since we moved left and there are more images
             btnRight.Enabled = index + 5 < albumSize;
         }
-
+        // "Navigate" to previous 'page' in the album view.
         private void btnRight_Click(object sender, EventArgs e)
         {
             // Check if there are more images to show

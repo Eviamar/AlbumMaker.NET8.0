@@ -1,8 +1,10 @@
 ﻿
 namespace AlbumMaker.Classes.Items
 {
+    // This class was made to handle files (for using in Scan Drive form)
     public class FileItem : Item
     {
+        // Although the Item class has name variable already but this one requires a one that is also public for DataBiding (in scan form) ¯\_(ツ)_/¯
         public string Name { get; private set; }
         public string Extension { get; private set; }
         public string RootDrive { get; private set; }

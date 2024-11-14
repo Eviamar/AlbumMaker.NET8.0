@@ -14,6 +14,8 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace AlbumMaker.Forms
 {
+
+    // This User Control made for scanning images from the user's pc drive(s).
     public partial class ScanForImages : UserControl
     {
         private int id;
@@ -51,6 +53,9 @@ namespace AlbumMaker.Forms
                 this.images = images;
         }
 
+        // This function handles what happens when mouse clicked on a header.
+        // Made for sorting by ascending/decending order.
+        // Runs the SortDataAlphabetically function.
         private void DataGridView1_ColumnHeaderMouseClick(object? sender, DataGridViewCellMouseEventArgs e)
         {
             // Get the column that was clicked
@@ -85,6 +90,7 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // The function sorting the clicked column header by alphabet. 
         private void SortDataAlphabetically(string columnName)
         {
             // Sort alphabetically based on the sortOrder
@@ -97,7 +103,7 @@ namespace AlbumMaker.Forms
                 dataGridView1.DataSource = new BindingList<FileItem>(scannedFiles.OrderByDescending(f => typeof(FileItem).GetProperty(columnName).GetValue(f, null)).ToList());
             }
         }
-
+        // This function sorting the clicked column header by date (for date column).
         private void SortDataByDate(string columnName)
         {
             // Sort by date based on the sortOrder
@@ -112,7 +118,8 @@ namespace AlbumMaker.Forms
         }
 
 
-
+        // This function handles what happens upon clicking on a cell in the datagrid.
+        // Made this function for saving which row clicked to add the selected file to the list.
         private void DataGridView1_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -125,7 +132,9 @@ namespace AlbumMaker.Forms
 
             }
         }
-
+        // This function handles double click on a cell.
+        // It was made so the user can view the image before adding it to the list.
+        // Previously it was displayed in a picture box but after many changes to this form there was no space remain for it.
         private void DataGridView1_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -143,6 +152,8 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // This function gets all drives available in the user's pc 
+        // Also adds a function on clicking on each button related to a drive (for scanning).
         private void GetDrives()
         {
             DriveInfo[] allDrives = DriveInfo.GetDrives();
@@ -158,12 +169,16 @@ namespace AlbumMaker.Forms
                 flowLayoutPanelDrives.Controls.Add(btn);
             }
         }
-
+        // This function is a button event click that runs the function ScanSelectedDrive
+        // More on that later.
         private void Button_MouseClick(object? sender, MouseEventArgs e, string drivePath)
         {
             ScanSelectedDrive(drivePath);
         }
 
+        // This function handles the scanning of a drive (each drive has a button so by clicking on a button for example called C:\
+        // The function gets the string which is the drive and scan all of it (can take a lot of time thats why added progress bar)
+        // Scans all files and seeks for file extensions in 'pictureExtensions' variable, adding them to a list.
         private async void ScanSelectedDrive(string drivePath)
         {
             scannedFiles.Clear();
@@ -221,6 +236,7 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // This function is made for counting files so the UI of progress bar will be displayed according to the ongoing progress.
         private int CountFiles(string folderPath, string[] pictureExtensions)
         {
             int count = 0;
@@ -246,6 +262,9 @@ namespace AlbumMaker.Forms
             }
             return count;
         }
+
+
+        // This function do the actual scan in a recursive way (goes into each folder within folder until no more sub-folders).
 
         private void ScanFolderRecursive(string folderPath, string[] pictureExtensions, CancellationToken token, IProgress<int> progress, int totalFiles)
         {
@@ -289,25 +308,9 @@ namespace AlbumMaker.Forms
                 throw;
             }
         }
-        private void OpenImage(object sender, EventArgs e, PictureBox pb)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = pb.ImageLocation,
-                UseShellExecute = true
-            });
-        }
 
-        private List<FileItem> FilterByRoot(string root)
-        {
-            return scannedFiles.Where(file => file.RootDrive == root).ToList();
-        }
-
-        private List<FileItem> FilterByDate(DateTime date)
-        {
-            return scannedFiles.Where(file => file.CreatedDate >= date || file.ModifiedDate >= date).ToList();
-        }
-
+        // This function cancel and dispose the token.
+        // Token is made so the task of scanning will stop if user close the window and not run in the background.
         private void ScanForImages_Leave(object sender, EventArgs e)
         {
             cancellationTokenSource?.Cancel();
@@ -345,6 +348,7 @@ namespace AlbumMaker.Forms
 
         }
 
+        // This function is a button event click to filter the data by the date selected.
         private void btnFilter_Click(object sender, EventArgs e)
         {
             if (scannedFiles.Count == 0)
@@ -386,6 +390,7 @@ namespace AlbumMaker.Forms
             lblInfoFilter.Text = "Could not find any files matched to the date you picked";
         }
 
+        // This function add selected row to the list of images the user will take to the create album.
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (selectedFile != null)
@@ -406,7 +411,7 @@ namespace AlbumMaker.Forms
 
             }
         }
-
+        // This function handles deleting the image from the list and the UI.
         private void Picture_ImageDeleted(object? sender, int e)
         {
             DigiBumPictureBox digi = (DigiBumPictureBox)sender;
@@ -420,6 +425,7 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // This function handles the button confirm event click that take all selected images back to the previous 'page' and proceed to create album. 
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             if (flpSelectedImages.Controls.Count == 0 && this.images.Count == 0 || flpSelectedImages.Controls.Count == 0)

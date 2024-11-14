@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace AlbumMaker.Classes.Items
 {
-    public class Item
+    // This class was made to make things easier for us to handle files and objects in the app.
+    public abstract class Item
     {
         private int id;
         private string name;

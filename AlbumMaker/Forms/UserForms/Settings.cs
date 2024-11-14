@@ -8,17 +8,13 @@ using System.Windows.Forms;
 
 namespace AlbumMaker.Forms
 {
+    // This User Control gives the user the ability to change application look and saved app files location.
+    // It gets the timer because there was a UI bug when changing font size, the size didn't apply to the menu, so it makes it "refresh".
     public partial class Settings : UserControl
     {
         private bool isLoading = true;
         private System.Windows.Forms.Timer timerClose;
         private System.Windows.Forms.Timer timerOpen;
-        public Settings()
-        {
-            InitializeComponent();
-            AddSizesToComboBox();
-            this.AutoScroll = true;
-        }
         public Settings(System.Windows.Forms.Timer timerClose, System.Windows.Forms.Timer timerOpen)
         {
             InitializeComponent();
@@ -27,7 +23,7 @@ namespace AlbumMaker.Forms
             this.timerOpen = timerOpen;
             this.AutoScroll = true;
         }
-
+        // Function of a raido button that applies light theme to the application
         private void radioButtonLight_CheckedChanged(object sender, EventArgs e)
         {
             Properties.AppSettings.Default.isDark = false;
@@ -36,6 +32,7 @@ namespace AlbumMaker.Forms
 
         }
 
+        // Function of a raido button button that applies dark theme to the application
         private void radioButtonDark_CheckedChanged(object sender, EventArgs e)
         {
             Properties.AppSettings.Default.isDark = true;
@@ -75,7 +72,7 @@ namespace AlbumMaker.Forms
 
             isLoading = false;
         }
-
+        // Function that populate the comboBox for sizes
         private void AddSizesToComboBox()
         {
             List<KeyValuePair<string, float>> keyValuePairs = new List<KeyValuePair<string, float>>()
@@ -89,7 +86,7 @@ namespace AlbumMaker.Forms
             comboBoxFontSize.ValueMember = "Value";
 
         }
-
+        // Function that handles the selected font size.
         private void comboBoxFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!isLoading)
@@ -109,6 +106,7 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // The function handles the change of application location, it does only copy and does not delete previous old folder.
         public void CopyDirectory(string sourceDir, string destinationDir, bool copySubDirs)
         {
             // Get the subdirectories for the specified directory.
@@ -144,14 +142,9 @@ namespace AlbumMaker.Forms
                 }
             }
         }
-        private void CopyAppContent(string source, string destination)
-        {
-            try
-            {
-
-            }
-            catch { throw; }
-        }
+        // Function that handles the change location button event click
+        // It opens a file dialog so user select where to move the application data folder to.
+        // Runs the CopyDirectory functions 
         private void btnChangeDataLocation_Click(object sender, EventArgs e)
         {
             try
@@ -209,6 +202,7 @@ namespace AlbumMaker.Forms
             catch { throw; }
         }
 
+        // A hidden button (not available for users) used for developing progress easier to clear tables (when we ruined the tables and had to start over).
         private void btnDropTables_Click(object sender, EventArgs e)
         {
             
@@ -222,6 +216,7 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // Function of label click event that opens the folder in the windows explorer.exe (just a QoL for user to open app data folder). 
         private void lblDataLocation_Click(object sender, EventArgs e)
         {
             try
@@ -231,6 +226,9 @@ namespace AlbumMaker.Forms
             catch { throw; }
         }
 
+
+        // This function restore all settings to their default value (default vaules can be found in Properties=>AppSettings).
+        // It does not reset the database
         private void btnReset_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show("This will reset all saved settings to default (just like first time launching the app\nAre you sure?","Reset?",MessageBoxButtons.YesNo, MessageBoxIcon.Warning);

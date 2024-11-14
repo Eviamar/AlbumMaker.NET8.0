@@ -3,6 +3,8 @@
 
 namespace AlbumMaker.Classes
 {
+    // This class was made to throw errors in more convenient way; instead of try catch in every fucntion and write messagebox we just do 'throw;' 
+    // The 'throw;' runs this handler also log the issue in a file so the user can choose to open it and send it to us for fixing the bugs.
     internal static class AppErrorHandler
     {
         private static readonly string LogFilePath = Path.Combine(AppContext.BaseDirectory, $"error_log_{DateTime.Now.ToString("dd-MM-yyyy")}.log");

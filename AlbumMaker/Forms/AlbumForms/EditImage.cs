@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using AlbumMaker.Classes.Db;
 namespace AlbumMaker.Forms.AlbumForms
 {
+    // This User Control where the user edit image.
     public partial class EditImage : UserControl
     {
         private ImageItem image;
@@ -31,6 +32,7 @@ namespace AlbumMaker.Forms.AlbumForms
             InitializeComponent();
 
             this.image = image;
+            // This load the original image to the memory (to prevent 'file is being used' exception when trying to save (overwrite the file))
             using (FileStream fs = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
             {
                 byte[] imageData = new byte[fs.Length];
@@ -64,6 +66,7 @@ namespace AlbumMaker.Forms.AlbumForms
 
 
         }
+        // This function is toolstrip event click to go back to Edit Album 'page'
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -82,6 +85,8 @@ namespace AlbumMaker.Forms.AlbumForms
             catch { throw; }
 
         }
+
+
         private void EditImage_Load(object sender, EventArgs e)
         {
             panelPic.AutoScroll = true;
@@ -101,6 +106,8 @@ namespace AlbumMaker.Forms.AlbumForms
             pictureBoxPic.MouseEnter += (sender, args) => Cursor = Cursors.Hand;
             pictureBoxPic.MouseLeave += (sender, args) => Cursor = Cursors.Default;
         }
+
+        // This fuction handles the selected shape by the user; Runs the specific function for each shape.
         private void btnApplyShape_Click(object sender, EventArgs e)
         {
             if (!selectedPoint.IsEmpty)
@@ -141,6 +148,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 MessageBox.Show("Please click anywhere in the image to create a point where the shape will apply around it.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
+
+        // This function is for a text box for a custom size; It also checks digits only inserted.
         private void txtBoxCustomSize_TextChanged(object sender, EventArgs e)
         {
             try
@@ -159,6 +168,8 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
+       // This function is a label click event to open color dialog for user to choose their color1.
+       // Used For Filter function
         private void lblColor1_Click(object sender, EventArgs e)
         {
             ColorDialog c = new ColorDialog();
@@ -170,6 +181,8 @@ namespace AlbumMaker.Forms.AlbumForms
 
             }
         }
+        // This function is a label click event to open color dialog for user to choose their color2.
+        // Used For Filter function
         private void lblColor2_Click(object sender, EventArgs e)
         {
             ColorDialog c = new ColorDialog();
@@ -180,6 +193,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 lblColor2.Text = c2.Name;
             }
         }
+
+        // This function is a link label event click that set random colors and activate Filter to the image.
         private void linkLabelRandomColors_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -195,10 +210,13 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
+
+        // This fucntion applies filter colors to the image, based on Color1 and Color2.
         private void btnFilter_Click(object sender, EventArgs e)
         {
             try
             {
+                // First checks if colors are empty, if so gives user message that they need to select colors.
                 if (c1.IsEmpty || c2.IsEmpty)
                 {
                     MessageBox.Show("Choose colors", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -207,10 +225,10 @@ namespace AlbumMaker.Forms.AlbumForms
                 
                 UndoFunc();
 
-                // Create a filtered bitmap
+                // Create a filtered bitmap (to not work on the original image; so we keep original image untouched for clear all changes option)
                 Bitmap filteredBitmap = new Bitmap(originalImage);
 
-                // Apply filter using ColorMatrix
+                // Apply filter to the image using Color Matrix
                 using (Graphics g = Graphics.FromImage(filteredBitmap))
                 {
                     ColorMatrix colorMatrix = new ColorMatrix(
@@ -240,8 +258,11 @@ namespace AlbumMaker.Forms.AlbumForms
                 // Set the PictureBox's Image to the filtered image
                 pictureBoxPic.Image = filteredBitmap;
 
-                // Enable Undo and clear Redo stack
-
+                
+                // this code made for if there is shape already made to the image before filter,
+                // there was issue that the shape undo itself and the image becomes normal again with filter.
+                // so basically it keeps the shape and applies the filter
+                // (dont know how to do it otherwise)
                 if (selectedShape.Key != null && selectedShape.Value != 0)
                 {
                     btnApplyShape_Click(sender, e);
@@ -250,6 +271,8 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch (Exception) { }
         }
+        // The following undo redo functions are  button event click for undo/redo.
+        // in our app we have undo redo option to keep progres for each change so if user regret a change they can easily click the undo/redo button.
         private void btnUndo_Click(object sender, EventArgs e)
         {
             if (undoStack.Count > 0)
@@ -297,6 +320,9 @@ namespace AlbumMaker.Forms.AlbumForms
                 btnRedo.Enabled = false;
             }
         }
+
+        // This function is button event click thats clear all changes and restore the ORIGINAL IMAGE and set every other value to their default.
+        // Also clearing from memory all kept changes.
         private void btnClear_Click(object sender, EventArgs e)
         {
             pictureBoxPic.Image = null;
@@ -327,6 +353,10 @@ namespace AlbumMaker.Forms.AlbumForms
             
 
         }
+
+        // This function is track bar event scrolling that handles the brightness of the image.
+        // On the middle value of the track bar it restore the original image that was before user started sliding it (the state of the image that was before scrolling).
+        // It calls another function AdjustBrightness (more on that later).
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             UndoFunc();
@@ -357,6 +387,8 @@ namespace AlbumMaker.Forms.AlbumForms
 
         }
 
+
+        // This function is button event click that flips the image down or up  
         private void btnFlipUpDown_Click(object sender, EventArgs e)
         {
             try
@@ -375,7 +407,7 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
-
+        // This function is button event click that flips the image right or left  
         private void btnFlipLeftRight_Click(object sender, EventArgs e)
         {
             try
@@ -394,6 +426,9 @@ namespace AlbumMaker.Forms.AlbumForms
             catch { throw; }
         }
 
+        // This function is button event click that handles saving the image in the PictureBox (after all changes made by user).
+        // It overrwrites the selected image.
+        // Also check if user add description to the image and if they want to add one.
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -412,6 +447,8 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
+        // This function is button event click for adding description to the image.
+        // It connects to the database (images table) and write the description to the row of said image.
         private async void btnApplyDesc_Click(object sender, EventArgs e)
         {
 
@@ -428,6 +465,9 @@ namespace AlbumMaker.Forms.AlbumForms
         }
 
         #region Functions
+
+        // This function takes the user one step before the current changes made by our image edit, in case user regret changes.
+        // it is limited by MaxUndoSteps so to keep memory usage low as possible.
         private void UndoFunc()
         {
             if (undoStack.Count >= MaxUndoSteps)
@@ -446,11 +486,15 @@ namespace AlbumMaker.Forms.AlbumForms
             undoStack.Push(new Bitmap(pictureBoxPic.Image));
             btnUndo.Enabled = true;
         }
+        // This function handles the setting of the variable selectedPoint.
+        // It is used for shaping.
         private void SetPoint(object sender, MouseEventArgs e)
         {
             selectedPoint = new Point(e.X, e.Y);
             grpBoxShapes.Text = $"Shape - (X:{e.X},Y:{e.Y})";
         }
+
+        // This function handles the shaping of the image to a circle shape based on selected point, and size.
         private void ShapeCircle()
         {
             try
@@ -488,6 +532,7 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
+        // This function handles the shaping of the image to a ellipse shape based on selected point, and size.
         private void ShapeEllipse()
         {
             try
@@ -525,6 +570,7 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
+        // This function handles the shaping of the image to a diamond shape based on selected point, and size.
         private void ShapeDiamod()
         {
             try
@@ -569,6 +615,7 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
+        // This function handles the shaping of the image to a square shape based on selected point, and size.
         private void ShapeSquare()
         {
             try
@@ -606,6 +653,7 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             catch { throw; }
         }
+        // This function handles the shaping of the image to a rectangle shape based on selected point, and size.
         private void ShapeRectangle()
         {
             try
@@ -647,6 +695,7 @@ namespace AlbumMaker.Forms.AlbumForms
             catch { throw; }
         }
 
+        //This function handles the brightness based on trackbar value (sliding value).
         private float CalculateBrightness(int trackbarValue)
         {
             // Convert trackbar value to a brightness multiplier
@@ -654,6 +703,7 @@ namespace AlbumMaker.Forms.AlbumForms
             return brightness;
         }
 
+        // This function applies the selected brightness to the picture box image.
         private void AdjustBrightness(float brightnessValue)
         {
             try
@@ -704,6 +754,8 @@ namespace AlbumMaker.Forms.AlbumForms
             }
         }
 
+
+        // This function saves the image in the picture box to the disk (overwrites the previous one).
         private void SaveImage()
         {
             try

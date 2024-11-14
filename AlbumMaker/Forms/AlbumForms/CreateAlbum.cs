@@ -10,21 +10,26 @@ using System.Security.Cryptography;
 
 namespace AlbumMaker.Forms
 {
+    // This is a User Control which handles all needs to create an album.
     public partial class CreateAlbum : UserControl
     {
         private string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\";
         private int imageCount = 0;
         private List<KeyValuePair<int,string>> images = new List<KeyValuePair<int,string>>();
         private string[] albumInfo = new string[2];
+        // Default constructor used as the first time arriving to this control.
         public CreateAlbum()
         {
             InitializeComponent();
         }
+        // Second constructor made so it can pass information already applied to the form to the next (Scan) form so when going back no need to insert again.
+        // EX: for when user type title and description (or images) and going to Scan form this information kept when coming back here.
         public CreateAlbum(List<string> images, string[] albumInfo)
         {
             InitializeComponent();
             LoadImagesFromScan(images,albumInfo);
         }
+        // This function loads information coming from Scan form.
         private async void LoadImagesFromScan(List<string> images, string[] albumInfo)
         {
             await Task.Run(() =>
@@ -46,6 +51,8 @@ namespace AlbumMaker.Forms
                 }
             });
         }
+        // This function is a toolstrip click event that takes the user to Scan form
+        // It checks if there are images already selected and gives the user options to keep them or discard while going to Scan.
         private void scanFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             albumInfo[0] = textBoxAlbumName.Text;
@@ -99,6 +106,7 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // This function is toolstrip event click to go back to 'My Albums'.
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MyAlbums myAlbums = new MyAlbums();
@@ -119,12 +127,12 @@ namespace AlbumMaker.Forms
 
 
         }
-
+        // This function is a toolstrip event click, opens file dialog to select images.
+        // It also check and prevent user to select same image (from same path) more than once.
         private async void chooseImagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-
                 using (OpenFileDialog ofd = new OpenFileDialog())
                 {
                     ofd.Multiselect = true;
@@ -168,6 +176,8 @@ namespace AlbumMaker.Forms
             }
             catch { throw; }
         }
+
+        // This function handles deleting image from the UI and the list of pictures the user selected.
         private void Picture_ImageDeleted(object sender, int tabIndex)
         {
             // Find the image in the list that has the matching TabIndex
@@ -186,6 +196,9 @@ namespace AlbumMaker.Forms
                 }
             }
         }
+        // This function is part of the album creating methods, it takes the images selected by the user and creating ImageItem out of them.
+        // Basically it gets image path (D:\image.png) and make it object of ImageItem to make it easier to make it in database.
+
         private async Task<List<ImageItem>> ConvertSelectedPicturesToImageItem(int albumID)
         {
             List<ImageItem> imageList = new List<ImageItem>();
@@ -196,6 +209,8 @@ namespace AlbumMaker.Forms
             await Task.CompletedTask;
             return imageList;
         }
+        // This function is also part of album creating methods, this one handles the copying the selected files by the user to a different folder (app folder).
+        // This is so the user is keeping the original images so the application will not harm the original images in case of a mistake editing or regret.
         private async Task<List<KeyValuePair<int, string>>> CopyFilesToAppFolder(List<KeyValuePair<int,string>> selectedFiles,int albumID)
         {
             try
@@ -230,6 +245,10 @@ namespace AlbumMaker.Forms
             catch { Cursor = Cursors.Default; return null; throw; }
             
         }
+
+        // This function is submit button event click that trigger the creating of an album.
+        // The function checks if there are images selected, if the title, description and template is not left untouched.
+        // It connects to the database, creating the row(s) needed (Albums table and Images).
         private async void buttonSubmitAlbum_Click(object sender, EventArgs e)
         {
             try
@@ -258,8 +277,6 @@ namespace AlbumMaker.Forms
 
                 if (albumID > 0)
                 {
-                    // TO DO: Checked! VVV need to copy the files, then get the new location and update the image list value with the new location AND THEN run the database create
-                    // perhaps need to add more logic if a database fail need to retry or if copy fail to retry x times and return success accordingly 
                     images = await CopyFilesToAppFolder(images,albumID);
                     if (images != null)
                     {
@@ -285,6 +302,7 @@ namespace AlbumMaker.Forms
             }
             catch { throw; }
         }
+        // This function returns the user back to My Album (one 'page' before).
         private void NavigateToMyAlbums()
         {
             MyAlbums myAlbums = new MyAlbums();

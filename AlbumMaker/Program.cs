@@ -8,7 +8,7 @@ namespace AlbumMaker
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-
+            // Here handle the exception (if) thrown
             Application.ThreadException += (sender, e) => AppErrorHandler.LogError(e.Exception);
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {

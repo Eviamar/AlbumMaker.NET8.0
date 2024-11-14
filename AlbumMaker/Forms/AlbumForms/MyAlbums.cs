@@ -7,6 +7,9 @@ using AlbumMaker.Properties;
 
 namespace AlbumMaker.Forms
 {
+    // This handles My Album 
+    // The 'page' (User control) which user see upon login
+    // Here user view their albums and from here editing/deleting albums
     public partial class MyAlbums : UserControl
     {
         public MyAlbums()
@@ -14,6 +17,9 @@ namespace AlbumMaker.Forms
             InitializeComponent();
             this.AutoScroll = true;
         }
+
+
+        // This function handles clicking on the album for viewing the album.
         private void Picture_AlbumView(AlbumItem album)
         {
             // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
@@ -29,6 +35,8 @@ namespace AlbumMaker.Forms
             
 
         }
+
+        // This function is event click of toolstip to navigate to create album 'page'.
         private void createNewAlbumToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateAlbum albumCreate = new CreateAlbum();
@@ -41,6 +49,7 @@ namespace AlbumMaker.Forms
                 albumCreate.Show();
             }
         }
+        // This function load the current logged in user albums to the UI.
         private void LoadAlbums()
         {
             try

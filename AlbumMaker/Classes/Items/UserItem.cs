@@ -1,6 +1,7 @@
 ﻿
 namespace AlbumMaker.Classes.Items
 {
+    // This class was made to make easier to handle users along our application
     public class UserItem : Item
     {
         private string password;

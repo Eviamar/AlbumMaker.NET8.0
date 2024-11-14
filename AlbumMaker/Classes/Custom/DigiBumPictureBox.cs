@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 namespace AlbumMaker.Classes.Custom
 {
+    // this class is to make a custom picture box fitting our needs
     internal class DigiBumPictureBox : PictureBox
     {
         public Button DeleteButton { get; private set; }
@@ -21,6 +22,7 @@ namespace AlbumMaker.Classes.Custom
         private static readonly string pictureFolderPath = $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\";
 
         #region constructor for image view
+        // this constructor for image view only with 2 options inside it depending on isEdit)
         public DigiBumPictureBox(ImageItem image,bool isEdit)
         {
             Size = new Size(200, 200);
@@ -197,6 +199,7 @@ namespace AlbumMaker.Classes.Custom
         }
         #endregion constructor for image view
         #region constructor for album view
+        //mostly like image view but this one is for album view with options fitting to album this also have 2 options with isEdit
         private void DigiLabelPaint(object sender, PaintEventArgs e)
         {
             Label lbl = sender as Label;
@@ -423,6 +426,8 @@ namespace AlbumMaker.Classes.Custom
 
         }
         #endregion  constructor for album view
+
+        // This function makes a smaller image of the original image for viewing purpose to reduce memory and make displaying them smoother on the UI(a thumbnail)
         private static Image GenerateSmallerImage(string path, int width, int height)
         {
             Bitmap b = null;

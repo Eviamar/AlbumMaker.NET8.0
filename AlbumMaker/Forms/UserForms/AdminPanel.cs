@@ -7,6 +7,7 @@ using AlbumMaker.Properties;
 
 namespace AlbumMaker.Forms.UserForms
 {
+    // This User Control made for admin to handle the application users.
     public partial class AdminPanel : UserControl
     {
         public AdminPanel()
@@ -24,6 +25,8 @@ namespace AlbumMaker.Forms.UserForms
             
 
         }
+        // This function loads all users in users table into a flow layout panel into a group box for each user and there user's album can be display/edit/delete.
+        // Also by clicking on said group box DOUBLE CLICK admin can edit the user itself (can change name,password and admin status).
         private void LoadDataToPanel()
         {
             try

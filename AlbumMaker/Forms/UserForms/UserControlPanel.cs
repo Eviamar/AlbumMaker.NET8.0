@@ -6,6 +6,8 @@ using AlbumMaker.Properties;
 
 namespace AlbumMaker.Forms
 {
+    // This User Control made so user can change their information and more QoL:
+    // such us keep me logged on next app opens or just remember user name for login 'page'.
     public partial class UserControlPanel : UserControl
     {
         public UserControlPanel()
@@ -15,7 +17,7 @@ namespace AlbumMaker.Forms
 
 
         }
-
+        // This function updates the input to the database for the secret question used for restoring forgotten password.
         private async void btnUpdateQuestion_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(textBoxAnswer.Text))
@@ -51,6 +53,8 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // This function is check box event change that handles the information-
+        // saving of user name for future login 'page' landing the name will be filled in user name text box.
         private void checkBoxRememberMe_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -61,6 +65,7 @@ namespace AlbumMaker.Forms
 
             Properties.AppSettings.Default.Save();
         }
+
 
         private void UserControlPanel_Load(object sender, EventArgs e)
         {
@@ -81,7 +86,9 @@ namespace AlbumMaker.Forms
             richTextBoxQuestion.Text = SettingsManager.userItem.GetQuestion();
             textBoxAnswer.PlaceholderText = SettingsManager.userItem.GetAnswer();
         }
-
+        // Function of a button event click to update the password
+        // it checks logic if the old password is current and not same as the new password
+        // checks if new password is match (new password1 == new password2)
         private async void btnUpdatePassword_Click(object sender, EventArgs e)
         {
             if (textBoxCurrentPassword.Text != SettingsManager.userItem.GetPassword())
@@ -101,6 +108,7 @@ namespace AlbumMaker.Forms
 
         }
 
+        // Function for check box change to display/hide password
         private void checkBoxShowHide_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxShowHide.Checked)
@@ -117,6 +125,7 @@ namespace AlbumMaker.Forms
             }
         }
 
+        // Function for check box change if marked the next time the user open the application it will be automatically logged in.
         private void checkBoxLoginAuto_CheckedChanged(object sender, EventArgs e)
         {
             if(checkBoxLoginAuto.Checked)
