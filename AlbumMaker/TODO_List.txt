@@ -1,4 +1,6 @@
 ﻿upon trying to create a album with a name that already exist nothing happens, it needs to return a message to the user
+on scan form when filter, and filter by date not found specific date it gives all images of the selected year, maybe add option to display by selected month of the selected year in a message bow dialog.
+add delete user option?
 
 V When swapping accounts while saving to login me next time message box appear with incorrect password.
 V IMPORTANT: in creating album => maybe try to find a way to append images instead of wiping them when clicking scan/select images (or ask to keep or delete)

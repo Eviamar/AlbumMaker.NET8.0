@@ -41,7 +41,7 @@ namespace AlbumMaker.Classes.Db
                         CREATE TABLE IF NOT EXISTS Albums (
                         ALBUM_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                         USER_ID INT NOT NULL,
-                        Album_Name NVARCHAR(100) NOT NULL UNIQUE,
+                        Album_Name NVARCHAR(100) NOT NULL,
                         Album_Description NVARCHAR(255) NOT NULL,
                         Album_Template NVARCHAR(100) NOT NULL,
                         FOREIGN KEY (USER_ID) REFERENCES Users(USER_ID));",
