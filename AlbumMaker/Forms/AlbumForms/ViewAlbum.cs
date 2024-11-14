@@ -82,6 +82,53 @@ namespace AlbumMaker.Forms.AlbumForms
                 catch { throw; }
             }
         }
+        private void DigiLabelPaint(object sender, PaintEventArgs e)
+        {
+            Label lbl = sender as Label;
+
+            if (lbl != null)
+            {
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                string text = lbl.Text;
+                Font font = lbl.Font;
+
+                // Define colors for stroke and fill
+                Color strokeColor = Color.Black; // Border color
+                Color textColor = lbl.ForeColor; // Text color
+
+                // Stroke width
+                float strokeWidth = 2f;
+
+                // Create brushes
+                using (Brush textBrush = new SolidBrush(textColor))
+                using (Pen strokePen = new Pen(strokeColor, strokeWidth))
+                {
+                    strokePen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round; // Prevent sharp edges
+
+                    // Measure text size
+                    SizeF textSize = e.Graphics.MeasureString(text, font);
+
+                    // Get text position
+                    PointF textPosition = new PointF(
+                        (lbl.Width - textSize.Width) / 2, // Center horizontally
+                        (lbl.Height - textSize.Height) / 2 // Center vertically
+                    );
+
+                    // Draw stroke (outline) by drawing text multiple times around the position
+                    for (float x = -strokeWidth; x <= strokeWidth; x += 1f)
+                    {
+                        for (float y = -strokeWidth; y <= strokeWidth; y += 1f)
+                        {
+                            e.Graphics.DrawString(text, font, strokePen.Brush, textPosition.X + x, textPosition.Y + y);
+                        }
+                    }
+
+                    // Draw the actual text on top of the stroke
+                    e.Graphics.DrawString(text, font, textBrush, textPosition);
+                }
+            }
+        }
         public async void LoadImages(int index)
         {
             // Set album details
@@ -135,9 +182,11 @@ namespace AlbumMaker.Forms.AlbumForms
                 {
                     AutoSize = true,
                     Text = albumItem.GetImages()[j].GetDescription(),
-                    Location = new Point(0, 0)
+                    Location = new Point(0, 0),
+                    BackColor = Color.Transparent
+                    
                 };
-
+                l.Paint += DigiLabelPaint;
                 // Add the label on top of the PictureBox
                 p.Controls.Add(l);
 
