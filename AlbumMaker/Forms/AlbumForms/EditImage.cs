@@ -88,26 +88,6 @@ namespace AlbumMaker.Forms.AlbumForms
 
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
 
-
-
-
-
-
-
-            //using (FileStream fileStream = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
-            //{
-            //    using (MemoryStream memoryStream = new MemoryStream())
-            //    {
-            //        // Copy the file's content to the memory stream
-            //        fileStream.CopyTo(memoryStream);
-            //        // Reset the position of the stream to the beginning
-            //        memoryStream.Seek(0, SeekOrigin.Begin);
-
-            //        // Load the image from the MemoryStream
-            //        pictureBoxPic.Image = Image.FromStream(memoryStream);
-            //    } // MemoryStream is disposed of here
-            //} // FileStream is disposed of here
-
             pictureBoxPic.SizeMode = PictureBoxSizeMode.AutoSize;
             if (pictureBoxPic.Image.Width > panelPic.Width || pictureBoxPic.Image.Height > panelPic.Height)
             {
@@ -213,10 +193,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 lblColor2.BackColor = c2;
                 lblColor1.Text = c1.Name;
                 lblColor2.Text = c2.Name;
-                //if (shapedImage == null)
-                //    Filter((Bitmap)originImage, c1, c2);
-                //else
-                //    Filter((Bitmap)shapedImage, c1, c2);
+                btnFilter_Click(sender, e);
 
             }
             catch { throw; }
@@ -352,6 +329,7 @@ namespace AlbumMaker.Forms.AlbumForms
             GC.Collect();
             GC.WaitForPendingFinalizers();
             pictureBoxPic.Image = originalImage;
+            
 
         }
         private void trackBar1_Scroll(object sender, EventArgs e)

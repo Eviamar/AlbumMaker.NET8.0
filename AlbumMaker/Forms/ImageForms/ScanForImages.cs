@@ -310,8 +310,8 @@ namespace AlbumMaker.Forms
 
         private void ScanForImages_Leave(object sender, EventArgs e)
         {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
         }
 
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
