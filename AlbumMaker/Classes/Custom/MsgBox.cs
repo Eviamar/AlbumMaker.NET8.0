@@ -58,14 +58,12 @@ namespace AlbumMaker.Classes.Custom
 
         private async void Btn_Click(object? sender, EventArgs e)
         {
-
             if(user.GetID() == 1 && checkBox.Checked != user.GetIsAdmin())
             {
                 MessageBox.Show("This user is the root user, cannot revoke admin rights from this user.",
                    "Information",MessageBoxButtons.OK,MessageBoxIcon.Information);
                 return;
             }
-
             if (!String.IsNullOrWhiteSpace(txtBoxPassword.Text) && !String.IsNullOrWhiteSpace(txtBoxName.Text))
             {
                 if (SettingsManager.userItem.GetName() == user.GetName())
@@ -92,8 +90,7 @@ namespace AlbumMaker.Classes.Custom
                     user.SetNewName(txtBoxName.Text);
                     user.SetNewPassword(txtBoxPassword.Text);
                     bool beforeChange = user.GetIsAdmin();
-                    user.SetIsAdmin(checkBox.Checked);
-                    
+                    user.SetIsAdmin(checkBox.Checked); 
                     bool res = await AppDataBase.UpdateUser(user);
                     if (res)
                     {
@@ -104,7 +101,6 @@ namespace AlbumMaker.Classes.Custom
                             MessageBox.Show("Because you disabled admin role from yourself the application will perform a restart", "Information");
                             Application.Restart();
                         }
-
                     }
                     this.Close();
                 }
@@ -133,7 +129,6 @@ namespace AlbumMaker.Classes.Custom
             this.Font = new Font(Form.DefaultFont.FontFamily, Properties.AppSettings.Default.FontSize);
             this.ForeColor = AppSettings.Default.isDark ? SettingsManager.ConvertHexToColor(DarkThemeSettings.Default.Foreground) : SettingsManager.ConvertHexToColor(LightThemeSettings.Default.Foreground);
             this.BackColor = AppSettings.Default.isDark ? SettingsManager.ConvertHexToColor(DarkThemeSettings.Default.Background) : SettingsManager.ConvertHexToColor(LightThemeSettings.Default.Background);
-            
         }
     }
 }

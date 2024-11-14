@@ -4,8 +4,7 @@ namespace AlbumMaker.Classes.Items
 
     // This class was made to handle albums 
     public class AlbumItem : Item
-    {
-        
+    {    
         private string description;
         private string template;
         private List<ImageItem> images;

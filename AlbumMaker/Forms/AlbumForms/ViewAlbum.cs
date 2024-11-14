@@ -24,7 +24,6 @@ namespace AlbumMaker.Forms.AlbumForms
             this.albumItem = albumItem;
             index = 0;
             page = 1;
-
             //this remove the flickering UI visual while loading the content into the tableLayoutPanelImages
             this.DoubleBuffered = true;
             typeof(Control).InvokeMember("DoubleBuffered",
@@ -54,7 +53,6 @@ namespace AlbumMaker.Forms.AlbumForms
             SettingsManager.SetTheme(this);
             if (albumItem == null)
                 return;
-
             albumSize = albumItem.GetImages().Count;
             LoadImages(index);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {albumItem}";
@@ -91,36 +89,28 @@ namespace AlbumMaker.Forms.AlbumForms
         private void DigiLabelPaint(object sender, PaintEventArgs e)
         {
             Label lbl = sender as Label;
-
             if (lbl != null)
             {
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
                 string text = lbl.Text;
                 Font font = lbl.Font;
-
                 // Define colors for stroke and fill
                 Color strokeColor = Color.Black; // Border color
                 Color textColor = lbl.ForeColor; // Text color
-
                 // Stroke width
                 float strokeWidth = 2f;
-
                 // Create brushes
                 using (Brush textBrush = new SolidBrush(textColor))
                 using (Pen strokePen = new Pen(strokeColor, strokeWidth))
                 {
                     strokePen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round; // Prevent sharp edges
-
                     // Measure text size
                     SizeF textSize = e.Graphics.MeasureString(text, font);
-
                     // Get text position
                     PointF textPosition = new PointF(
                         (lbl.Width - textSize.Width) / 2, // Center horizontally
                         (lbl.Height - textSize.Height) / 2 // Center vertically
                     );
-
                     // Draw stroke (outline) by drawing text multiple times around the position
                     for (float x = -strokeWidth; x <= strokeWidth; x += 1f)
                     {
@@ -129,7 +119,6 @@ namespace AlbumMaker.Forms.AlbumForms
                             e.Graphics.DrawString(text, font, strokePen.Brush, textPosition.X + x, textPosition.Y + y);
                         }
                     }
-
                     // Draw the actual text on top of the stroke
                     e.Graphics.DrawString(text, font, textBrush, textPosition);
                 }
@@ -141,7 +130,6 @@ namespace AlbumMaker.Forms.AlbumForms
             // Set album details
             labelTitle.Text = albumItem.GetName();
             labelDesc.Text = albumItem.GetDescription();
-
             if (index < 0 || index >= albumItem.GetImages().Count)
                 return;
             PreloadImagesToMemory();
@@ -149,21 +137,17 @@ namespace AlbumMaker.Forms.AlbumForms
             tableLayoutPanelImages.RowCount = 3; // Fixed row count
             tableLayoutPanelImages.ColumnCount = 3; // Fixed column count
             tableLayoutPanelImages.AutoSize = false; // Disable auto-size to prevent adding extra rows/columns
-
             // Clear previous controls from the TableLayoutPanel
             tableLayoutPanelImages.Controls.Clear();
-
             // Loop through the images and place them in the TableLayoutPanel based on the template
             for (int j = index, i = 0; j < albumItem.GetImages().Count && i < 5; j++, i++)
             {
-                
                 PictureBox p = new PictureBox()
                 {
                     Dock = DockStyle.Fill,
                     SizeMode = PictureBoxSizeMode.StretchImage,
                     //Image = imageCache.ContainsKey(j) ? imageCache[j] : null, // Use preloaded image from cache
                     ImageLocation = albumItem.GetImages()[j].GetImagePath(),
-                    
                 };
                 await Task.Run(() =>
                 {
@@ -179,7 +163,6 @@ namespace AlbumMaker.Forms.AlbumForms
                         p.Image = img;
                     }
                 });
-               
                 // Create the PictureBox for each image
                 p.Click += OpenImage;
                 p.MouseEnter += (sender, e) => p.Cursor = Cursors.Hand;
@@ -196,10 +179,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 l.Paint += DigiLabelPaint;
                 // Add the label on top of the PictureBox
                 p.Controls.Add(l);
-
                 // Initialize row and column
                 int row = -1, col = -1;
-
                 // Determine row/column based on template and image index
                 switch (albumItem.GetTemplate())
                 {
@@ -227,18 +208,15 @@ namespace AlbumMaker.Forms.AlbumForms
                     default:
                         return; // Exit the function if the template doesn't match
                 }
-
                 if (row == -1 || col == -1)
                 {
                     // Exit if the position is invalid
                     this.Dispose();
                     return;
                 }
-
                 // Add PictureBox to the TableLayoutPanel
                 Invoke((Action)(() => tableLayoutPanelImages.Controls.Add(p, col, row))); // Update UI safely
             }
-
             // Fill any remaining empty cells in the TableLayoutPanel
             FillRemainingCells();
         }
@@ -281,7 +259,6 @@ namespace AlbumMaker.Forms.AlbumForms
                             ImageLocation = pictures[picturesCount % pictures.Length], // Use a placeholder image
                         };
                         picturesCount++;
-
                         // Add the PictureBox to the TableLayoutPanel
                         tableLayoutPanelImages.Controls.Add(pictureBox, col, row);
                     }
@@ -300,10 +277,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 LoadImages(index);
                 labelPage.Text = (--page).ToString();
             }
-
             // Disable the left button if we're at the first set of images
             btnLeft.Enabled = index > 0;
-
             // Ensure the right button is enabled since we moved left and there are more images
             btnRight.Enabled = index + 5 < albumSize;
         }
@@ -319,10 +294,8 @@ namespace AlbumMaker.Forms.AlbumForms
                 LoadImages(index);
                 labelPage.Text = (++page).ToString();
             }
-
             // Disable the right button if we're at the last set of images
             btnRight.Enabled = index + 5 < albumSize;
-
             // Ensure the left button is enabled since we moved right
             btnLeft.Enabled = index > 0;
         }

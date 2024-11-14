@@ -27,7 +27,6 @@ namespace AlbumMaker.Classes.Db
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     await connection.OpenAsync();
-
                     string[] createTableSql = {
                         @"
                         CREATE TABLE IF NOT EXISTS Users (
@@ -418,13 +417,11 @@ namespace AlbumMaker.Classes.Db
         public static async Task<int> GetAllAlbumsOfUser(UserItem user)
         {
             List<AlbumItem> albums = new List<AlbumItem>();
-
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     await connection.OpenAsync();
-
                     string query = $"SELECT * FROM Albums WHERE User_ID={user.GetID()}"; // Query to get all users
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
@@ -456,10 +453,7 @@ namespace AlbumMaker.Classes.Db
                 user.SetAlbumItems(albums);
             }
             catch { return -1; throw; }
-
             return user.GetAlbumItems().Count;
-
-
         }
 
         // The function handles the creating of a new album
@@ -470,10 +464,8 @@ namespace AlbumMaker.Classes.Db
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     string insertQuery = "INSERT INTO Albums (USER_ID, Album_Name, Album_Description, Album_Template) VALUES (@userID, @albumName, @albumDescription, @albumTemplate)";
-
                     // Open the connection
                     await connection.OpenAsync();
-
                     using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
                     {
                         // Add parameters to the query
@@ -481,11 +473,9 @@ namespace AlbumMaker.Classes.Db
                         insertCommand.Parameters.AddWithValue("@albumName", albumName);
                         insertCommand.Parameters.AddWithValue("@albumDescription", albumDescription);
                         insertCommand.Parameters.AddWithValue("@albumTemplate", albumTemplate);
-
                         // Execute the insert command
                         await insertCommand.ExecuteNonQueryAsync();
-                    }
-                    
+                    }                  
                     // Retrieve the last inserted row ID (ALBUM_ID)
                     using (SQLiteCommand getIdCommand = new SQLiteCommand("SELECT last_insert_rowid()", connection))
                     {
@@ -523,9 +513,7 @@ namespace AlbumMaker.Classes.Db
                         connection.Close(); 
                         return rowsAffected > 0;
                     }
-
                 }
-
             }
             catch { return false; throw; }
         }
@@ -540,7 +528,6 @@ namespace AlbumMaker.Classes.Db
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     string deleteQuery = "DELETE FROM Albums WHERE ALBUM_ID = @albumID";
-
                     using (SQLiteCommand deleteCommand = new SQLiteCommand(deleteQuery, connection))
                     {
                         deleteCommand.Parameters.AddWithValue("@albumID", album.GetID());
@@ -559,11 +546,9 @@ namespace AlbumMaker.Classes.Db
                             }
                             album.SetImages(new List<ImageItem>());
                             return true;
-                        }
-                        
+                        }                     
                         return false;
                     }
-
                 }
             }
             catch { throw; }
@@ -579,7 +564,6 @@ namespace AlbumMaker.Classes.Db
         public static async Task<int> GetAllImagesOfAlbum(AlbumItem album)
         {
             List<ImageItem> images = new List<ImageItem>();
-
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
@@ -600,18 +584,15 @@ namespace AlbumMaker.Classes.Db
                                 // Create a new UserItem for each row and add it to the list
                                 ImageItem image = new ImageItem(imageID, imagePath, imageDescription,album.GetID());
                                 images.Add(image);
-                            }
-                           
+                            }                         
                         }
                         album.SetImages(images);
                     }
                 }
             }
             catch { return -1; throw; }
-
             album.SetImages(images);
-            return album.GetImages().Count;
-             
+            return album.GetImages().Count;       
         }
         // The function creates a image in images table.
         public static async Task<bool> CreateImage(AlbumItem album, string imagePath, string imageDescription)
@@ -620,11 +601,9 @@ namespace AlbumMaker.Classes.Db
             {
                 if(album==null)
                     return false;
-
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     string insertQuery = insertQuery = "INSERT INTO Images (ALBUM_ID, Image_path, Image_Description) VALUES (@albumID, @imagePath, @imageDescription)";
-
                     if (String.IsNullOrEmpty(insertQuery))
                         return false;
                     await connection.OpenAsync();
@@ -635,7 +614,6 @@ namespace AlbumMaker.Classes.Db
                         insertCommand.Parameters.AddWithValue("@imageDescription", imageDescription);
                         await insertCommand.ExecuteScalarAsync();
                     }
-
                     using (SQLiteCommand getIdCommand = new SQLiteCommand("SELECT last_insert_rowid()", connection))
                     {
                         var imageID = await getIdCommand.ExecuteScalarAsync();
@@ -673,11 +651,8 @@ namespace AlbumMaker.Classes.Db
                     }
 
                 }
-
             }
             catch { return false; throw; }
-
-
         }
 
         // The function delete from database (deleting from disk is not handled here)
@@ -705,7 +680,6 @@ namespace AlbumMaker.Classes.Db
                         }
                         return false;
                     }
-
                 }
             }
             catch { return false; throw; }

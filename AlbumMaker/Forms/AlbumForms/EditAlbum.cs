@@ -14,8 +14,6 @@ namespace AlbumMaker.Forms.AlbumForms
             InitializeComponent();
             this.album= album;
             this.AutoScroll = true;
-
-
         }
         // This function is a toolstrip menu click that takes back the user one 'page' back
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -36,7 +34,6 @@ namespace AlbumMaker.Forms.AlbumForms
         {
             // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
             var controlToRemove = flpImagesToEdit.Controls.Cast<Control>().FirstOrDefault(c => c.TabIndex == tabIndex);
-
             if (controlToRemove != null)
             {
                 flpImagesToEdit.Controls.Remove(controlToRemove);
@@ -92,15 +89,12 @@ namespace AlbumMaker.Forms.AlbumForms
 
         private void EditAlbum_Load(object sender, EventArgs e)
         {
-            
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             ShowImagesToEdit();
             txtBoxAlbumName.Text = album.GetName();
             txtBoxDesc.Text = album.GetDescription();
             cmbTemplate.SelectedItem = album.GetTemplate();
             labelTitle.Text = $"{album.GetName()}";
-           
-            
         }
     }
 }

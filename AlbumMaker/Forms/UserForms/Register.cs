@@ -50,7 +50,6 @@ namespace AlbumMaker.Forms
         // If everything is right it register the user and automatically navigate to login.
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
-
             if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
             {
                 MessageBox.Show("Username cannot be empty");
@@ -81,7 +80,6 @@ namespace AlbumMaker.Forms
                 richTextBoxQuestion.Focus();
                 return;
             }
-
             if (textBoxPassword.Text != textBoxPassword2.Text)
             {
                 MessageBox.Show("Passwords are not matched!!");
@@ -94,15 +92,9 @@ namespace AlbumMaker.Forms
                 textBoxAnswer.Focus();
                 return;
             }
-
-
-
-
             bool isCreated = await AppDataBase.CreateUser(textBoxUsername.Text, textBoxPassword.Text, richTextBoxQuestion.Text, textBoxAnswer.Text);
             if (isCreated)
                 NavigateToLogin();
-
-
         }
 
         private void Register_Load(object sender, EventArgs e)

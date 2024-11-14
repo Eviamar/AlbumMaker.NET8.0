@@ -30,14 +30,12 @@ namespace AlbumMaker.Forms.AlbumForms
         public EditImage(ImageItem image)
         {
             InitializeComponent();
-
             this.image = image;
             // This load the original image to the memory (to prevent 'file is being used' exception when trying to save (overwrite the file))
             using (FileStream fs = new FileStream(image.GetImagePath(), FileMode.Open, FileAccess.Read))
             {
                 byte[] imageData = new byte[fs.Length];
                 fs.Read(imageData, 0, (int)fs.Length);
-
                 using (MemoryStream ms = new MemoryStream(imageData))
                 {
                     originalImage = new Bitmap(ms);
@@ -61,10 +59,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 new KeyValuePair<string,int>("Very Large",1500),
             };
             this.AutoScroll = true;
-
             trackBarBrightness.Value = (trackBarBrightness.Minimum + trackBarBrightness.Maximum) / 2;
-
-
         }
         // This function is toolstrip event click to go back to Edit Album 'page'
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -83,22 +78,18 @@ namespace AlbumMaker.Forms.AlbumForms
                 }
             }
             catch { throw; }
-
         }
 
 
         private void EditImage_Load(object sender, EventArgs e)
         {
             panelPic.AutoScroll = true;
-
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
-
             pictureBoxPic.SizeMode = PictureBoxSizeMode.AutoSize;
             if (pictureBoxPic.Image.Width > panelPic.Width || pictureBoxPic.Image.Height > panelPic.Height)
             {
                 panelPic.AutoScroll = true;
             }
-
             tlpOptions.AutoScroll = true;
             comboBoxShapeSize.DataSource = sizes;
             comboBoxShape.DataSource = shapes;
@@ -113,7 +104,6 @@ namespace AlbumMaker.Forms.AlbumForms
             if (!selectedPoint.IsEmpty)
             {
                 selectedShape = new KeyValuePair<string, int>(comboBoxShape.Text, ((KeyValuePair<string, int>)comboBoxShapeSize.SelectedItem).Value);
-
                 if (!String.IsNullOrWhiteSpace(txtBoxCustomSize.Text))
                 {
                     //just here to check if user typed any custom size...
@@ -146,7 +136,6 @@ namespace AlbumMaker.Forms.AlbumForms
             }
             else
                 MessageBox.Show("Please click anywhere in the image to create a point where the shape will apply around it.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
         }
 
         // This function is for a text box for a custom size; It also checks digits only inserted.
@@ -222,12 +211,9 @@ namespace AlbumMaker.Forms.AlbumForms
                     MessageBox.Show("Choose colors", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                
                 UndoFunc();
-
                 // Create a filtered bitmap (to not work on the original image; so we keep original image untouched for clear all changes option)
                 Bitmap filteredBitmap = new Bitmap(originalImage);
-
                 // Apply filter to the image using Color Matrix
                 using (Graphics g = Graphics.FromImage(filteredBitmap))
                 {
@@ -245,7 +231,6 @@ namespace AlbumMaker.Forms.AlbumForms
                         0, 1
                     }
                         });
-
                     using (ImageAttributes attributes = new ImageAttributes())
                     {
                         attributes.SetColorMatrix(colorMatrix);
@@ -288,9 +273,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 pictureBoxPic.Image = undoStack.Pop();
                 imageToDispose?.Dispose();
                 btnRedo.Enabled = true;  // Enable redo button
-
             }
-
             // Disable the undo button if no more steps are left
             if (undoStack.Count == 0)
             {
@@ -311,9 +294,7 @@ namespace AlbumMaker.Forms.AlbumForms
                 pictureBoxPic.Image = redoStack.Pop();
                 imageToDispose?.Dispose();
                 btnUndo.Enabled = true;  // Enable undo button
-
             }
-
             // Disable the redo button if no more steps are left
             if (redoStack.Count == 0)
             {
@@ -330,7 +311,6 @@ namespace AlbumMaker.Forms.AlbumForms
                 img.Dispose();
             foreach (var img in redoStack)
                 img.Dispose();
-
             undoStack.Clear();
             redoStack.Clear();
             c1 = new Color();
@@ -350,8 +330,6 @@ namespace AlbumMaker.Forms.AlbumForms
             GC.Collect();
             GC.WaitForPendingFinalizers();
             pictureBoxPic.Image = originalImage;
-            
-
         }
 
         // This function is track bar event scrolling that handles the brightness of the image.
@@ -365,8 +343,6 @@ namespace AlbumMaker.Forms.AlbumForms
                 brightnessImage = new Bitmap(pictureBoxPic.Image); // Clone the image to avoid modifying the original
                 brightnessScroll = true;
             }
-
-
             if (trackBarBrightness.Value == trackBarBrightness.Maximum / 2)
             {
                 // Reset to the original brightness when trackbar is in the middle position
@@ -377,14 +353,11 @@ namespace AlbumMaker.Forms.AlbumForms
                 brightnessScroll = false; // Reset the scroll flag
                 return;
             }
-
             // Calculate the brightness value based on the trackbar position
             float brightnessValue = CalculateBrightness(trackBarBrightness.Value);
-
             // Adjust the brightness of the image
             AdjustBrightness(brightnessValue);
             grpBoxBrightness.Text = $"Brightness -  ({trackBarBrightness.Value})";
-
         }
 
 
@@ -394,12 +367,10 @@ namespace AlbumMaker.Forms.AlbumForms
             try
             {
                 UndoFunc();
-
                 flipUpDown = !flipUpDown;
                 Bitmap flippedImage = new Bitmap(pictureBoxPic.Image);
                 flippedImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
                 pictureBoxPic.Image = flippedImage;
-
                 if (flipUpDown == true)
                     btnFlipUpDown.Text = "Down";
                 else
@@ -421,7 +392,6 @@ namespace AlbumMaker.Forms.AlbumForms
                     btnFlipLeftRight.Text = "Right";
                 else
                     btnFlipLeftRight.Text = "Left";
-
             }
             catch { throw; }
         }
@@ -443,7 +413,6 @@ namespace AlbumMaker.Forms.AlbumForms
                 }
                 else
                     SaveImage();
-
             }
             catch { throw; }
         }
@@ -451,7 +420,6 @@ namespace AlbumMaker.Forms.AlbumForms
         // It connects to the database (images table) and write the description to the row of said image.
         private async void btnApplyDesc_Click(object sender, EventArgs e)
         {
-
             if (!String.IsNullOrWhiteSpace(textBoxDesc.Text))
             {
 
@@ -462,6 +430,12 @@ namespace AlbumMaker.Forms.AlbumForms
                 else
                     lblImgeDesc.Text = textBoxDesc.Text;
             }
+        }
+        private void trackBarBrightness_MouseLeave(object sender, EventArgs e)
+        {
+            if (brightnessImage != null)
+                brightnessImage.Dispose();
+            brightnessScroll = false;
         }
 
         #region Functions
@@ -499,7 +473,6 @@ namespace AlbumMaker.Forms.AlbumForms
         {
             try
             {
-
                 if (selectedPoint.IsEmpty)
                 {
                     MessageBox.Show("No focus point\nClick anywhere on the image where you want the shape to take place", "Pick position", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -709,13 +682,10 @@ namespace AlbumMaker.Forms.AlbumForms
             try
             {
                 if (brightnessImage == null) return;
-
                 // Clone the original unmodified image for editing
                 Bitmap originalBitmap = new Bitmap(brightnessImage);
-
                 // Create a new bitmap for the adjusted image
                 Bitmap adjustedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
-
                 using (Graphics g = Graphics.FromImage(adjustedBitmap))
                 {
                     // Set up a brightness adjustment matrix
@@ -727,7 +697,6 @@ namespace AlbumMaker.Forms.AlbumForms
                 new float[] { 0, 0, 0, 1, 0 },
                 new float[] { 0, 0, 0, 0, 1 }
             };
-
                     ColorMatrix colorMatrix = new ColorMatrix(brightnessMatrix);
                     using (ImageAttributes attributes = new ImageAttributes())
                     {
@@ -736,18 +705,13 @@ namespace AlbumMaker.Forms.AlbumForms
                             0, 0, originalBitmap.Width, originalBitmap.Height, GraphicsUnit.Pixel, attributes);
                     }
                 }
-
                 // Dispose of the previous image in the PictureBox before setting the new one
                 pictureBoxPic.Image?.Dispose();
                 pictureBoxPic.Image = adjustedBitmap;
-
                 // Dispose the original bitmap to free resources
                 originalBitmap.Dispose();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error");
-            }
+            catch (Exception ex) { throw; }
             finally
             {
                 Cursor.Current = Cursors.Default;
@@ -770,16 +734,6 @@ namespace AlbumMaker.Forms.AlbumForms
 
         #endregion Functions
 
-
-
-
-
-
-        private void trackBarBrightness_MouseLeave(object sender, EventArgs e)
-        {
-            if(brightnessImage!=null)
-                brightnessImage.Dispose();
-            brightnessScroll = false;
-        }
+        
     }
 }

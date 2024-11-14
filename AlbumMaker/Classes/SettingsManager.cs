@@ -13,16 +13,12 @@ namespace AlbumMaker.Classes
         // We also store a list of users in userItems (for admin purposes).
         public static UserItem userItem { get; set; }
         internal static List<UserItem> userItems { get; set; }
-
         // This function applies theme to an active FORM.
         public static void SetTheme()
         {
             Form form = Form.ActiveForm;
-
             if (form != null)
-            {
                 SetTheme(form);
-            }
         }
   
         // This function made for limiting the side menu size so it will work properly according to font size.
@@ -31,20 +27,12 @@ namespace AlbumMaker.Classes
             float fontSize = GetFont().Size;
             int maxWidthSize = 145;
             if (fontSize == 9)
-            {
                 maxWidthSize = 145;
-            }
             else if (fontSize == 12)
-            {
                 maxWidthSize = 160;
-            }
             else if (fontSize == 16)
-            {
                 maxWidthSize = 200;
-            }
             return maxWidthSize;
-
-
         }
         // This tiny function just returns font size.
         public static Font GetFont()
@@ -82,9 +70,7 @@ namespace AlbumMaker.Classes
                         }
                     }
                 }
-            }
-            
-
+            }     
         }
 
         // This function set the theme into a form.
@@ -150,7 +136,6 @@ namespace AlbumMaker.Classes
                 {
                     btn.Height = 38;
                 }
-
             }
             else
             {
@@ -161,27 +146,23 @@ namespace AlbumMaker.Classes
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.SideMenuForeground)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.SideMenuForeground);
             }
-
         }
         // This function set the theme to the side menu 
         public static void SetThemeToMenu(FlowLayoutPanel flp, bool isDark)
-        {
-            
+        {        
             flp.BackColor = isDark ?
                    ConvertHexToColor(Properties.DarkThemeSettings.Default.SideMenuBackground)
                    : ConvertHexToColor(Properties.LightThemeSettings.Default.SideMenuBackground);
             flp.ForeColor = isDark ?
                 ConvertHexToColor(Properties.DarkThemeSettings.Default.SideMenuForeground)
-                : ConvertHexToColor(Properties.LightThemeSettings.Default.SideMenuForeground);
-            
+                : ConvertHexToColor(Properties.LightThemeSettings.Default.SideMenuForeground);           
         }
 
 
         // This function set the theme to controls which are used in the application (see if statement).
         // It is also a recursive function if the control has controls inside it its being called again.
         public static void SetThemeToControls(Control control, bool theme)
-        {
-            
+        {          
             if (control is Button btn)
             {
                 btn.Cursor = Cursors.Hand;
@@ -264,9 +245,6 @@ namespace AlbumMaker.Classes
             }
             else if(control is Panel || control is FlowLayoutPanel | control is TableLayoutPanel)
             {
-
-               
-
                 control.BackColor = theme ?
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
@@ -281,7 +259,6 @@ namespace AlbumMaker.Classes
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
                 dgv.ForeColor = ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
                 dgv.GridColor = ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
-
             }
             else if(control is DateTimePicker dtp)
             {
@@ -296,16 +273,12 @@ namespace AlbumMaker.Classes
                     : ConvertHexToColor(Properties.LightThemeSettings.Default.Foreground);
                 dtp.CalendarTrailingForeColor = theme ?
                     ConvertHexToColor(Properties.DarkThemeSettings.Default.Background)
-                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);
-                
+                    : ConvertHexToColor(Properties.LightThemeSettings.Default.Background);           
             }
-
-
             foreach (Control child in control.Controls)
             {
                 SetThemeToControls(child, theme);  // Recursively apply the theme to each child control
             }
-
         }
 
         // This function converts Hexadecimal value to a of Color the .NET controls reads
@@ -317,7 +290,6 @@ namespace AlbumMaker.Classes
             {
                 hexColor = "#" + hexColor;
             }
-
             // Use ColorTranslator to convert the hex string to a Color object
             return ColorTranslator.FromHtml(hexColor);
         }

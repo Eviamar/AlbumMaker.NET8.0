@@ -26,8 +26,6 @@ namespace AlbumMaker.Forms
         private List<string> images;
         private FileItem selectedFile;
         private string[] albumInfo;
-
-
         private SortOrder sortOrder;
         private string lastSortedColumn;
         public ScanForImages(List<string> images, string[] albumInfo)
@@ -37,16 +35,13 @@ namespace AlbumMaker.Forms
             this.albumInfo = albumInfo;
             scannedFiles = new BindingList<FileItem>(); // Initialize BindingList
             accessDeniedFiles = new List<string>();
-
             id = 0;
             cancellationTokenSource = new CancellationTokenSource();
             dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
             dataGridView1.CellClick += DataGridView1_CellClick;
             dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
-
             sortOrder = SortOrder.None;
             lastSortedColumn = string.Empty;
-
             if (images.Count == 0 || images is null)
                 this.images = new List<string>();
             else
@@ -60,7 +55,6 @@ namespace AlbumMaker.Forms
         {
             // Get the column that was clicked
             string columnName = dataGridView1.Columns[e.ColumnIndex].DataPropertyName;
-
             // Toggle the sort order if the same column is clicked again
             if (lastSortedColumn == columnName)
             {
@@ -70,9 +64,7 @@ namespace AlbumMaker.Forms
             {
                 sortOrder = SortOrder.Ascending;
             }
-
             lastSortedColumn = columnName; // Update the last sorted column
-
             // Sort the data based on the column clicked
             switch (columnName)
             {
@@ -129,7 +121,6 @@ namespace AlbumMaker.Forms
                 {
                     selectedFile = file;
                 }
-
             }
         }
         // This function handles double click on a cell.
@@ -147,7 +138,6 @@ namespace AlbumMaker.Forms
                         FileName = selectedFile.GetName(),
                         UseShellExecute = true
                     });
-
                 }
             }
         }
@@ -184,19 +174,15 @@ namespace AlbumMaker.Forms
             scannedFiles.Clear();
             accessDeniedFiles.Clear();
             string[] pictureExtensions = { ".jpg", ".jpeg", ".png", ".bmp" };
-
             progressBarScanning.Visible = true;
             progressBarScanning.Style = ProgressBarStyle.Blocks; // Set to blocks for visual feedback
             progressBarScanning.Value = 0; // Reset the progress bar value
-
             cancellationTokenSource.Cancel();
             cancellationTokenSource.Dispose();
             cancellationTokenSource = new CancellationTokenSource();
-
             try
             {
                 var progress = new Progress<int>(value => progressBarScanning.Value = value);
-
                 await Task.Run(() =>
                 {
                     var token = cancellationTokenSource.Token; // Get the new token
@@ -208,11 +194,8 @@ namespace AlbumMaker.Forms
                     // Scan the folder and report progress
                     ScanFolderRecursive(drivePath, pictureExtensions, token, progress, totalFiles); // Pass token and progress to recursive scan
                 });
-
-
                 dataGridView1.DataSource = scannedFiles;
                 lblInfoFilter.Text = $"Finished!\n{scannedFiles.Count} imgs found.";
-
                 if (accessDeniedFiles.Count > 0)
                 {
                     DialogResult dr = MessageBox.Show($"{accessDeniedFiles.Count} files were unabled to be scanned due to access denied.\nWould you like to review which files?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -263,13 +246,10 @@ namespace AlbumMaker.Forms
             return count;
         }
 
-
         // This function do the actual scan in a recursive way (goes into each folder within folder until no more sub-folders).
-
         private void ScanFolderRecursive(string folderPath, string[] pictureExtensions, CancellationToken token, IProgress<int> progress, int totalFiles)
         {
             if (token.IsCancellationRequested) return; // Stop if cancellation is requested
-
             try
             {
                 foreach (string file in Directory.GetFiles(folderPath))
@@ -288,7 +268,6 @@ namespace AlbumMaker.Forms
                         }
                     }
                 }
-
                 foreach (string subfolder in Directory.GetDirectories(folderPath))
                 {
                     token.ThrowIfCancellationRequested(); // Check before scanning subfolders
@@ -344,8 +323,6 @@ namespace AlbumMaker.Forms
                     flpSelectedImages.Controls.Add(digiBox);
                 }
             }
-
-
         }
 
         // This function is a button event click to filter the data by the date selected.
@@ -357,7 +334,6 @@ namespace AlbumMaker.Forms
                 lblInfoFilter.Text = "Scan a drive first please.";
                 return;
             }
-
             BindingList<FileItem> filteredFiles = new BindingList<FileItem>();
             BindingList<FileItem> filteredFilesByYear = new BindingList<FileItem>();
             foreach (FileItem file in scannedFiles)
@@ -398,7 +374,6 @@ namespace AlbumMaker.Forms
                 var alreadyExist = flpSelectedImages.Controls.Cast<DigiBumPictureBox>().FirstOrDefault(c => c.ImageLocation == selectedFile.GetName());
                 if (alreadyExist == null)
                 {
-
                     ImageItem imageItem = new ImageItem(selectedFile.GetID(), selectedFile.GetName(), "", -1);
                     DigiBumPictureBox digiBumPictureBox = new DigiBumPictureBox(imageItem, false);
                     digiBumPictureBox.ImageDeleted += Picture_ImageDeleted;
@@ -408,7 +383,6 @@ namespace AlbumMaker.Forms
                 {
                     MessageBox.Show("The picture is already added", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-
             }
         }
         // This function handles deleting the image from the list and the UI.

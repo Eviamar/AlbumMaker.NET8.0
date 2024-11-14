@@ -14,8 +14,6 @@ namespace AlbumMaker.Forms
         {
             InitializeComponent();
             this.AutoScroll = true;
-
-
         }
         // This function updates the input to the database for the secret question used for restoring forgotten password.
         private async void btnUpdateQuestion_Click(object sender, EventArgs e)
@@ -38,12 +36,9 @@ namespace AlbumMaker.Forms
                 textBoxAnswer.Focus();
                 return;
             }
-
             UserItem tempUser = SettingsManager.userItem;
             tempUser.SetQuestion(richTextBoxQuestion.Text);
             tempUser.SetAnswer(textBoxAnswer.Text);
-
-
             bool isUpdated = await AppDataBase.UpdateUser(tempUser);
             if (isUpdated)
             {
@@ -57,7 +52,6 @@ namespace AlbumMaker.Forms
         // saving of user name for future login 'page' landing the name will be filled in user name text box.
         private void checkBoxRememberMe_CheckedChanged(object sender, EventArgs e)
         {
-
             if (checkBoxRememberMe.Checked)
                 Properties.AppSettings.Default.userName = Properties.AppSettings.Default.currentUser;
             else
@@ -140,7 +134,6 @@ namespace AlbumMaker.Forms
                 {
                     AppSettings.Default.userName = "";
                 } 
-
             }
         }
     }

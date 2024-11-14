@@ -25,7 +25,6 @@ namespace AlbumMaker
         // Button click event that triggers timer to close/open side menu.
         private void btnMenuToggle_Click(object sender, EventArgs e)
         {
-
             if (menuOpen)
                 timerMenuClose.Start();
             else
@@ -43,7 +42,6 @@ namespace AlbumMaker
                     c.Width -= shrinkSpeed;
                     c.Invalidate();
                 }
-
                 flpMenu.Invalidate();
             }
             else
@@ -51,9 +49,6 @@ namespace AlbumMaker
                 timerMenuClose.Stop();
                 menuOpen = false;
             }
-
-
-
         }
         // The timer function that does the 'animation' of menu opening
         private void timerMenuOpen_Tick(object sender, EventArgs e)
@@ -62,14 +57,12 @@ namespace AlbumMaker
             int maxWidthSize = SettingsManager.GetMaxWidthMenu();
             if (flpMenu.Width < maxWidthSize)
             {
-
                 flpMenu.Width += shrinkSpeed;
                 foreach (Control c in flpMenu.Controls)
                 {
                     c.Width += shrinkSpeed;
                     c.Invalidate();
                 }
-
                 flpMenu.Invalidate();
             }
             else
@@ -150,7 +143,6 @@ namespace AlbumMaker
         // Made for checking if user is logged or not and display the buttons in side menu accordingly.
         private void timerCheckUserLoggedIn_Tick(object sender, EventArgs e)
         {
-
             btnLogin.Visible = !Properties.AppSettings.Default.isLogged;
             btnMyAlbums.Visible = Properties.AppSettings.Default.isLogged;
             btnUserControlPanel.Visible = Properties.AppSettings.Default.isLogged;
@@ -163,10 +155,7 @@ namespace AlbumMaker
             }
             else
                 btnAdminPanel.Visible = false;
-
-
         }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             ExitMethod();

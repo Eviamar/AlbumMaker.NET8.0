@@ -96,7 +96,6 @@ namespace AlbumMaker.Classes.Custom
         }
         private void MouseEnterFunction(object sender, EventArgs e, string msg)
         {
-
             Cursor = Cursors.Hand;
             imageToolTip.SetToolTip(sender as Control, msg);
         }
@@ -120,20 +119,13 @@ namespace AlbumMaker.Classes.Custom
                     DialogResult dr = MessageBox.Show($"Are you sure to delete {image.GetName()}?", "Delete?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dr == DialogResult.Yes)
                     {
-                        /* TO DO:
-                        // 1. delete from database
-                        // 2.attempt delete the file
-                        // 3.delete the image from the list using SettingManager.userItem.GetAlbumItems().Find(x=>x.GetID()==image.GetRelatedAlbumID()).GetImages().Find(x=> x.GetID()==image.GetID()))
-                        // 4.remove from controls
-                        */
                         bool res = await AppDataBase.DeleteImage(image);
                         if (res)
                         {
-                            //delete fild
+                            //delete file
                             File.Delete(image.GetImagePath());
                             if (!File.Exists(image.GetImagePath()))
                             {
-                                //MessageBox.Show("Image Deleted", "success");
                                 AlbumItem album = SettingsManager.userItem.GetAlbumItems().Find(x => x.GetID() == image.GetRelatedAlbumID());
                                 if (album != null)
                                     album.DeleteImageItem(image);
@@ -171,16 +163,11 @@ namespace AlbumMaker.Classes.Custom
                         return;
                     
                 }
-
                 int tabIndex = this.TabIndex;
-                // this.Dispose();  // Dispose the PictureBox
-
                 // Raise the event with the tabIndex as the event argument
                 ImageDeleted?.Invoke(this, tabIndex);
             }
             catch { throw; }
-            
-           
         }
 
         private void EditImage(object sender,EventArgs e,ImageItem image)
@@ -203,36 +190,28 @@ namespace AlbumMaker.Classes.Custom
         private void DigiLabelPaint(object sender, PaintEventArgs e)
         {
             Label lbl = sender as Label;
-
             if (lbl != null)
             {
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
                 string text = lbl.Text;
                 Font font = lbl.Font;
-
                 // Define colors for stroke and fill
                 Color strokeColor = Color.Black; // Border color
                 Color textColor = lbl.ForeColor; // Text color
-
                 // Stroke width
                 float strokeWidth = 2f;
-
                 // Create brushes
                 using (Brush textBrush = new SolidBrush(textColor))
                 using (Pen strokePen = new Pen(strokeColor, strokeWidth))
                 {
                     strokePen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round; // Prevent sharp edges
-
                     // Measure text size
                     SizeF textSize = e.Graphics.MeasureString(text, font);
-
                     // Get text position
                     PointF textPosition = new PointF(
                         (lbl.Width - textSize.Width) / 2, // Center horizontally
                         (lbl.Height - textSize.Height) / 2 // Center vertically
                     );
-
                     // Draw stroke (outline) by drawing text multiple times around the position
                     for (float x = -strokeWidth; x <= strokeWidth; x += 1f)
                     {
@@ -241,7 +220,6 @@ namespace AlbumMaker.Classes.Custom
                             e.Graphics.DrawString(text, font, strokePen.Brush, textPosition.X + x, textPosition.Y + y);
                         }
                     }
-
                     // Draw the actual text on top of the stroke
                     e.Graphics.DrawString(text, font, textBrush, textPosition);
                 }
@@ -249,8 +227,7 @@ namespace AlbumMaker.Classes.Custom
         }
         public DigiBumPictureBox(AlbumItem album,bool isEdit)
         {
-            Size = new Size(200, 200);
-            
+            Size = new Size(200, 200);           
             if (isEdit)
             { 
                 DeleteButton = new Button
@@ -264,7 +241,6 @@ namespace AlbumMaker.Classes.Custom
                     ForeColor = Color.White,
                 };
                 DeleteButton.FlatAppearance.BorderSize = 0;
-
                 EditButton = new Button
                 {
                     Name = "btnEdit",
@@ -285,8 +261,6 @@ namespace AlbumMaker.Classes.Custom
                 Controls.Add(DeleteButton);
                 Controls.Add(EditButton);
             }
-
-
             Title = new Label
             {
                 Name = "lblTitle",
@@ -295,7 +269,6 @@ namespace AlbumMaker.Classes.Custom
                 AutoSize = true,
                 BackColor = Color.Transparent
             };
-
             Description = new Label
             {
                 Name = "lblDesc",
@@ -306,7 +279,6 @@ namespace AlbumMaker.Classes.Custom
             };
             Title.Paint += DigiLabelPaint;
             Description.Paint += DigiLabelPaint;
-            // Setup image
             if (album.GetImages().Count == 0)
             {
                 Image = null;  // Placeholder for "image not found"
@@ -315,25 +287,15 @@ namespace AlbumMaker.Classes.Custom
             else
             {
                 Image = GenerateSmallerImage(album.GetImages()[0].GetImagePath(), 200, 200);
-                //ImageLocation = album.GetImages()[0].GetImagePath();
             }
-
             SizeMode = PictureBoxSizeMode.StretchImage;
-
-            // Add controls to the PictureBox
-            
             Controls.Add(Title);
             Controls.Add(Description);
-
             // Position controls
-
             Title.Location = new Point(0, 0);
             Description.Location = new Point(0, Height - Description.Height);
-
-            // Assign event handlers (you can add more as needed)
-           
+            // Assign event handlers (you can add more as needed)   
             Click += (sender, e) => { OpenAlbum(sender,e,album); };
-
             this.MouseEnter += (sender, e) => MouseEnterFunction(sender, e, album.GetDescription());
             this.MouseLeave += (sender, e) => Cursor = Cursors.Default;
         }
@@ -347,7 +309,6 @@ namespace AlbumMaker.Classes.Custom
                 p.Controls.Clear();
                 p.Controls.Add(adminPanel);
                 adminPanel.Dock = DockStyle.Fill;
-                //this.Dispose();
                 adminPanel.Show();
             }
         }
@@ -372,19 +333,16 @@ namespace AlbumMaker.Classes.Custom
             {
                 p.Controls.Clear();
                 SettingsManager.SetTheme(editAlbum);
-                
                 p.Controls.Add(editAlbum);
                 editAlbum.Dock = DockStyle.Fill;
                 this.Dispose();
                 editAlbum.Show();
             }
-
         }
         private void OpenAlbum(object sender, EventArgs e,AlbumItem album)
         {
            int tabIndex = this.TabIndex;
            albumView?.Invoke(this, tabIndex);
-
         }
         private async void DeleteAlbum(object sender, EventArgs e,AlbumItem album)
         {
@@ -452,8 +410,6 @@ namespace AlbumMaker.Classes.Custom
                 return b;
             }
             catch { return null; throw; }
-        }
-
-        
+        }   
     }
 }

@@ -13,14 +13,11 @@ namespace AlbumMaker.Forms
         {
             InitializeComponent();
             this.AutoScroll = true;
-
-
         }
 
         // This function is label event click used to let the user go into hidden section (in UI) for retrieving forgotten password. 
         private async void lblForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-
             if (lblForgot.Text == "Forgot password?")
             {
                 if (String.IsNullOrWhiteSpace(textBoxUsername.Text))
@@ -88,17 +85,13 @@ namespace AlbumMaker.Forms
                 textBoxPassword.Focus();
                 return;
             }
-
-
             bool isVerfied = await AppDataBase.VerifyUser(textBoxUsername.Text.ToLower(), textBoxPassword.Text);
             if (isVerfied)
             {
-
                 if (checkBoxRememberMe.Checked)
                     Properties.AppSettings.Default.userName = textBoxUsername.Text;
                 else
                     Properties.AppSettings.Default.userName = "";
-
                 Properties.AppSettings.Default.isLogged = true;
                 Properties.AppSettings.Default.currentUser = textBoxUsername.Text;
                 Properties.AppSettings.Default.Save();
@@ -113,7 +106,6 @@ namespace AlbumMaker.Forms
                     myAlbums.Show();
                 }
             }
-
         }
 
 
@@ -128,7 +120,6 @@ namespace AlbumMaker.Forms
             }
             else
                 checkBoxRememberMe.Checked = false;
-
         }
          
          /* This function is check box event change that makes the application remember the user's user name for next login 
@@ -155,7 +146,5 @@ namespace AlbumMaker.Forms
                 MessageBox.Show($"Wrong answer!", "Answer incorrect", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-
     }
 }

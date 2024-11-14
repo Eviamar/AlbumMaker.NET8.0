@@ -40,7 +40,6 @@ namespace AlbumMaker.Forms
                 {
                     ImageItem imageItem = new ImageItem(i, images[i], "", -1);
                     this.images.Add(new KeyValuePair<int, string>(i, images[i]));
-
                     Invoke((Action)(() =>
                     {
                         DigiBumPictureBox picture = new DigiBumPictureBox(imageItem, false);
@@ -124,8 +123,6 @@ namespace AlbumMaker.Forms
         {
             SettingsManager.SetTheme(this);
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
-
-
         }
         // This function is a toolstrip event click, opens file dialog to select images.
         // It also check and prevent user to select same image (from same path) more than once.
@@ -182,12 +179,10 @@ namespace AlbumMaker.Forms
         {
             // Find the image in the list that has the matching TabIndex
             var imageToRemove = images.FirstOrDefault(item => item.Key == tabIndex);
-
             // If found, remove the image from the list
             if (imageToRemove.Key != 0 || imageToRemove.Value != null)
             {
                 images.Remove(imageToRemove);
-
                 // Find and remove the PictureBox from the FlowLayoutPanel based on TabIndex
                 var controlToRemove = FLPAlbumData.Controls.Cast<Control>().FirstOrDefault(c => c.TabIndex == tabIndex);
                 if (controlToRemove != null)
@@ -268,13 +263,10 @@ namespace AlbumMaker.Forms
                     MessageBox.Show("All fields are required!", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                
                 bool dataBaseSuccess = false;
-                bool copySuccess = false;
-                
+                bool copySuccess = false;           
                 int albumID = await AppDataBase.CreateAlbum(SettingsManager.userItem, albumTitle, albumDesc, albumTemplate);
                 string path = pictureFolderPath + $@"{albumID}\";
-
                 if (albumID > 0)
                 {
                     images = await CopyFilesToAppFolder(images,albumID);
@@ -287,18 +279,15 @@ namespace AlbumMaker.Forms
                              await AppDataBase.CreateImage(SettingsManager.userItem.GetAlbumItems().LastOrDefault(), imageItem.GetName(), "");
                         }
                         dataBaseSuccess = true;
-                    }
-                    
+                    }       
                 }
                 else
                     return;
-
                 if (dataBaseSuccess && copySuccess)
                 {
                     MessageBox.Show("Album created successfully!\nYou are being redirected to your user panel where you can view and edit your albums.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     NavigateToMyAlbums();
                 }
-
             }
             catch { throw; }
         }

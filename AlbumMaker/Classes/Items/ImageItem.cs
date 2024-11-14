@@ -8,7 +8,6 @@ namespace AlbumMaker.Classes.Items
         private string path;
         private string description;
         private int relatedAlbumID;
-
         internal ImageItem(int id,string path,string description,int relatedAlbumID) : base(id,path)
         {
             this.description = description;
@@ -24,7 +23,6 @@ namespace AlbumMaker.Classes.Items
         public string GetImagePath()
         {
             return $@"{Properties.AppSettings.Default.AppDataFolder}\{Properties.AppSettings.Default.AppName}\{Properties.AppSettings.Default.AppAlbumsFolderName}\{this.GetName()}";
-
         }
     }
 }

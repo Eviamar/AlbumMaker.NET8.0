@@ -32,8 +32,6 @@ namespace AlbumMaker.Forms
                 this.Dispose();
                 va.Show();
             }
-            
-
         }
 
         // This function is event click of toolstip to navigate to create album 'page'.

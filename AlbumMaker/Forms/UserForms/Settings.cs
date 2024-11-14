@@ -29,7 +29,6 @@ namespace AlbumMaker.Forms
             Properties.AppSettings.Default.isDark = false;
             Properties.AppSettings.Default.Save();
             SettingsManager.SetTheme();
-
         }
 
         // Function of a raido button button that applies dark theme to the application
@@ -38,7 +37,6 @@ namespace AlbumMaker.Forms
             Properties.AppSettings.Default.isDark = true;
             Properties.AppSettings.Default.Save();
             SettingsManager.SetTheme();
-
         }
 
         private void Settings_Load(object sender, EventArgs e)
@@ -51,25 +49,20 @@ namespace AlbumMaker.Forms
                 lblDataLocation.Text = Properties.AppSettings.Default.AppDataFolder + $@"\{Properties.AppSettings.Default.AppName}";
             Size textSize = TextRenderer.MeasureText(lblDataLocation.Text, lblDataLocation.Font);
             lblDataLocation.MinimumSize = new Size(textSize.Width, lblDataLocation.Height);
-
             this.Parent.FindForm().Text = $"{Properties.AppSettings.Default.AppName} - {this.AccessibleName}";
             if (Properties.AppSettings.Default.isDark)
                 radioButtonDark.Checked = true;
             else
                 radioButtonLight.Checked = true;
-
             for (int i = 0; i < comboBoxFontSize.Items.Count; i++)
             {
                 var item = (KeyValuePair<string, float>)comboBoxFontSize.Items[i];
-
                 if (item.Value == Properties.AppSettings.Default.FontSize)
                 {
                     comboBoxFontSize.SelectedItem = item;
                     break;
                 }
-
             }
-
             isLoading = false;
         }
         // Function that populate the comboBox for sizes
@@ -84,7 +77,6 @@ namespace AlbumMaker.Forms
             comboBoxFontSize.DataSource = keyValuePairs;
             comboBoxFontSize.DisplayMember = "Key";
             comboBoxFontSize.ValueMember = "Value";
-
         }
         // Function that handles the selected font size.
         private void comboBoxFontSize_SelectedIndexChanged(object sender, EventArgs e)
@@ -101,8 +93,7 @@ namespace AlbumMaker.Forms
                     timerClose.Start();
                 }
                 SettingsManager.SetTheme();
-                SettingsManager.SetTheme(this);
-                
+                SettingsManager.SetTheme(this);               
             }
         }
 
@@ -111,18 +102,15 @@ namespace AlbumMaker.Forms
         {
             // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDir);
-
             if (!dir.Exists)
             {
                 throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDir);
             }
-
             // If the destination directory doesn't exist, create it.
             if (!Directory.Exists(destinationDir))
             {
                 Directory.CreateDirectory(destinationDir);
             }
-
             // Get the files in the directory and copy them to the new location.
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo file in files)
@@ -130,7 +118,6 @@ namespace AlbumMaker.Forms
                 string temppath = Path.Combine(destinationDir, file.Name);
                 file.CopyTo(temppath, false);
             }
-
             // If copying subdirectories, copy them and their contents to new location.
             if (copySubDirs)
             {
@@ -195,17 +182,14 @@ namespace AlbumMaker.Forms
                         MessageBox.Show("Cannot copy because a folder with the same name of the application exist in the location you have selected." +
                             "\nPlease try again and click Yes to delete or delete it manually.","Folder exist.");
 
-                }
-
-                
+                }              
             }
             catch { throw; }
         }
 
         // A hidden button (not available for users) used for developing progress easier to clear tables (when we ruined the tables and had to start over).
         private void btnDropTables_Click(object sender, EventArgs e)
-        {
-            
+        {           
             DialogResult dr = MessageBox.Show("YOU ARE ABOUT TO DELETE EVERYTHING FROM THE DATABASE\nARE YOU SURE ABOUT THAT?", "!!!ALERT!!!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dr == DialogResult.Yes)
             {
@@ -240,8 +224,7 @@ namespace AlbumMaker.Forms
                 MessageBox.Show(Properties.AppSettings.Default.AppDataFolder);
                // CopyDirectory(oldPath + $@"\{Properties.AppSettings.Default.AppName}\", Properties.AppSettings.Default.AppDataFolder + $@"\{Properties.AppSettings.Default.AppName}\", true);
                 Application.Restart();
-            }
-            
+            }          
         }
     }
 }
