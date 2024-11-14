@@ -316,7 +316,7 @@ namespace AlbumMaker.Forms
 
         private void goBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CreateAlbum createAlbum = new CreateAlbum();
+            CreateAlbum createAlbum = new CreateAlbum(images,albumInfo);
             Panel p = this.Parent as Panel;
             if (p != null)
             {
