@@ -252,7 +252,7 @@ namespace AlbumMaker.Classes.Custom
                     ForeColor = Color.White,
                 };
                 EditButton.FlatAppearance.BorderSize = 0;
-                DeleteButton.Click += (sender, e) => { DeleteAlbum(sender, e, album); };
+                DeleteButton.Click += (sender, e) => { DeleteAlbum(sender, e, album,false); };
                 EditButton.Click += (sender, e) => { EditAlbum(sender, e, album); };
                 DeleteButton.Location = new Point(Width - DeleteButton.Width, 0);
                 EditButton.Location = new Point(Width - EditButton.Width, Height - EditButton.Height);
@@ -344,10 +344,9 @@ namespace AlbumMaker.Classes.Custom
            int tabIndex = this.TabIndex;
            albumView?.Invoke(this, tabIndex);
         }
-        private async void DeleteAlbum(object sender, EventArgs e,AlbumItem album)
+        internal async void DeleteAlbum(object sender, EventArgs e,AlbumItem album, bool skipDialog)
         {
-            DialogResult dr = MessageBox.Show($"Delete?\n{album}","Deletion",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
-            if(dr == DialogResult.Yes)
+            if(skipDialog || MessageBox.Show($"Delete?\n{album}", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {

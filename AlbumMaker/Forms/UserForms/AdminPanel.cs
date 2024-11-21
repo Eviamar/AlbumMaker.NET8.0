@@ -80,9 +80,13 @@ namespace AlbumMaker.Forms.UserForms
 
         private void GrpBox_DoubleClick(object? sender, EventArgs e,UserItem u)
         {
-            MsgBox msgBox = new MsgBox(u,$"Editing user - {u.GetName()}");
-            SettingsManager.SetTheme(msgBox);
-            msgBox.ShowDialog();
+            UserEditForm userEditForm = new UserEditForm(u,$"Editing user - {u.GetName()}");
+            SettingsManager.SetTheme(userEditForm);
+            userEditForm.ShowDialog();
+            this.Controls.Clear();
+            InitializeComponent();
+            AdminPanel_Load(this, EventArgs.Empty); 
+            
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace AlbumMaker.Classes.Custom
 {
-    partial class MsgBox
+    partial class UserEditForm
     {
         /// <summary>
         /// Required designer variable.
@@ -38,7 +38,7 @@
             ClientSize = new Size(120, 0);
             Name = "MsgBox";
             Text = "MsgBox";
-            Load += MsgBox_Load;
+            Load += UserEditForm_Load;
             ResumeLayout(false);
         }
 
