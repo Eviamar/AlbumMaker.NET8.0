@@ -5,31 +5,44 @@ This repository contains my Final Graduation Project in Software Engineering. De
 
 A robust desktop application designed for users to organize their memories and for administrators to manage the platform efficiently.
 
-## Key Features:
+### Key Features:
 
-👤 User Capabilities
+## 👤 User Capabilities
 • Secure Authentication: Complete registration and login system, including a password recovery mechanism via security questions.
+
 • Album Management: Create and customize albums with titles, descriptions, and various design templates.
+
 • Smart Drive Scanner: A powerful tool that scans local drives to automatically locate image files and import them into albums based on dates.
+
 • Advanced Image Editor: * Apply custom or random color filters.
+
 • Adjust image brightness levels.
+
 • Rotate and flip images.
+
 • Crop images into unique shapes like circles, diamonds, and squares.
+
 • Add text captions directly onto photos.
 
-⚙️ Customization & Accessibility
+## ⚙️ Customization & Accessibility
 • UI Themes: Easily switch between Light Mode and Dark Mode.
+
 • Dynamic Scaling: Adjust font sizes across the entire application for better accessibility.
+
 • Storage Control: Manually configure the destination path for the application's database and media assets.
+
 • Factory Reset: Quickly restore all software settings to their default values.
 
-🛡️ Administrative Tools
+## 🛡️ Administrative Tools
 • User Management: A dedicated panel for admins to monitor and manage all users and their respective albums.
 
-🛠 Technical Stack
+## 🛠 Technical Stack
 • Language: C#
+
 • Framework: .NET 8.0 / Windows Forms (WinForms)
+
 • Database: SQLite (Local storage for users, albums, and configurations)
+
 • Architecture: 3-Layer Architecture (Presentation, Business Logic, and Data Access)
 
 ## 🖥️ System Screenshots
