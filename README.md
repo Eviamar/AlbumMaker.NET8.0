@@ -30,7 +30,7 @@ Key Features:
 
 ## 🖥️ System Screenshots
 
-| **Register Scren* | **Photo Editor** |
+| **Register Screen** | **Photo Editor** |
 | :---: | :---: |
 | <img src="https://github.com/user-attachments/assets/c34b9760-a6f6-4079-b759-75c84e4c8d87" width="400" alt="Main Dashboard" /> | <img src="https://github.com/user-attachments/assets/3df35d44-7628-4ce1-be3d-bc5a9da2a2ab" width="400" alt="Image Editor" /> |
 
