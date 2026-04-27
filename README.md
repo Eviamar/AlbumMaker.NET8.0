@@ -1,7 +1,11 @@
-Digital Picture Album Manager
-A comprehensive desktop application built with C# and .NET, designed for creating, managing, and editing digital photo albums. This system provides a robust solution for users to organize their memories and for administrators to manage the platform.
+# Digital Picture Album Manager
+### Final Graduation Project | Software Engineering
 
-Key Features:
+This repository contains my Final Graduation Project in Software Engineering. Developed as a comprehensive solution for managing and editing digital albums, this project demonstrates full-stack development capabilities using C# and .NET.
+
+A robust desktop application designed for users to organize their memories and for administrators to manage the platform efficiently.
+
+## Key Features:
 
 👤 User Capabilities
 • Secure Authentication: Complete registration and login system, including a password recovery mechanism via security questions.
@@ -32,10 +36,23 @@ Key Features:
 
 | **Register Screen** | **Photo Editor** |
 | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/c34b9760-a6f6-4079-b759-75c84e4c8d87" width="400" alt="Main Dashboard" /> | <img src="https://github.com/user-attachments/assets/3df35d44-7628-4ce1-be3d-bc5a9da2a2ab" width="400" alt="Image Editor" /> |
+| <img src="https://github.com/user-attachments/assets/c34b9760-a6f6-4079-b759-75c84e4c8d87" width="400" /> | <img src="https://github.com/user-attachments/assets/3df35d44-7628-4ce1-be3d-bc5a9da2a2ab" width="400"/> |
 
 | **Album View** | **Album Edit** |
 | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/fcc5daaf-8f9c-4222-b3c9-f2dfd7a76455" width="400" alt="Settings Panel" /> | <img src="https://github.com/user-attachments/assets/83d8b319-84a2-45ca-9197-6c2954fa4f57" width="400" alt="Drive Scanner" /> |
+| <img src="https://github.com/user-attachments/assets/fcc5daaf-8f9c-4222-b3c9-f2dfd7a76455" width="400"  /> | <img src="https://github.com/user-attachments/assets/83d8b319-84a2-45ca-9197-6c2954fa4f57" width="400"  /> |
 
 
+## 📦 How to Run
+1.  **Clone the Repo:**
+    ```bash
+    git clone [https://github.com/Eviamar/AlbumMaker.NET8.0.git](https://github.com/Eviamar/AlbumMaker.NET8.0.git)
+    ```
+2.  **Open Solution:** Open `AlbumMaker.sln` using **Visual Studio 2022**.
+3.  **Restore Packages:** The project uses **SQLite**. Ensure NuGet packages are restored upon building.
+4.  **Run:** Press `F5` to build and run the application. Data is saved locally in the `AppData` folder.
+
+## ✍️ Authors
+* **Evyatar Amar** (Lead Developer)
+* **Ron Asulin** (Project Partner)
+* Developed at the Technological College of Beer Sheva.
